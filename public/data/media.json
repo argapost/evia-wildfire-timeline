@@ -1,0 +1,30 @@
+{
+  "img-north-evia-fire-front-2021": {
+    "id": "img-north-evia-fire-front-2021",
+    "type": "image",
+    "file": "/images/events/north-evia-fire-front-2021.svg",
+    "alt": "Simplified map depiction of the North Evia wildfire front area in August 2021",
+    "caption": "Indicative visualization of the wildfire front footprint used for timeline context.",
+    "credit": "Evia Wildfire Timeline research compilation",
+    "sourceUrl": "",
+    "license": "Editorial reference",
+    "focalPoint": [
+      0.5,
+      0.5
+    ]
+  },
+  "img-regeneration-governance-2021": {
+    "id": "img-regeneration-governance-2021",
+    "type": "image",
+    "file": "/images/events/regeneration-governance-2021.svg",
+    "alt": "Diagram-like image representing institutional reconstruction governance process in 2021",
+    "caption": "Institutional process context for the reconstruction governance decision.",
+    "credit": "Evia Wildfire Timeline research compilation",
+    "sourceUrl": "",
+    "license": "Editorial reference",
+    "focalPoint": [
+      0.5,
+      0.5
+    ]
+  }
+}

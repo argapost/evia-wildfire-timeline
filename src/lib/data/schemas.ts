@@ -243,3 +243,5 @@ export type ActorFrontmatter = z.infer<typeof actorFrontmatterSchema>;
 export type PlaceFrontmatter = z.infer<typeof placeFrontmatterSchema>;
 export type PageFrontmatter = z.infer<typeof pageFrontmatterSchema>;
 export type Geometry = z.infer<typeof geometrySchema>;
+export type SourceReference = z.infer<typeof sourceReferenceSchema>;
+export type MediaReference = z.infer<typeof mediaReferenceSchema>;

@@ -1,0 +1,16 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Reconstruction governance process context</title>
+  <desc id="desc">Diagrammatic representation of institutional relationships in 2021 reconstruction governance.</desc>
+  <rect width="1200" height="800" fill="#f4f1ea" />
+  <rect x="120" y="130" width="280" height="120" fill="#e5dfd3" stroke="#948b80" stroke-width="2"/>
+  <rect x="470" y="320" width="280" height="120" fill="#d6cfbf" stroke="#948b80" stroke-width="2"/>
+  <rect x="820" y="510" width="280" height="120" fill="#e5dfd3" stroke="#948b80" stroke-width="2"/>
+  <line x1="400" y1="190" x2="470" y2="380" stroke="#6b645a" stroke-width="4"/>
+  <line x1="750" y1="380" x2="820" y2="570" stroke="#6b645a" stroke-width="4"/>
+  <circle cx="400" cy="190" r="8" fill="#8f2f23"/>
+  <circle cx="470" cy="380" r="8" fill="#8f2f23"/>
+  <circle cx="820" cy="570" r="8" fill="#8f2f23"/>
+  <text x="145" y="195" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#252320">Government announcement</text>
+  <text x="495" y="385" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#252320">Coordination structure</text>
+  <text x="845" y="575" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#252320">Implementation actions</text>
+</svg>

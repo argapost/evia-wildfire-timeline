@@ -18,7 +18,9 @@ tags:
   - suppression
 sourceRefs:
   - src-fire-ops-2021-08
-imageRefs: []
+imageRefs:
+  - img-north-evia-fire-front-2021
+coverImage: img-north-evia-fire-front-2021
 confidence: high
 verificationStatus: verified
 geometry:

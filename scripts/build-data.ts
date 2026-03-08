@@ -5,17 +5,22 @@ import matter from 'gray-matter';
 import {
   actorFrontmatterSchema,
   eventFrontmatterSchema,
+  mediaReferenceSchema,
   pageFrontmatterSchema,
   placeFrontmatterSchema,
+  sourceReferenceSchema,
   type ActorFrontmatter,
   type EventFrontmatter,
   type Geometry,
+  type MediaReference,
   type PageFrontmatter,
-  type PlaceFrontmatter
+  type PlaceFrontmatter,
+  type SourceReference
 } from '../src/lib/data/schemas';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const contentRoot = join(repoRoot, 'src', 'content');
+const referencesRoot = join(repoRoot, 'src', 'references');
 const outputRoot = join(repoRoot, 'public', 'data');
 const byYearRoot = join(outputRoot, 'events.by-year');
 
@@ -25,6 +30,11 @@ type RawEntry<T> = {
   filePath: string;
   data: T;
   body: string;
+};
+
+type RawReferenceEntry<T> = {
+  filePath: string;
+  data: T;
 };
 
 type CompiledEvent = EventFrontmatter & {
@@ -165,6 +175,24 @@ function readCollection<T>(dirName: string, normalizer: (input: Record<string, u
   });
 }
 
+function readReferenceCollection<T>(fileName: string, parser: (input: unknown) => T): RawReferenceEntry<T>[] {
+  const filePath = join(referencesRoot, fileName);
+  if (!existsSync(filePath)) {
+    return [];
+  }
+
+  const source = readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '');
+  const parsed = JSON.parse(source) as unknown;
+  if (!Array.isArray(parsed)) {
+    throw new Error(`Reference file ${relative(repoRoot, filePath)} must contain a JSON array.`);
+  }
+
+  return parsed.map((entry, index) => ({
+    filePath: `${filePath}#${index}`,
+    data: parser(entry)
+  }));
+}
+
 function assertNoDuplicateIds(entries: Array<{ filePath: string; data: { id: string } }>, collection: string): void {
   const seen = new Map<string, string>();
 
@@ -197,10 +225,14 @@ function buildDisplayDate(event: EventFrontmatter): string {
 function ensureReferenceIntegrity(
   events: RawEntry<EventFrontmatter>[],
   actors: RawEntry<ActorFrontmatter>[],
-  places: RawEntry<PlaceFrontmatter>[]
+  places: RawEntry<PlaceFrontmatter>[],
+  sources: RawReferenceEntry<SourceReference>[],
+  media: RawReferenceEntry<MediaReference>[]
 ): void {
   const actorIds = new Set(actors.map((entry) => entry.data.id));
   const placeIds = new Set(places.map((entry) => entry.data.id));
+  const sourceIds = new Set(sources.map((entry) => entry.data.id));
+  const mediaIds = new Set(media.map((entry) => entry.data.id));
 
   for (const event of events) {
     for (const actorId of event.data.actors) {
@@ -217,6 +249,28 @@ function ensureReferenceIntegrity(
           `Event "${event.data.id}" references unknown place "${placeId}" in ${relative(repoRoot, event.filePath)}.`
         );
       }
+    }
+
+    for (const sourceRefId of event.data.sourceRefs) {
+      if (!sourceIds.has(sourceRefId)) {
+        throw new Error(
+          `Event "${event.data.id}" references unknown source "${sourceRefId}" in ${relative(repoRoot, event.filePath)}.`
+        );
+      }
+    }
+
+    for (const imageRefId of event.data.imageRefs) {
+      if (!mediaIds.has(imageRefId)) {
+        throw new Error(
+          `Event "${event.data.id}" references unknown media "${imageRefId}" in ${relative(repoRoot, event.filePath)}.`
+        );
+      }
+    }
+
+    if (event.data.coverImage && !mediaIds.has(event.data.coverImage)) {
+      throw new Error(
+        `Event "${event.data.id}" references unknown cover image "${event.data.coverImage}" in ${relative(repoRoot, event.filePath)}.`
+      );
     }
 
     const startTs = parseIsoLikeDate(event.data.start, false);
@@ -245,12 +299,27 @@ function ensureReferenceIntegrity(
       );
     }
   }
+
+  for (const mediaEntry of media) {
+    if (!mediaEntry.data.file.startsWith('/')) {
+      continue;
+    }
+
+    const absoluteMediaPath = join(repoRoot, 'public', mediaEntry.data.file.replace(/^\//, ''));
+    if (!existsSync(absoluteMediaPath)) {
+      throw new Error(
+        `Media "${mediaEntry.data.id}" file "${mediaEntry.data.file}" is missing at ${relative(repoRoot, absoluteMediaPath)}.`
+      );
+    }
+  }
 }
 
 function compileData(): {
   actorsById: Record<string, ActorFrontmatter & { body: string }>;
   placesById: Record<string, PlaceFrontmatter & { body: string }>;
   pages: Record<string, PageFrontmatter & { body: string }>;
+  sourcesById: Record<string, SourceReference>;
+  mediaById: Record<string, MediaReference>;
   eventsIndex: CompiledEvent[];
   eventsGeoJSON: { type: 'FeatureCollection'; features: GeoJSONFeature[] };
   eventsByYear: Record<string, CompiledEvent[]>;
@@ -295,12 +364,21 @@ function compileData(): {
     (raw) => pageFrontmatterSchema.parse(raw)
   );
 
+  const sourceEntries = readReferenceCollection<SourceReference>('sources.json', (raw) =>
+    sourceReferenceSchema.parse(raw)
+  );
+  const mediaEntries = readReferenceCollection<MediaReference>('media.json', (raw) =>
+    mediaReferenceSchema.parse(raw)
+  );
+
   assertNoDuplicateIds(eventEntries, 'event');
   assertNoDuplicateIds(actorEntries, 'actor');
   assertNoDuplicateIds(placeEntries, 'place');
   assertNoDuplicateIds(pageEntries, 'page');
+  assertNoDuplicateIds(sourceEntries, 'source reference');
+  assertNoDuplicateIds(mediaEntries, 'media reference');
 
-  ensureReferenceIntegrity(eventEntries, actorEntries, placeEntries);
+  ensureReferenceIntegrity(eventEntries, actorEntries, placeEntries, sourceEntries, mediaEntries);
 
   const actorsById = Object.fromEntries(
     actorEntries.map((entry) => [entry.data.id, { ...entry.data, body: entry.body }])
@@ -313,6 +391,16 @@ function compileData(): {
   const pagesById = Object.fromEntries(
     pageEntries.map((entry) => [entry.data.id, { ...entry.data, body: entry.body }])
   ) as Record<string, PageFrontmatter & { body: string }>;
+
+  const sourcesById = Object.fromEntries(sourceEntries.map((entry) => [entry.data.id, entry.data])) as Record<
+    string,
+    SourceReference
+  >;
+
+  const mediaById = Object.fromEntries(mediaEntries.map((entry) => [entry.data.id, entry.data])) as Record<
+    string,
+    MediaReference
+  >;
 
   const nowTs = Date.now();
 
@@ -406,6 +494,8 @@ function compileData(): {
     actorsById,
     placesById,
     pages: pagesById,
+    sourcesById,
+    mediaById,
     eventsIndex,
     eventsGeoJSON,
     eventsByYear
@@ -422,6 +512,8 @@ function writeCompiledOutputs(compiled: ReturnType<typeof compileData>): void {
   writeFileSync(join(outputRoot, 'actors.json'), JSON.stringify(compiled.actorsById, null, 2));
   writeFileSync(join(outputRoot, 'places.json'), JSON.stringify(compiled.placesById, null, 2));
   writeFileSync(join(outputRoot, 'pages.json'), JSON.stringify(compiled.pages, null, 2));
+  writeFileSync(join(outputRoot, 'sources.json'), JSON.stringify(compiled.sourcesById, null, 2));
+  writeFileSync(join(outputRoot, 'media.json'), JSON.stringify(compiled.mediaById, null, 2));
   writeFileSync(join(outputRoot, 'events.index.json'), JSON.stringify(compiled.eventsIndex, null, 2));
   writeFileSync(join(outputRoot, 'events.geojson'), JSON.stringify(compiled.eventsGeoJSON, null, 2));
 
@@ -435,7 +527,7 @@ function main(): void {
 
   if (validateOnly) {
     console.log(
-      `Content validation passed: ${compiled.eventsIndex.length} events, ${Object.keys(compiled.actorsById).length} actors, ${Object.keys(compiled.placesById).length} places.`
+      `Content validation passed: ${compiled.eventsIndex.length} events, ${Object.keys(compiled.actorsById).length} actors, ${Object.keys(compiled.placesById).length} places, ${Object.keys(compiled.sourcesById).length} sources, ${Object.keys(compiled.mediaById).length} media refs.`
     );
     return;
   }

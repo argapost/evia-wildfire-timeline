@@ -1,0 +1,9 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">North Evia wildfire front context</title>
+  <desc id="desc">Stylized analytical illustration of the 2021 fire front footprint in North Evia.</desc>
+  <rect width="1200" height="800" fill="#f4f1ea" />
+  <path d="M210 520 C280 350, 450 250, 620 280 C780 305, 940 390, 980 540 C930 620, 800 690, 620 700 C430 710, 290 650, 210 520 Z" fill="#d7d2c8" stroke="#a9a094" stroke-width="3"/>
+  <path d="M320 520 C380 430, 510 360, 650 380 C760 396, 850 450, 880 530 C840 586, 740 622, 620 628 C488 634, 390 602, 320 520 Z" fill="#9e3b31" fill-opacity="0.55" stroke="#7f2e26" stroke-width="3"/>
+  <line x1="210" y1="520" x2="120" y2="620" stroke="#5f5850" stroke-width="2"/>
+  <text x="40" y="640" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#2a2825">Indicative wildfire front footprint</text>
+</svg>

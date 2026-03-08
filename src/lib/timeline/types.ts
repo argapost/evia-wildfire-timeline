@@ -1,11 +1,17 @@
 ﻿import { z } from 'zod';
-import { categoryValues, datePrecisionValues } from '@/lib/data/schemas';
+import {
+  categoryValues,
+  datePrecisionValues,
+  mediaReferenceSchema,
+  sourceReferenceSchema
+} from '@/lib/data/schemas';
 
 export const compiledEventSchema = z.object({
   id: z.string().min(1),
   slug: z.string().min(1),
   title: z.string().min(1),
   summary: z.string().min(1),
+  body: z.string().default(''),
   category: z.enum(categoryValues),
   start: z.string().min(4),
   end: z.string().nullable().optional(),
@@ -15,6 +21,9 @@ export const compiledEventSchema = z.object({
   startTs: z.number(),
   endTs: z.number().nullable(),
   featured: z.boolean().default(false),
+  sourceRefs: z.array(z.string().min(1)).default([]),
+  imageRefs: z.array(z.string().min(1)).default([]),
+  coverImage: z.string().nullable().optional(),
   actorLabels: z.array(
     z.object({
       id: z.string().min(1),
@@ -44,14 +53,21 @@ export const compiledEventSchema = z.object({
 });
 
 export const compiledEventsSchema = z.array(compiledEventSchema);
+export const sourceLookupSchema = z.record(sourceReferenceSchema);
+export const mediaLookupSchema = z.record(mediaReferenceSchema);
 
 export type CompiledEvent = z.infer<typeof compiledEventSchema>;
+export type SourceLookup = z.infer<typeof sourceLookupSchema>;
+export type MediaLookup = z.infer<typeof mediaLookupSchema>;
+export type SourceReference = z.infer<typeof sourceReferenceSchema>;
+export type MediaReference = z.infer<typeof mediaReferenceSchema>;
 
 export type TimelineEvent = {
   id: string;
   slug: string;
   title: string;
   summary: string;
+  body: string;
   category: CompiledEvent['category'];
   startTs: number;
   endTs: number | null;
@@ -59,6 +75,9 @@ export type TimelineEvent = {
   displayDate: string;
   datePrecision: CompiledEvent['datePrecision'];
   featured: boolean;
+  sourceRefs: string[];
+  imageRefs: string[];
+  coverImage?: string | null;
   actorLabels: CompiledEvent['actorLabels'];
   placeLabels: CompiledEvent['placeLabels'];
   mapViewport?: CompiledEvent['mapViewport'];
@@ -85,4 +104,3 @@ export type CategoryLane = {
   height: number;
   subLaneCount: number;
 };
-

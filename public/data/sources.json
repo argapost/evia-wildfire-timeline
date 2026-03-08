@@ -1,0 +1,50 @@
+{
+  "src-forestry-1974": {
+    "id": "src-forestry-1974",
+    "title": "Forestry governance baseline legal text",
+    "type": "government-document",
+    "publisher": "Hellenic Republic",
+    "date": "1974",
+    "url": "https://www.et.gr",
+    "accessDate": "2026-03-08",
+    "archiveUrl": "",
+    "language": "el",
+    "notes": "Reference legal baseline used for historical comparison."
+  },
+  "src-fire-ops-2021-08": {
+    "id": "src-fire-ops-2021-08",
+    "title": "Operational updates during August 2021 wildfire",
+    "type": "government-document",
+    "publisher": "Hellenic Fire Service",
+    "date": "2021-08",
+    "url": "https://www.fireservice.gr",
+    "accessDate": "2026-03-08",
+    "archiveUrl": "",
+    "language": "el",
+    "notes": "Compiled incident updates and operational status notes."
+  },
+  "src-gov-announcement-2021-08-12": {
+    "id": "src-gov-announcement-2021-08-12",
+    "title": "Government announcement on North Evia regeneration governance",
+    "type": "government-document",
+    "publisher": "Hellenic Government",
+    "date": "2021-08-12",
+    "url": "https://primeminister.gr",
+    "accessDate": "2026-03-08",
+    "archiveUrl": "",
+    "language": "el",
+    "notes": "Primary announcement assigning reconstruction coordination."
+  },
+  "src-recovery-contract-2022-06": {
+    "id": "src-recovery-contract-2022-06",
+    "title": "Recovery works procurement bundle notice",
+    "type": "government-document",
+    "publisher": "Hellenic Government",
+    "date": "2022-06",
+    "url": "https://www.diavgeia.gov.gr",
+    "accessDate": "2026-03-08",
+    "archiveUrl": "",
+    "language": "el",
+    "notes": "Procurement reference for reconstruction implementation."
+  }
+}

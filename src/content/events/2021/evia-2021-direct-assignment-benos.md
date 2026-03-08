@@ -19,7 +19,9 @@ tags:
   - reconstruction
 sourceRefs:
   - src-gov-announcement-2021-08-12
-imageRefs: []
+imageRefs:
+  - img-regeneration-governance-2021
+coverImage: img-regeneration-governance-2021
 confidence: high
 verificationStatus: verified
 geometry:
