@@ -52,7 +52,6 @@ export default function EventDetailPanel({ selectedEvent, sourcesById, mediaById
   const bodyParagraphs = splitBody(selectedEvent.body);
   const leadText = bodyParagraphs[0] ?? '';
   const visibleImages = images.slice(0, 4);
-  const legendText = visibleImages[0]?.caption ?? selectedEvent.summary;
 
   return (
     <aside className="detail-panel" aria-label="Event detail panel" aria-live="polite">
@@ -106,30 +105,6 @@ export default function EventDetailPanel({ selectedEvent, sourcesById, mediaById
         </section>
       </div>
 
-      <section className="detail-section detail-legend-section" aria-label="Event legend">
-        <h3>Legend</h3>
-        <p>{legendText}</p>
-      </section>
-
-      <section className="detail-section" aria-label="Sources">
-        <h3>Sources</h3>
-        {sources.length > 0 ? (
-          <ol className="detail-source-list">
-            {sources.map((source) => (
-              <li key={source.id}>
-                <a href={source.url} target="_blank" rel="noreferrer">
-                  {source.title}
-                </a>
-                <p className="detail-source-meta">
-                  {source.publisher} {source.date ? `(${source.date})` : ''}
-                </p>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p>No source references available for this event.</p>
-        )}
-      </section>
     </aside>
   );
 }

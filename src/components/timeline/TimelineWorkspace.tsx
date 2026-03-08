@@ -45,6 +45,7 @@ function filtersEqual(a: TimelineFilterState, b: TimelineFilterState): boolean {
 }
 
 export default function TimelineWorkspace() {
+  const showMap = false;
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [filters, setFilters] = useState<TimelineFilterState>(() => createEmptyFilters());
   const [sourcesById, setSourcesById] = useState<SourceLookup>({});
@@ -214,17 +215,19 @@ export default function TimelineWorkspace() {
           onSelectEvent={(eventId) => setSelectedEventId(eventId)}
         />
 
-        <div className="workspace-panels" aria-label="Legend and map panels">
+        <div className={`workspace-panels ${showMap ? '' : 'is-map-hidden'}`.trim()} aria-label="Legend and map panels">
           <TimelineLegend events={filteredEvents} />
-          <Suspense
-            fallback={
-              <section className="map-panel" aria-label="Map panel loading state" aria-live="polite">
-                <p>Loading map module...</p>
-              </section>
-            }
-          >
-            <LazyEventMapPanel selectedEvent={selectedEvent} events={filteredEvents} />
-          </Suspense>
+          {showMap ? (
+            <Suspense
+              fallback={
+                <section className="map-panel" aria-label="Map panel loading state" aria-live="polite">
+                  <p>Loading map module...</p>
+                </section>
+              }
+            >
+              <LazyEventMapPanel selectedEvent={selectedEvent} events={filteredEvents} />
+            </Suspense>
+          ) : null}
         </div>
       </section>
     </TimelineSelectionContext.Provider>

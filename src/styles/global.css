@@ -33,9 +33,10 @@ body {
 }
 
 .site-shell {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: var(--space-6) var(--space-4);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: var(--space-6) var(--space-5);
 }
 
 .page-intro {
@@ -291,7 +292,7 @@ a {
 }
 
 .timeline-tick-label {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   fill: var(--color-muted);
 }
 
@@ -309,14 +310,14 @@ a {
 }
 
 .timeline-zone-label {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 600;
   fill: #3f3a35;
 }
 
 .timeline-event-label {
   fill: var(--color-text);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   pointer-events: none;
 }
 
@@ -328,6 +329,10 @@ a {
   display: grid;
   gap: var(--space-4);
   align-items: start;
+}
+
+.workspace-panels.is-map-hidden {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .detail-panel,

@@ -55,8 +55,8 @@ const margin = {
 };
 
 const minimumInnerWidth = 680;
-const eventHeight = 12;
-const laneGap = 6;
+const eventHeight = 14;
+const laneGap = 8;
 const centerGap = 24;
 const pointCollisionMs = 86_400_000;
 const eventMinWidth = 6;
@@ -283,11 +283,34 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
   const { width } = useElementSize(hostRef, { width: 0, height: 0 });
 
   const [transform, setTransform] = useState<ZoomTransform>(zoomIdentity);
+  const [viewportHeight, setViewportHeight] = useState(() =>
+    typeof window === 'undefined' ? 900 : window.innerHeight
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const hasEvents = events.length > 0;
   const layout = useMemo(() => computeBandLayout(events), [events]);
 
-  const timelineHeight = layout.height;
+  const minimumTimelineHeight = Math.max(260, Math.round(viewportHeight / 3));
+  const timelineHeight = Math.max(layout.height, minimumTimelineHeight);
+  const verticalOffset = Math.max(0, Math.round((timelineHeight - layout.height) / 2));
+  const dividerY = layout.centerY + verticalOffset;
   const svgHeight = margin.top + timelineHeight + margin.bottom;
   const innerWidth = Math.max(minimumInnerWidth, width - margin.left - margin.right);
 
@@ -538,11 +561,11 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                 );
               })}
 
-              <line x1={0} x2={innerWidth} y1={layout.centerY} y2={layout.centerY} className="timeline-divider-line" />
-              <text x={8} y={layout.centerY - centerGap - 8} className="timeline-zone-label">
+              <line x1={0} x2={innerWidth} y1={dividerY} y2={dividerY} className="timeline-divider-line" />
+              <text x={8} y={dividerY - centerGap - 8} className="timeline-zone-label">
                 Evia island events
               </text>
-              <text x={8} y={layout.centerY + centerGap + 14} className="timeline-zone-label">
+              <text x={8} y={dividerY + centerGap + 14} className="timeline-zone-label">
                 Rest of Greece events
               </text>
 
@@ -550,7 +573,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                 const color = getCategoryColor(event.category);
                 const xStart = visibleScale(new Date(event.startTs));
                 const xEnd = visibleScale(new Date(event.endTs ?? event.startTs));
-                const yMid = event.y + eventHeight / 2;
+                const yMid = event.y + verticalOffset + eventHeight / 2;
                 const isSelected = event.id === selectedEventId;
                 const widthPx = Math.max(eventMinWidth, xEnd - xStart);
 
@@ -579,7 +602,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                     {event.isDuration ? (
                       <rect
                         x={xStart}
-                        y={event.y}
+                        y={event.y + verticalOffset}
                         width={widthPx}
                         height={eventHeight}
                         rx={2}
