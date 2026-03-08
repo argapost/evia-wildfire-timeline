@@ -1,0 +1,42 @@
+{
+  "name": "evia-wildfire-timeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Publication-grade investigative timeline workspace for the Evia wildfire research archive.",
+  "scripts": {
+    "dev": "astro dev",
+    "build:data": "tsx scripts/build-data.ts",
+    "validate:content": "tsx scripts/build-data.ts --validate-only",
+    "build": "npm run build:data && npm run validate:content && astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\" keystatic.config.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@keystatic/astro": "^5.0.6",
+    "@keystatic/core": "^0.5.48",
+    "astro": "^5.18.0",
+    "d3": "^7.9.0",
+    "gray-matter": "^4.0.3",
+    "maplibre-gl": "^5.19.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.0.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
+  }
+}

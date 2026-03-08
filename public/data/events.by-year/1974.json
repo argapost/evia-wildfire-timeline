@@ -1,0 +1,62 @@
+[
+  {
+    "id": "evia-1974-forestry-policy-baseline",
+    "slug": "forestry-policy-baseline",
+    "title": "National forestry policy baseline enters force",
+    "start": "1974",
+    "datePrecision": "year",
+    "isOngoing": false,
+    "summary": "Baseline forestry governance framework used as a long-duration reference point in later land and fire debates.",
+    "category": "forestry-policy",
+    "actors": [
+      "actor-greek-government"
+    ],
+    "places": [
+      "place-evia"
+    ],
+    "tags": [
+      "policy",
+      "forestry"
+    ],
+    "sourceRefs": [
+      "src-forestry-1974"
+    ],
+    "imageRefs": [],
+    "mapViewport": {
+      "center": [
+        23.6,
+        38.5
+      ],
+      "zoom": 7
+    },
+    "confidence": "medium",
+    "verificationStatus": "partially-verified",
+    "relatedEvents": [],
+    "featured": false,
+    "body": "This anchor event is used to connect later wildfire governance decisions to earlier institutional structures.",
+    "startTs": 126230400000,
+    "endTs": null,
+    "durationDays": null,
+    "hasGeometry": false,
+    "actorCount": 1,
+    "placeCount": 1,
+    "year": 1974,
+    "decade": 1970,
+    "displayDate": "1974",
+    "sortKey": "126230400000-evia-1974-forestry-policy-baseline",
+    "actorLabels": [
+      {
+        "id": "actor-greek-government",
+        "name": "Hellenic Government",
+        "slug": "greek-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-evia",
+        "name": "Evia",
+        "slug": "evia"
+      }
+    ]
+  }
+]

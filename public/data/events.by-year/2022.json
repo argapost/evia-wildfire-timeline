@@ -1,0 +1,64 @@
+[
+  {
+    "id": "evia-2022-recovery-contract-bundle",
+    "slug": "recovery-contract-bundle",
+    "title": "Recovery works procurement bundle announced",
+    "start": "2022-06",
+    "datePrecision": "month",
+    "isOngoing": false,
+    "summary": "Procurement bundle for post-fire works announced as part of medium-term reconstruction implementation.",
+    "category": "contract",
+    "actors": [
+      "actor-greek-government"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [
+      "contract",
+      "reconstruction"
+    ],
+    "sourceRefs": [
+      "src-recovery-contract-2022-06"
+    ],
+    "imageRefs": [],
+    "mapViewport": {
+      "center": [
+        23.4,
+        38.85
+      ],
+      "zoom": 8
+    },
+    "confidence": "medium",
+    "verificationStatus": "partially-verified",
+    "relatedEvents": [
+      "evia-2021-direct-assignment-benos"
+    ],
+    "featured": false,
+    "body": "Month-precision event used to validate mixed date precision handling.",
+    "startTs": 1654041600000,
+    "endTs": null,
+    "durationDays": null,
+    "hasGeometry": false,
+    "actorCount": 1,
+    "placeCount": 1,
+    "year": 2022,
+    "decade": 2020,
+    "displayDate": "2022-06",
+    "sortKey": "1654041600000-evia-2022-recovery-contract-bundle",
+    "actorLabels": [
+      {
+        "id": "actor-greek-government",
+        "name": "Hellenic Government",
+        "slug": "greek-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  }
+]

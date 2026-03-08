@@ -1,0 +1,18 @@
+{
+  "page-about": {
+    "id": "page-about",
+    "slug": "about",
+    "title": "About the Evia Wildfire Timeline",
+    "summary": "Methodology, editorial principles, and project scope for the investigative timeline.",
+    "updatedAt": "2026-03-08T14:00:00.000Z",
+    "body": "This page documents the methodology used for event curation, verification, and publication."
+  },
+  "page-sources": {
+    "id": "page-sources",
+    "slug": "sources",
+    "title": "Sources and Verification Policy",
+    "summary": "Source standards, attribution conventions, and verification status definitions.",
+    "updatedAt": "2026-03-08T14:00:00.000Z",
+    "body": "This page defines source handling, archival links, and confidence terminology."
+  }
+}

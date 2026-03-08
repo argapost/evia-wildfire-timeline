@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "evia-2021-wildfire-front-duration",
+      "properties": {
+        "id": "evia-2021-wildfire-front-duration",
+        "title": "Northern Evia wildfire active front period",
+        "category": "wildfire",
+        "start": "2021-08-01",
+        "end": "2021-08-13",
+        "datePrecision": "day",
+        "year": 2021,
+        "decade": 2020
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              23.12,
+              38.62
+            ],
+            [
+              23.92,
+              38.62
+            ],
+            [
+              23.92,
+              39.02
+            ],
+            [
+              23.12,
+              39.02
+            ],
+            [
+              23.12,
+              38.62
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "evia-2021-direct-assignment-benos",
+      "properties": {
+        "id": "evia-2021-direct-assignment-benos",
+        "title": "Direct assignment of North Evia regeneration program to S. Benos",
+        "category": "reconstruction-governance",
+        "start": "2021-08-12",
+        "datePrecision": "day",
+        "year": 2021,
+        "decade": 2020
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          23.7275,
+          37.9838
+        ]
+      }
+    }
+  ]
+}

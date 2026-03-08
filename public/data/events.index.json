@@ -1,0 +1,295 @@
+[
+  {
+    "id": "evia-1974-forestry-policy-baseline",
+    "slug": "forestry-policy-baseline",
+    "title": "National forestry policy baseline enters force",
+    "start": "1974",
+    "datePrecision": "year",
+    "isOngoing": false,
+    "summary": "Baseline forestry governance framework used as a long-duration reference point in later land and fire debates.",
+    "category": "forestry-policy",
+    "actors": [
+      "actor-greek-government"
+    ],
+    "places": [
+      "place-evia"
+    ],
+    "tags": [
+      "policy",
+      "forestry"
+    ],
+    "sourceRefs": [
+      "src-forestry-1974"
+    ],
+    "imageRefs": [],
+    "mapViewport": {
+      "center": [
+        23.6,
+        38.5
+      ],
+      "zoom": 7
+    },
+    "confidence": "medium",
+    "verificationStatus": "partially-verified",
+    "relatedEvents": [],
+    "featured": false,
+    "body": "This anchor event is used to connect later wildfire governance decisions to earlier institutional structures.",
+    "startTs": 126230400000,
+    "endTs": null,
+    "durationDays": null,
+    "hasGeometry": false,
+    "actorCount": 1,
+    "placeCount": 1,
+    "year": 1974,
+    "decade": 1970,
+    "displayDate": "1974",
+    "sortKey": "126230400000-evia-1974-forestry-policy-baseline",
+    "actorLabels": [
+      {
+        "id": "actor-greek-government",
+        "name": "Hellenic Government",
+        "slug": "greek-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-evia",
+        "name": "Evia",
+        "slug": "evia"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-wildfire-front-duration",
+    "slug": "wildfire-front-duration",
+    "title": "Northern Evia wildfire active front period",
+    "start": "2021-08-01",
+    "end": "2021-08-13",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "summary": "Main active wildfire period affecting multiple settlements in Northern Evia.",
+    "category": "wildfire",
+    "actors": [
+      "actor-hellenic-fire-service"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [
+      "wildfire",
+      "suppression"
+    ],
+    "sourceRefs": [
+      "src-fire-ops-2021-08"
+    ],
+    "imageRefs": [],
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            23.12,
+            38.62
+          ],
+          [
+            23.92,
+            38.62
+          ],
+          [
+            23.92,
+            39.02
+          ],
+          [
+            23.12,
+            39.02
+          ],
+          [
+            23.12,
+            38.62
+          ]
+        ]
+      ]
+    },
+    "mapViewport": {
+      "center": [
+        23.52,
+        38.82
+      ],
+      "zoom": 8.3
+    },
+    "confidence": "high",
+    "verificationStatus": "verified",
+    "relatedEvents": [
+      "evia-2021-direct-assignment-benos"
+    ],
+    "featured": true,
+    "body": "Duration event used to validate point-versus-duration rendering and map polygon support.",
+    "startTs": 1627776000000,
+    "endTs": 1628899199000,
+    "durationDays": 13,
+    "hasGeometry": true,
+    "actorCount": 1,
+    "placeCount": 1,
+    "year": 2021,
+    "decade": 2020,
+    "displayDate": "2021-08-01 to 2021-08-13",
+    "sortKey": "1627776000000-evia-2021-wildfire-front-duration",
+    "actorLabels": [
+      {
+        "id": "actor-hellenic-fire-service",
+        "name": "Hellenic Fire Service",
+        "slug": "hellenic-fire-service"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-direct-assignment-benos",
+    "slug": "direct-assignment-benos",
+    "title": "Direct assignment of North Evia regeneration program to S. Benos",
+    "start": "2021-08-12",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "summary": "The government assigned North Evia regeneration coordination to Stavros Benos, shaping institutional reconstruction governance.",
+    "category": "reconstruction-governance",
+    "actors": [
+      "actor-greek-government",
+      "actor-diazoma"
+    ],
+    "places": [
+      "place-athens",
+      "place-north-evia"
+    ],
+    "tags": [
+      "governance",
+      "reconstruction"
+    ],
+    "sourceRefs": [
+      "src-gov-announcement-2021-08-12"
+    ],
+    "imageRefs": [],
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        23.7275,
+        37.9838
+      ]
+    },
+    "mapViewport": {
+      "center": [
+        23.7275,
+        37.9838
+      ],
+      "zoom": 7.5
+    },
+    "confidence": "high",
+    "verificationStatus": "verified",
+    "relatedEvents": [
+      "evia-2021-wildfire-front-duration"
+    ],
+    "featured": true,
+    "body": "Point event used for selection and cross-reference tests in later interaction phases.",
+    "startTs": 1628726400000,
+    "endTs": null,
+    "durationDays": null,
+    "hasGeometry": true,
+    "actorCount": 2,
+    "placeCount": 2,
+    "year": 2021,
+    "decade": 2020,
+    "displayDate": "2021-08-12",
+    "sortKey": "1628726400000-evia-2021-direct-assignment-benos",
+    "actorLabels": [
+      {
+        "id": "actor-greek-government",
+        "name": "Hellenic Government",
+        "slug": "greek-government"
+      },
+      {
+        "id": "actor-diazoma",
+        "name": "DIAZOMA",
+        "slug": "diazoma"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-athens",
+        "name": "Athens",
+        "slug": "athens"
+      },
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  },
+  {
+    "id": "evia-2022-recovery-contract-bundle",
+    "slug": "recovery-contract-bundle",
+    "title": "Recovery works procurement bundle announced",
+    "start": "2022-06",
+    "datePrecision": "month",
+    "isOngoing": false,
+    "summary": "Procurement bundle for post-fire works announced as part of medium-term reconstruction implementation.",
+    "category": "contract",
+    "actors": [
+      "actor-greek-government"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [
+      "contract",
+      "reconstruction"
+    ],
+    "sourceRefs": [
+      "src-recovery-contract-2022-06"
+    ],
+    "imageRefs": [],
+    "mapViewport": {
+      "center": [
+        23.4,
+        38.85
+      ],
+      "zoom": 8
+    },
+    "confidence": "medium",
+    "verificationStatus": "partially-verified",
+    "relatedEvents": [
+      "evia-2021-direct-assignment-benos"
+    ],
+    "featured": false,
+    "body": "Month-precision event used to validate mixed date precision handling.",
+    "startTs": 1654041600000,
+    "endTs": null,
+    "durationDays": null,
+    "hasGeometry": false,
+    "actorCount": 1,
+    "placeCount": 1,
+    "year": 2022,
+    "decade": 2020,
+    "displayDate": "2022-06",
+    "sortKey": "1654041600000-evia-2022-recovery-contract-bundle",
+    "actorLabels": [
+      {
+        "id": "actor-greek-government",
+        "name": "Hellenic Government",
+        "slug": "greek-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  }
+]
