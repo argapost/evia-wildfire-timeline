@@ -15,7 +15,7 @@ import {
 } from '@/lib/timeline';
 import D3Timeline from './D3Timeline';
 import EventDetailPanel from './EventDetailPanel';
-import TimelineFilters from './TimelineFilters';
+import TimelineLegend from './TimelineLegend';
 
 const LazyEventMapPanel = lazy(() => import('./EventMapPanel'));
 
@@ -196,21 +196,14 @@ export default function TimelineWorkspace() {
   return (
     <TimelineSelectionContext.Provider value={selectionState}>
       <section className="timeline-workspace" aria-label="Timeline workspace">
-        <TimelineFilters
-          filters={filters}
-          options={filterOptions}
-          totalCount={events.length}
-          resultCount={filteredEvents.length}
-          onChange={(next) => setFilters(next)}
-          onReset={() => setFilters(createEmptyFilters())}
-        />
+        <EventDetailPanel selectedEvent={selectedEvent} sourcesById={sourcesById} mediaById={mediaById} />
 
         {filteredEvents.length === 0 ? (
           <section className="timeline-empty-state" aria-live="polite">
-            <h2>No events match these filters</h2>
-            <p>Try broadening the selected category, actor, place, tag, or date range.</p>
+            <h2>No events match the current URL filter state</h2>
+            <p>Clear URL filters to restore the full timeline dataset.</p>
             <button type="button" className="timeline-button" onClick={() => setFilters(createEmptyFilters())}>
-              Clear all filters
+              Clear hidden filters
             </button>
           </section>
         ) : null}
@@ -221,8 +214,8 @@ export default function TimelineWorkspace() {
           onSelectEvent={(eventId) => setSelectedEventId(eventId)}
         />
 
-        <div className="workspace-panels" aria-label="Event detail and map panels">
-          <EventDetailPanel selectedEvent={selectedEvent} sourcesById={sourcesById} mediaById={mediaById} />
+        <div className="workspace-panels" aria-label="Legend and map panels">
+          <TimelineLegend events={filteredEvents} />
           <Suspense
             fallback={
               <section className="map-panel" aria-label="Map panel loading state" aria-live="polite">
