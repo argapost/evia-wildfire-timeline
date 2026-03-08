@@ -1,13 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import TimelineWorkspacePlaceholder from '../components/TimelineWorkspacePlaceholder.tsx';
+import TimelineWorkspace from '../components/timeline/TimelineWorkspace.tsx';
 ---
 
 <BaseLayout title="Timeline | Evia Wildfire Timeline">
   <section class="page-intro">
     <p class="eyebrow">Timeline Workspace</p>
-    <h1>Phase 0 placeholder</h1>
-    <p>The custom D3 timeline and synchronized map are implemented in later phases.</p>
+    <h1>Long-range event timeline</h1>
+    <p>
+      Custom D3 timeline engine with zoom, pan, category lanes, and selection handoff for detail panel and map
+      synchronization.
+    </p>
   </section>
-  <TimelineWorkspacePlaceholder client:load />
+  <TimelineWorkspace client:load />
 </BaseLayout>
