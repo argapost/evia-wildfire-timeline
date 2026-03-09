@@ -13,6 +13,20 @@ type CategorySummary = {
   totalBudget: number;
 };
 
+export type BudgetByCategoryDatum = {
+  category: string;
+  totalBudget: number;
+  projectCount: number;
+  megaProjectCount: number;
+};
+
+export type FundingProvenanceByCategoryDatum = {
+  category: string;
+  totalProjects: number;
+  counts: Record<FundingProvenance, number>;
+  shares: Record<FundingProvenance, number>;
+};
+
 function initFundingCounts(): Record<FundingProvenance, number> {
   return {
     public: 0,
@@ -54,6 +68,91 @@ function buildCategorySummary(projects: EvoiaMetaProject[]): CategorySummary[] {
     }
     return a.category.localeCompare(b.category);
   });
+}
+
+export function selectBudgetByCategory(
+  projects: EvoiaMetaProject[],
+  options: { includeMegaProjects?: boolean } = {}
+): BudgetByCategoryDatum[] {
+  const includeMegaProjects = options.includeMegaProjects ?? true;
+  const categoryMap = new Map<string, BudgetByCategoryDatum>();
+
+  projects.forEach((project) => {
+    if (!includeMegaProjects && project.isMegaProject) {
+      return;
+    }
+
+    const existing = categoryMap.get(project.category);
+    if (existing) {
+      existing.projectCount += 1;
+      existing.totalBudget += project.announcedBudget ?? 0;
+      if (project.isMegaProject) {
+        existing.megaProjectCount += 1;
+      }
+      return;
+    }
+
+    categoryMap.set(project.category, {
+      category: project.category,
+      totalBudget: project.announcedBudget ?? 0,
+      projectCount: 1,
+      megaProjectCount: project.isMegaProject ? 1 : 0
+    });
+  });
+
+  return [...categoryMap.values()].sort((a, b) => {
+    if (b.totalBudget !== a.totalBudget) {
+      return b.totalBudget - a.totalBudget;
+    }
+    return a.category.localeCompare(b.category);
+  });
+}
+
+function initFundingCountRecord(): Record<FundingProvenance, number> {
+  return {
+    public: 0,
+    private_philanthropy: 0,
+    mixed_unclear: 0
+  };
+}
+
+export function selectFundingProvenanceByCategory(projects: EvoiaMetaProject[]): FundingProvenanceByCategoryDatum[] {
+  const categoryMap = new Map<string, FundingProvenanceByCategoryDatum>();
+
+  projects.forEach((project) => {
+    const existing = categoryMap.get(project.category);
+    if (existing) {
+      existing.totalProjects += 1;
+      existing.counts[project.fundingProvenance] += 1;
+      return;
+    }
+
+    const counts = initFundingCountRecord();
+    counts[project.fundingProvenance] += 1;
+
+    categoryMap.set(project.category, {
+      category: project.category,
+      totalProjects: 1,
+      counts,
+      shares: initFundingCountRecord()
+    });
+  });
+
+  const rows = [...categoryMap.values()].sort((a, b) => {
+    if (b.totalProjects !== a.totalProjects) {
+      return b.totalProjects - a.totalProjects;
+    }
+    return a.category.localeCompare(b.category);
+  });
+
+  rows.forEach((row) => {
+    const denominator = Math.max(1, row.totalProjects);
+    row.shares.public = row.counts.public / denominator;
+    row.shares.private_philanthropy = row.counts.private_philanthropy / denominator;
+    row.shares.mixed_unclear = row.counts.mixed_unclear / denominator;
+  });
+
+  return rows;
 }
 
 function getDateExtent(projects: EvoiaMetaProject[]): EvoiaMetaSummary['dateExtent'] {
