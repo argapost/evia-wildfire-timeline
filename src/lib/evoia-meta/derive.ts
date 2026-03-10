@@ -22,8 +22,11 @@ const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const YEAR_PATTERN = /^\d{4}$/;
 const MONTH_YEAR_PATTERN = /^(\d{1,2})\/(\d{4})$/;
 const ISO_MONTH_PATTERN = /^(\d{4})-(\d{2})$/;
-const RANGE_PATTERN = /^(\d{1,2})\/(\d{4})\s*[-–]\s*(\d{1,2})\/(\d{4})$/;
-const RELATIVE_PATTERN = /(month|months|year|years|no exact date|ongoing|tbd|unknown)/i;
+const MONTH_YEAR_RANGE_PATTERN = /^(\d{1,2})\/(\d{4})\s*[-–]\s*(\d{1,2})\/(\d{4})$/;
+const YEAR_RANGE_PATTERN = /^(\d{4})\s*[-–]\s*(\d{4})$/;
+const SLASH_DATE_PATTERN = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/;
+const RELATIVE_PATTERN = /(month|months|year|years|no exact date|ongoing|tbd|until|from the moment)/i;
+const MISSING_END_DATE_VALUES = new Set(['not defined', 'not available', '-', 'n/a', 'na']);
 
 const PUBLIC_FUNDER_VALUES = [
   'Regional Program of Sterea Ellada 2021-2027',
@@ -50,19 +53,151 @@ function normalizeText(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+function normalizeYear(yearString: string): number | null {
+  const year = Number(yearString);
+  if (!Number.isInteger(year)) {
+    return null;
+  }
+
+  if (yearString.length === 2) {
+    return year >= 70 ? 1900 + year : 2000 + year;
+  }
+
+  return year;
+}
+
+function daysInMonth(year: number, month: number): number {
+  if (month < 1 || month > 12) {
+    return 0;
+  }
+  return new Date(Date.UTC(year, month, 0)).getUTCDate();
+}
+
+function toIsoDate(year: number, month: number, day: number): string {
+  return `${year.toString().padStart(4, '0')}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+}
+
 function toEndOfMonthIso(year: number, month: number): string {
-  const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
-  return `${year.toString().padStart(4, '0')}-${month.toString().padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+  return toIsoDate(year, month, daysInMonth(year, month));
 }
 
 function parseMonthYear(monthString: string, yearString: string): { month: number; year: number } | null {
   const month = Number(monthString);
-  const year = Number(yearString);
+  const year = normalizeYear(yearString);
+  if (year == null) {
+    return null;
+  }
   if (!Number.isInteger(month) || !Number.isInteger(year) || month < 1 || month > 12) {
     return null;
   }
 
   return { month, year };
+}
+
+type SlashDateCandidate = {
+  year: number;
+  month: number;
+  day: number;
+  clampedFrom: number | null;
+};
+
+function resolveSlashDateCandidate(day: number, month: number, year: number): SlashDateCandidate | null {
+  if (!Number.isInteger(day) || !Number.isInteger(month) || day < 1 || month < 1 || month > 12) {
+    return null;
+  }
+
+  const maxDay = daysInMonth(year, month);
+  if (maxDay === 0) {
+    return null;
+  }
+
+  if (day > maxDay) {
+    return {
+      year,
+      month,
+      day: maxDay,
+      clampedFrom: day
+    };
+  }
+
+  return {
+    year,
+    month,
+    day,
+    clampedFrom: null
+  };
+}
+
+function parseSlashDate(rawValue: string, rowNumber: number, warnings: string[]): string | null {
+  const match = rawValue.match(SLASH_DATE_PATTERN);
+  if (!match) {
+    return null;
+  }
+
+  const first = Number(match[1]);
+  const second = Number(match[2]);
+  const year = normalizeYear(match[3]);
+  if (year == null || !Number.isInteger(first) || !Number.isInteger(second)) {
+    warnings.push(`Row ${rowNumber}: invalid slash date "${rawValue}".`);
+    return null;
+  }
+
+  const dayMonthCandidate = resolveSlashDateCandidate(first, second, year);
+  const monthDayCandidate = resolveSlashDateCandidate(second, first, year);
+
+  let chosen: SlashDateCandidate | null = null;
+  if (dayMonthCandidate && !monthDayCandidate) {
+    chosen = dayMonthCandidate;
+  } else if (!dayMonthCandidate && monthDayCandidate) {
+    chosen = monthDayCandidate;
+  } else if (dayMonthCandidate && monthDayCandidate) {
+    if (first > 12) {
+      chosen = dayMonthCandidate;
+    } else if (second > 12) {
+      chosen = monthDayCandidate;
+    } else {
+      // Default to day/month for ambiguous dates to match workbook conventions.
+      chosen = dayMonthCandidate;
+    }
+  }
+
+  if (!chosen) {
+    warnings.push(`Row ${rowNumber}: invalid slash date "${rawValue}".`);
+    return null;
+  }
+
+  if (chosen.clampedFrom != null) {
+    warnings.push(
+      `Row ${rowNumber}: clamped invalid day in "${rawValue}" from ${chosen.clampedFrom} to ${chosen.day}.`
+    );
+  }
+
+  return toIsoDate(chosen.year, chosen.month, chosen.day);
+}
+
+function parseIsoDate(rawValue: string, rowNumber: number, warnings: string[]): string | null {
+  if (!ISO_DATE_PATTERN.test(rawValue)) {
+    return null;
+  }
+
+  const [yearString, monthString, dayString] = rawValue.split('-');
+  const year = Number(yearString);
+  const month = Number(monthString);
+  const day = Number(dayString);
+
+  const candidate = resolveSlashDateCandidate(day, month, year);
+  if (!candidate) {
+    warnings.push(`Row ${rowNumber}: invalid ISO date value "${rawValue}".`);
+    return null;
+  }
+
+  if (candidate.clampedFrom != null) {
+    warnings.push(
+      `Row ${rowNumber}: clamped invalid day in "${rawValue}" from ${candidate.clampedFrom} to ${candidate.day}.`
+    );
+  }
+
+  return toIsoDate(candidate.year, candidate.month, candidate.day);
 }
 
 export function deriveFundingProvenance(fundedByRaw: string | null): FundingProvenance {
@@ -120,9 +255,26 @@ export function deriveIndicativeEnd(
     };
   }
 
-  if (ISO_DATE_PATTERN.test(value)) {
+  if (MISSING_END_DATE_VALUES.has(normalizeText(value))) {
     return {
-      indicativeEndDateISO: value,
+      indicativeEndDateISO: null,
+      indicativeEndPrecision: 'unknown',
+      hasUsableEndDate: false
+    };
+  }
+
+  if (ISO_DATE_PATTERN.test(value)) {
+    const isoDate = parseIsoDate(value, rowNumber, warnings);
+    if (!isoDate) {
+      return {
+        indicativeEndDateISO: null,
+        indicativeEndPrecision: 'unknown',
+        hasUsableEndDate: false
+      };
+    }
+
+    return {
+      indicativeEndDateISO: isoDate,
       indicativeEndPrecision: 'month',
       hasUsableEndDate: true
     };
@@ -136,9 +288,9 @@ export function deriveIndicativeEnd(
     };
   }
 
-  const rangeMatch = value.match(RANGE_PATTERN);
-  if (rangeMatch) {
-    const end = parseMonthYear(rangeMatch[3], rangeMatch[4]);
+  const monthYearRangeMatch = value.match(MONTH_YEAR_RANGE_PATTERN);
+  if (monthYearRangeMatch) {
+    const end = parseMonthYear(monthYearRangeMatch[3], monthYearRangeMatch[4]);
     if (!end) {
       warnings.push(`Row ${rowNumber}: invalid month/year range "${value}".`);
       return {
@@ -151,6 +303,35 @@ export function deriveIndicativeEnd(
     return {
       indicativeEndDateISO: toEndOfMonthIso(end.year, end.month),
       indicativeEndPrecision: 'range',
+      hasUsableEndDate: true
+    };
+  }
+
+  const yearRangeMatch = value.match(YEAR_RANGE_PATTERN);
+  if (yearRangeMatch) {
+    const startYear = Number(yearRangeMatch[1]);
+    const endYear = Number(yearRangeMatch[2]);
+    if (!Number.isInteger(startYear) || !Number.isInteger(endYear) || endYear < startYear) {
+      warnings.push(`Row ${rowNumber}: invalid year range "${value}".`);
+      return {
+        indicativeEndDateISO: null,
+        indicativeEndPrecision: 'unknown',
+        hasUsableEndDate: false
+      };
+    }
+
+    return {
+      indicativeEndDateISO: `${String(endYear).padStart(4, '0')}-12-31`,
+      indicativeEndPrecision: 'range',
+      hasUsableEndDate: true
+    };
+  }
+
+  const slashDate = parseSlashDate(value, rowNumber, warnings);
+  if (slashDate) {
+    return {
+      indicativeEndDateISO: slashDate,
+      indicativeEndPrecision: 'month',
       hasUsableEndDate: true
     };
   }
@@ -227,7 +408,25 @@ export function deriveTimelineStatus(
 }
 
 export function deriveProject(baseProject: EvoiaMetaBaseProject, todayISO: string, warnings: string[]): EvoiaMetaProject {
-  const timeframe = deriveIndicativeEnd(baseProject.indicativeCompletionRaw, baseProject.rowNumber, warnings);
+  const timeframeFromIndicative = deriveIndicativeEnd(baseProject.indicativeCompletionRaw, baseProject.rowNumber, warnings);
+  const timeframeFromEndDate =
+    baseProject.endDateRaw != null ? deriveIndicativeEnd(baseProject.endDateRaw, baseProject.rowNumber, warnings) : null;
+
+  let timeframe = timeframeFromIndicative;
+  if (!timeframe.hasUsableEndDate && timeframeFromEndDate?.hasUsableEndDate) {
+    timeframe = timeframeFromEndDate;
+  }
+
+  if (
+    timeframeFromIndicative.hasUsableEndDate &&
+    timeframeFromEndDate?.hasUsableEndDate &&
+    timeframeFromIndicative.indicativeEndDateISO !== timeframeFromEndDate.indicativeEndDateISO
+  ) {
+    warnings.push(
+      `Row ${baseProject.rowNumber}: indicative completion "${baseProject.indicativeCompletionRaw}" and end date "${baseProject.endDateRaw}" resolve to different dates (${timeframeFromIndicative.indicativeEndDateISO} vs ${timeframeFromEndDate.indicativeEndDateISO}). Using indicative completion.`
+    );
+  }
+
   const fundingProvenance = deriveFundingProvenance(baseProject.fundedByRaw);
   const sourceTable = deriveSourceTable(baseProject.tag, baseProject.rowNumber);
 

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-03-09T22:47:09.630Z",
-  "todayISO": "2026-03-09",
+  "generatedAt": "2026-03-10T17:12:20.935Z",
+  "todayISO": "2026-03-10",
   "totalProjects": 77,
-  "totalBudget": 395055350,
+  "totalBudget": 394305350,
   "categories": [
     {
       "category": "Infrastructure",
@@ -20,14 +20,14 @@
       "totalBudget": 24502580
     },
     {
-      "category": "Culture",
-      "projectCount": 15,
-      "totalBudget": 6948615
-    },
-    {
       "category": "Tourism",
       "projectCount": 8,
       "totalBudget": 6863000
+    },
+    {
+      "category": "Culture",
+      "projectCount": 15,
+      "totalBudget": 6198615
     },
     {
       "category": "Healthcare & Welfare",
@@ -52,21 +52,27 @@
   },
   "timelineStatusCounts": {
     "completed": 20,
-    "past_due_unfinished": 6,
-    "ongoing": 12,
-    "undated": 39
+    "past_due_unfinished": 18,
+    "ongoing": 25,
+    "undated": 14
   },
   "dateExtent": {
-    "minIndicativeEndDateISO": "2023-06-30",
+    "minIndicativeEndDateISO": "2022-02-28",
     "maxIndicativeEndDateISO": "2029-12-31",
-    "usableEndDateCount": 24,
-    "undatedCount": 53
+    "usableEndDateCount": 58,
+    "undatedCount": 19
   },
   "megaProjectStats": {
     "threshold": 20000000,
     "count": 4,
     "totalBudget": 339000000,
-    "shareOfTotalBudget": 0.8581076044154319
+    "shareOfTotalBudget": 0.8597397930309594
   },
-  "parsingWarnings": []
+  "parsingWarnings": [
+    "Row 5: indicative completion \"2027\" and end date \"31/12/2025\" resolve to different dates (2027-12-31 vs 2025-12-31). Using indicative completion.",
+    "Row 6: clamped invalid day in \"6/31/2023\" from 31 to 30.",
+    "Row 22: clamped invalid day in \"31/06/2023\" from 31 to 30.",
+    "Row 30: clamped invalid day in \"31/06/2023\" from 31 to 30.",
+    "Row 63: clamped invalid day in \"31/02/2022\" from 31 to 28."
+  ]
 }

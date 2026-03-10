@@ -159,7 +159,7 @@ export default function ReconstructionWebsiteModule({ projects, summary }: Recon
                 data-step-id={narrativeStep.step}
                 style={{
                   border: '1px solid var(--color-rule)',
-                  background: active ? '#f8f5ee' : 'var(--color-surface)',
+                  background: active ? 'var(--color-surface-soft)' : 'var(--color-surface)',
                   padding: '0.9rem 1rem',
                   minHeight: layoutMode === 'split' ? '62vh' : 'auto',
                   display: 'grid',

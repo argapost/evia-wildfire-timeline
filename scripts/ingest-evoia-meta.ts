@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import XLSX from 'xlsx';
 import { deriveProjects } from '../src/lib/evoia-meta/derive';
@@ -14,11 +14,14 @@ import {
 } from '../src/lib/evoia-meta/schema';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const workbookPath = join(repoRoot, 'data', 'raw', 'EviaMeta_Works.xlsx');
 const overridesPath = join(repoRoot, 'data', 'overrides', 'evoia-meta-overrides.json');
 const generatedProjectsPath = join(repoRoot, 'data', 'generated', 'evoia-meta-projects.json');
 const generatedSummaryPath = join(repoRoot, 'data', 'generated', 'evoia-meta-summary.json');
 const sheetName = 'Works_EN';
+const workbookCandidates = [
+  join(repoRoot, 'data', 'raw', 'EviaMeta_Works_update01.xlsx'),
+  join(repoRoot, 'data', 'raw', 'EviaMeta_Works.xlsx')
+] as const;
 
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -36,6 +39,38 @@ function parseTodayArgument(): string {
   return todayValue;
 }
 
+function parseWorkbookPathArgument(): string | null {
+  const workbookArgument = process.argv.find((argument) => argument.startsWith('--workbook='));
+  const workbookValue = workbookArgument
+    ? workbookArgument.slice('--workbook='.length)
+    : process.env.EVOIA_META_WORKBOOK ?? null;
+
+  if (!workbookValue || workbookValue.trim().length === 0) {
+    return null;
+  }
+
+  return workbookValue.trim();
+}
+
+function resolveWorkbookPath(): string {
+  const overridePath = parseWorkbookPathArgument();
+  if (overridePath) {
+    const absoluteOverridePath = isAbsolute(overridePath) ? overridePath : join(repoRoot, overridePath);
+    if (!existsSync(absoluteOverridePath)) {
+      throw new Error(`Workbook not found: ${relative(repoRoot, absoluteOverridePath)}`);
+    }
+    return absoluteOverridePath;
+  }
+
+  const firstExistingWorkbook = workbookCandidates.find((candidate) => existsSync(candidate));
+  if (!firstExistingWorkbook) {
+    const searched = workbookCandidates.map((candidate) => relative(repoRoot, candidate)).join(', ');
+    throw new Error(`Workbook not found. Searched: ${searched}`);
+  }
+
+  return firstExistingWorkbook;
+}
+
 function ensureOutputDirectory(path: string): void {
   mkdirSync(dirname(path), { recursive: true });
 }
@@ -45,7 +80,7 @@ function writeJson(path: string, value: unknown): void {
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
 }
 
-function readWorkbookRows(): Array<Record<string, unknown>> {
+function readWorkbookRows(workbookPath: string): Array<Record<string, unknown>> {
   if (!existsSync(workbookPath)) {
     throw new Error(`Workbook not found: ${relative(repoRoot, workbookPath)}`);
   }
@@ -86,7 +121,8 @@ function validateProjects(projects: EvoiaMetaProject[]): EvoiaMetaProject[] {
 
 function main(): void {
   const todayISO = parseTodayArgument();
-  const rawRows = readWorkbookRows();
+  const workbookPath = resolveWorkbookPath();
+  const rawRows = readWorkbookRows(workbookPath);
   const overrides = readOverrides();
 
   const parsed = parseWorkbookRows(rawRows);
@@ -94,12 +130,13 @@ function main(): void {
   const derived = deriveProjects(overridden.projects, todayISO);
 
   const projects = validateProjects(derived.projects);
-  const warnings = [...parsed.warnings, ...overridden.warnings, ...derived.warnings];
+  const warnings = Array.from(new Set([...parsed.warnings, ...overridden.warnings, ...derived.warnings]));
   const summary = evoiaMetaSummarySchema.parse(buildEvoiaMetaSummary(projects, warnings, todayISO));
 
   writeJson(generatedProjectsPath, projects);
   writeJson(generatedSummaryPath, summary);
 
+  console.log(`[evoia-meta] workbook: ${relative(repoRoot, workbookPath)}`);
   console.log(`[evoia-meta] sheet: ${sheetName}`);
   console.log(`[evoia-meta] projects parsed: ${projects.length}`);
   console.log(`[evoia-meta] warnings: ${warnings.length}`);

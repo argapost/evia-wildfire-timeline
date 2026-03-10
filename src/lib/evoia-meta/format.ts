@@ -9,9 +9,9 @@ export const fundingProvenanceLabels: Record<FundingProvenance, string> = {
 };
 
 export const fundingProvenanceColors: Record<FundingProvenance, string> = {
-  public: '#3f5d73',
-  private_philanthropy: '#8b6f35',
-  mixed_unclear: '#6f665f'
+  public: '#273891',
+  private_philanthropy: '#c74949',
+  mixed_unclear: '#9ca4b4'
 };
 
 const euroFormatter = new Intl.NumberFormat('en-GB', {

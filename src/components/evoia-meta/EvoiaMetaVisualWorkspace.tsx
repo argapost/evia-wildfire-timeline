@@ -108,6 +108,12 @@ export default function EvoiaMetaVisualWorkspace({
             <p style={{ margin: 0, color: 'var(--color-muted)', fontSize: `${0.86 * typeScale}rem` }}>
               Indicative completion: {compactText(selectedProject.indicativeCompletionRaw, 'No published end date')}
             </p>
+            <p style={{ margin: 0, color: 'var(--color-muted)', fontSize: `${0.86 * typeScale}rem` }}>
+              End date field: {compactText(selectedProject.endDateRaw, 'Not defined')}
+            </p>
+            <p style={{ margin: 0, color: 'var(--color-muted)', fontSize: `${0.86 * typeScale}rem` }}>
+              Last update: {compactText(selectedProject.lastUpdateRaw, 'Not provided')}
+            </p>
           </div>
         ) : (
           <p style={{ margin: '0.45rem 0 0', color: 'var(--color-muted)', fontSize: `${0.88 * typeScale}rem` }}>

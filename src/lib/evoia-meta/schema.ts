@@ -36,6 +36,10 @@ export const evoiaMetaBaseProjectSchema = z.object({
   announcedBudget: z.number().nonnegative().nullable(),
 
   indicativeCompletionRaw: nullableNonEmptyStringSchema,
+  startDateRaw: nullableNonEmptyStringSchema,
+  endDateRaw: nullableNonEmptyStringSchema,
+  durationInMonthsRaw: nullableRawValueSchema,
+  lastUpdateRaw: nullableNonEmptyStringSchema,
   furtheredTimeframeRaw: nullableNonEmptyStringSchema,
   budgetDifferentThanAnnouncedRaw: nullableRawValueSchema,
 
@@ -110,6 +114,10 @@ export const evoiaMetaProjectOverrideSchema = z
     completed: z.boolean().optional(),
     announcedBudgetRaw: z.union([z.string().trim().min(1), z.number(), z.null()]).optional(),
     indicativeCompletionRaw: z.string().trim().min(1).nullable().optional(),
+    startDateRaw: z.string().trim().min(1).nullable().optional(),
+    endDateRaw: z.string().trim().min(1).nullable().optional(),
+    durationInMonthsRaw: z.union([z.string().trim().min(1), z.number(), z.null()]).optional(),
+    lastUpdateRaw: z.string().trim().min(1).nullable().optional(),
     furtheredTimeframeRaw: z.string().trim().min(1).nullable().optional(),
     budgetDifferentThanAnnouncedRaw: z.union([z.string().trim().min(1), z.number(), z.null()]).optional(),
     responsibleAgency: z.string().trim().min(1).nullable().optional(),

@@ -25,6 +25,10 @@ const COLUMN_NAMES = {
   privateActorInvolved: 'private actor involved',
   announcedBudget: 'announced budget',
   indicativeCompletion: 'indicative completion timeframe',
+  startDate: 'start date',
+  endDate: 'end date',
+  durationInMonths: 'duration in months',
+  lastUpdate: 'last update',
   budgetDifferentThanAnnounced: 'budget different than announced',
   furtheredTimeframe: 'furthered timeframe',
   description: 'description',
@@ -34,6 +38,7 @@ const COLUMN_NAMES = {
 
 const TRUE_VALUES = new Set(['yes', 'true', '1']);
 const FALSE_VALUES = new Set(['no', 'false', '0', '']);
+const BUDGET_NULL_MARKERS = new Set(['-', 'not defined', 'not available', 'n/a', 'na']);
 
 function normalizeHeader(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -132,6 +137,14 @@ function parseBudget(rawValue: unknown, rowNumber: number, warnings: string[]): 
     };
   }
 
+  const normalizedLower = announcedBudgetRaw.trim().toLowerCase();
+  if (BUDGET_NULL_MARKERS.has(normalizedLower)) {
+    return {
+      announcedBudgetRaw,
+      announcedBudget: null
+    };
+  }
+
   const normalized = announcedBudgetRaw.replace(/€/g, '').replace(/,/g, '').replace(/\s+/g, '');
   if (normalized.length === 0) {
     return {
@@ -209,6 +222,10 @@ export function parseWorkbookRows(rawRows: Array<Record<string, unknown>>): Pars
       announcedBudget,
 
       indicativeCompletionRaw: toNullableString(getCell(row, COLUMN_NAMES.indicativeCompletion)),
+      startDateRaw: toNullableString(getCell(row, COLUMN_NAMES.startDate)),
+      endDateRaw: toNullableString(getCell(row, COLUMN_NAMES.endDate)),
+      durationInMonthsRaw: toNullableRawValue(getCell(row, COLUMN_NAMES.durationInMonths)),
+      lastUpdateRaw: toNullableString(getCell(row, COLUMN_NAMES.lastUpdate)),
       furtheredTimeframeRaw: toNullableString(getCell(row, COLUMN_NAMES.furtheredTimeframe)),
       budgetDifferentThanAnnouncedRaw: toNullableRawValue(getCell(row, COLUMN_NAMES.budgetDifferentThanAnnounced)),
 
@@ -281,6 +298,18 @@ function applyProjectOverride(project: EvoiaMetaBaseProject, override: EvoiaMeta
   }
   if (override.indicativeCompletionRaw !== undefined) {
     next.indicativeCompletionRaw = override.indicativeCompletionRaw;
+  }
+  if (override.startDateRaw !== undefined) {
+    next.startDateRaw = override.startDateRaw;
+  }
+  if (override.endDateRaw !== undefined) {
+    next.endDateRaw = override.endDateRaw;
+  }
+  if (override.durationInMonthsRaw !== undefined) {
+    next.durationInMonthsRaw = override.durationInMonthsRaw;
+  }
+  if (override.lastUpdateRaw !== undefined) {
+    next.lastUpdateRaw = override.lastUpdateRaw;
   }
   if (override.furtheredTimeframeRaw !== undefined) {
     next.furtheredTimeframeRaw = override.furtheredTimeframeRaw;
