@@ -144,10 +144,17 @@ function computeColumnHeights(
   return heights;
 }
 
+type Slide1Options = {
+  /** Use funding-origin tints instead of neutral category shades */
+  fillByFunding?: boolean;
+  titleText?: string;
+};
+
 export function computeSlide1Layout(
   projects: EvoiaMetaProject[],
   viewportWidth: number,
-  viewportHeight: number
+  viewportHeight: number,
+  options?: Slide1Options
 ): SlideLayout {
   // --- Filter: only A-tagged projects (exclude B-tagged) ---
   const filtered = projects.filter((p) => !p.tag.startsWith('B'));
@@ -249,7 +256,7 @@ export function computeSlide1Layout(
       }
 
       const groupStartY = yOffset;
-      const shade = CATEGORY_SHADES[category] ?? '#e4e7ed';
+      const shade = options?.fillByFunding ? null : (CATEGORY_SHADES[category] ?? '#e4e7ed');
 
       // Compute group height (bars + headers vs label)
       const catHeaderCount = countGroupHeaders(catProjects);
@@ -294,13 +301,15 @@ export function computeSlide1Layout(
         const barX = colX + tagWidth + tagGap;
         const barY = cursor;
 
+        const barFill = shade ?? (FUNDING_GROUP_FILLS[project.fundingProvenance] ?? '#e4e7ed');
+
         bars.push({
           id: project.id,
           x: barX,
           y: barY,
           width: barWidth,
           height: barHeight,
-          fill: shade,
+          fill: barFill,
           tag: project.tag,
           displayTag: formatDisplayTag(project.tag),
           tagX: colX + tagWidth,
@@ -339,7 +348,7 @@ export function computeSlide1Layout(
     bars,
     groupHeaders,
     categoryLabels,
-    titleText: 'ANNOUNCED PROJECTS',
+    titleText: options?.titleText ?? 'ANNOUNCED PROJECTS',
     titleFontFamily: FONT_DISPLAY,
     titleFontSize,
     titleX: marginX + tagWidth,
@@ -554,6 +563,12 @@ export function computeSlideLayout(
   }
   if (slideIndex === 2) {
     return computeSlide2Layout(projects, viewportWidth, viewportHeight, true);
+  }
+  if (slideIndex === 3) {
+    return computeSlide1Layout(projects, viewportWidth, viewportHeight, {
+      fillByFunding: true,
+      titleText: 'FUNDING BY CATEGORY'
+    });
   }
   return computeSlide1Layout(projects, viewportWidth, viewportHeight);
 }

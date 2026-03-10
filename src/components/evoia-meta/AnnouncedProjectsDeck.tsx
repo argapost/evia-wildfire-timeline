@@ -36,7 +36,7 @@ type ColumnOverlay = {
   totalColor: string;
 };
 
-const TOTAL_SLIDES = 3;
+const TOTAL_SLIDES = 4;
 
 function useViewportSize() {
   const [size, setSize] = useState({ width: 1920, height: 1080 });
@@ -232,7 +232,7 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
         .transition()
         .duration(duration)
         .ease(easeCubicOut)
-        .attr('opacity', slideIndex >= 2 ? 1 : 0);
+        .attr('opacity', slideIndex === 2 ? 1 : 0);
     }
   }, [layout, slideIndex, transitionMs]);
 
