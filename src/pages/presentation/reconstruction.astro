@@ -1,28 +1,25 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ReconstructionPresentationModule from '../../components/evoia-meta/ReconstructionPresentationModule.tsx';
-import { evoiaMetaProjects, evoiaMetaSummary } from '../../lib/evoia-meta/data';
+import AnnouncedProjectsDeck from '../../components/evoia-meta/AnnouncedProjectsDeck';
+import { evoiaMetaProjects } from '../../lib/evoia-meta/data';
 ---
 
 <BaseLayout
   title="Presentation | Reconstruction | Evia Wildfire Timeline"
-  description="Classroom presentation route for the Evia Meta reconstruction timeline and supporting charts."
+  description="Presentation deck for announced Evia Meta reconstruction projects."
 >
-  <section class="page-intro">
-    <p class="eyebrow">Presentation</p>
-    <h1>Reconstruction module (16:9)</h1>
-    <p>
-      Slide-like route using the same React and D3 components as website mode, with explicit controls and keyboard
-      navigation for classroom use.
-    </p>
-    <p>
-      Dataset snapshot: {evoiaMetaSummary.totalProjects} projects from `Works_EN`.
-    </p>
-    <nav class="nav-links">
-      <a href="/reconstruction">Open website scrollytelling mode</a>
-      <a href="/timeline">Back to wildfire timeline</a>
-    </nav>
-  </section>
+  <AnnouncedProjectsDeck client:only="react" projects={evoiaMetaProjects} />
 
-  <ReconstructionPresentationModule client:load projects={evoiaMetaProjects} />
+  <style is:global>
+    body {
+      overflow: hidden;
+      margin: 0;
+    }
+
+    .site-shell {
+      width: 100%;
+      max-width: none;
+      padding: 0;
+    }
+  </style>
 </BaseLayout>
