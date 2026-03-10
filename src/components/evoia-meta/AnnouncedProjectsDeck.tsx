@@ -133,7 +133,6 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
         fontFamily={layout.titleFontFamily}
         fontSize={layout.titleFontSize}
         fill={COLOR_TEXT}
-        textAnchor="end"
         letterSpacing="0.004em"
       >
         {layout.titleText}
