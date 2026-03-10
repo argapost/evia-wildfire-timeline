@@ -19,6 +19,7 @@ const generatedProjectsPath = join(repoRoot, 'data', 'generated', 'evoia-meta-pr
 const generatedSummaryPath = join(repoRoot, 'data', 'generated', 'evoia-meta-summary.json');
 const sheetName = 'Works_EN';
 const workbookCandidates = [
+  join(repoRoot, 'data', 'raw', 'EviaMeta_Works_update02.xlsx'),
   join(repoRoot, 'data', 'raw', 'EviaMeta_Works_update01.xlsx'),
   join(repoRoot, 'data', 'raw', 'EviaMeta_Works.xlsx')
 ] as const;

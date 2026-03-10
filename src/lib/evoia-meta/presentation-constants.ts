@@ -39,10 +39,11 @@ export const CATEGORY_SHADES: Record<string, string> = {
 };
 
 /**
- * Column assignments balanced for A-tagged projects only:
- * col0: Infrastructure(4) + General(2) + Healthcare(8) + Tourism(8) = 22
+ * Column assignments balanced for non-B-tagged projects:
+ * col0: Infrastructure(4) + Healthcare(8) + Tourism(8) = 20
  * col1: Forest(16) + HR(10) = 26
- * col2: Agrifood(9) + Culture(14) = 23
+ * col2: Agrifood(9) + Culture(14) + General(2) = 25
+ * Note: Forest has 2 group headers (Forest economy, Reforestation) adding visual height.
  */
 export const COLUMN_ASSIGNMENTS: Record<string, number> = {
   Infrastructure: 0,

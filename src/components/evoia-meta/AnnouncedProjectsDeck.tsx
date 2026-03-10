@@ -8,6 +8,7 @@ import {
   FONT_DISPLAY,
   FONT_BODY,
   COLOR_TEXT,
+  COLOR_MUTED,
   COLOR_CATEGORY_LABEL
 } from '@/lib/evoia-meta/presentation-constants';
 
@@ -157,6 +158,23 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
         </text>
       ))}
 
+      {/* Parent group headers */}
+      {layout.groupHeaders.map((header) => (
+        <text
+          key={header.key}
+          x={header.x}
+          y={header.y + header.height / 2}
+          dominantBaseline="central"
+          fontFamily={FONT_BODY}
+          fontSize={header.fontSize}
+          fontStyle="italic"
+          fill={COLOR_MUTED}
+          style={{ pointerEvents: 'none' }}
+        >
+          {header.text}
+        </text>
+      ))}
+
       {/* Project bars */}
       <g ref={barsRef}>
         {layout.bars.map((bar) => (
@@ -192,7 +210,7 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
               fill={COLOR_TEXT}
               letterSpacing="0.01em"
             >
-              {bar.tag}
+              {bar.displayTag}
             </text>
 
             {/* Title text (inside bar) */}

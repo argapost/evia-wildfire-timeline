@@ -23,6 +23,11 @@ export const evoiaMetaBaseProjectSchema = z.object({
   subtitleRaw: nullableNonEmptyStringSchema,
   displayTitle: z.string().trim().min(1),
 
+  /** Parent group title for subprojects (e.g. "Forest economy", "Reforestation") */
+  parentGroupTitle: nullableNonEmptyStringSchema,
+  /** True when this project is a subproject within a parent group */
+  isSubproject: z.boolean(),
+
   category: z.string().trim().min(1),
   fundedByRaw: nullableNonEmptyStringSchema,
 
@@ -38,6 +43,8 @@ export const evoiaMetaBaseProjectSchema = z.object({
   indicativeCompletionRaw: nullableNonEmptyStringSchema,
   startDateRaw: nullableNonEmptyStringSchema,
   endDateRaw: nullableNonEmptyStringSchema,
+  exactStartDateRaw: nullableNonEmptyStringSchema,
+  exactEndDateRaw: nullableNonEmptyStringSchema,
   durationInMonthsRaw: nullableRawValueSchema,
   lastUpdateRaw: nullableNonEmptyStringSchema,
   furtheredTimeframeRaw: nullableNonEmptyStringSchema,
@@ -105,6 +112,8 @@ export const evoiaMetaProjectOverrideSchema = z
     titleRaw: z.string().trim().min(1).nullable().optional(),
     subtitleRaw: z.string().trim().min(1).nullable().optional(),
     displayTitle: z.string().trim().min(1).optional(),
+    parentGroupTitle: z.string().trim().min(1).nullable().optional(),
+    isSubproject: z.boolean().optional(),
     category: z.string().trim().min(1).optional(),
     fundedByRaw: z.string().trim().min(1).nullable().optional(),
     approved: z.boolean().optional(),
@@ -116,6 +125,8 @@ export const evoiaMetaProjectOverrideSchema = z
     indicativeCompletionRaw: z.string().trim().min(1).nullable().optional(),
     startDateRaw: z.string().trim().min(1).nullable().optional(),
     endDateRaw: z.string().trim().min(1).nullable().optional(),
+    exactStartDateRaw: z.string().trim().min(1).nullable().optional(),
+    exactEndDateRaw: z.string().trim().min(1).nullable().optional(),
     durationInMonthsRaw: z.union([z.string().trim().min(1), z.number(), z.null()]).optional(),
     lastUpdateRaw: z.string().trim().min(1).nullable().optional(),
     furtheredTimeframeRaw: z.string().trim().min(1).nullable().optional(),

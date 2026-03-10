@@ -10,30 +10,36 @@ type ParseResult = {
   warnings: string[];
 };
 
+/**
+ * Column name mappings. Each entry is an array of possible header names
+ * (after normalization) to support both the original and updated workbooks.
+ */
 const COLUMN_NAMES = {
-  tag: 'tag',
-  title: 'title',
-  subtitle: 'subtitle',
-  category: 'category',
-  fundedBy: 'funded by',
-  approved: 'approved',
-  includedInProgramme: 'included in a programme',
-  openToAssignment: 'open to assignment',
-  assigned: 'assigned',
-  completion: 'completion',
-  responsibleAgency: 'responsible agency',
-  privateActorInvolved: 'private actor involved',
-  announcedBudget: 'announced budget',
-  indicativeCompletion: 'indicative completion timeframe',
-  startDate: 'start date',
-  endDate: 'end date',
-  durationInMonths: 'duration in months',
-  lastUpdate: 'last update',
-  budgetDifferentThanAnnounced: 'budget different than announced',
-  furtheredTimeframe: 'furthered timeframe',
-  description: 'description',
-  locationArea: 'location-area of implementation',
-  comments: 'comments'
+  tag: ['tag'],
+  title: ['title'],
+  subtitle: ['subtitle'],
+  category: ['category'],
+  fundedBy: ['funded by'],
+  approved: ['approved'],
+  includedInProgramme: ['included in a programme'],
+  openToAssignment: ['open to assignment'],
+  assigned: ['assigned'],
+  completion: ['completion'],
+  responsibleAgency: ['responsible agency'],
+  privateActorInvolved: ['private actor involved'],
+  announcedBudget: ['announced budget'],
+  indicativeCompletion: ['indicative completion timeframe'],
+  startDate: ['indicative start date', 'start date'],
+  endDate: ['indicative end date', 'end date'],
+  exactStartDate: ['exact start date'],
+  exactEndDate: ['exact end date'],
+  durationInMonths: ['indicative completion timeframe in months', 'real duration in months', 'duration in months'],
+  lastUpdate: ['latest update', 'last update'],
+  budgetDifferentThanAnnounced: ['budget different than announced'],
+  furtheredTimeframe: ['furthered timeframe'],
+  description: ['description'],
+  locationArea: ['location-area of implementation'],
+  comments: ['comments']
 } as const;
 
 const TRUE_VALUES = new Set(['yes', 'true', '1']);
@@ -58,8 +64,11 @@ function normalizeRow(row: Record<string, unknown>): Record<string, unknown> {
   return normalized;
 }
 
-function getCell(row: Record<string, unknown>, columnName: string): unknown {
-  return row[columnName];
+function getCell(row: Record<string, unknown>, columnNames: readonly string[]): unknown {
+  for (const name of columnNames) {
+    if (name in row) return row[name];
+  }
+  return undefined;
 }
 
 function toNullableString(value: unknown): string | null {
@@ -182,13 +191,32 @@ function createProjectId(tag: string): string {
   return `evoia-meta-${slug}`;
 }
 
-export function deriveDisplayTitle(titleRaw: string | null, subtitleRaw: string | null, tag: string): string {
+/** Strip letter prefix from subtitle (e.g. "A_Something" → "Something", "B_ Something" → "Something") */
+function cleanSubtitlePrefix(subtitle: string): string {
+  const match = subtitle.match(/^[A-Z]_\s*/);
+  return match ? subtitle.slice(match[0].length) : subtitle;
+}
+
+export function deriveDisplayTitle(
+  titleRaw: string | null,
+  subtitleRaw: string | null,
+  tag: string,
+  isSubproject: boolean
+): string {
+  if (isSubproject && subtitleRaw) {
+    return cleanSubtitlePrefix(subtitleRaw);
+  }
   return titleRaw ?? subtitleRaw ?? tag;
 }
 
 export function parseWorkbookRows(rawRows: Array<Record<string, unknown>>): ParseResult {
   const projects: EvoiaMetaBaseProject[] = [];
   const warnings: string[] = [];
+
+  // Track parent group title across consecutive rows.
+  // A row with both title AND subtitle starts a new group.
+  // Subsequent rows with title=null and subtitle set continue the group.
+  let currentParentTitle: string | null = null;
 
   rawRows.forEach((rawRow, index) => {
     const rowNumber = index + 1;
@@ -197,6 +225,24 @@ export function parseWorkbookRows(rawRows: Array<Record<string, unknown>>): Pars
     const tag = toRequiredString(getCell(row, COLUMN_NAMES.tag), 'tag', rowNumber);
     const titleRaw = toNullableString(getCell(row, COLUMN_NAMES.title));
     const subtitleRaw = toNullableString(getCell(row, COLUMN_NAMES.subtitle));
+
+    // Detect parent group membership
+    let parentGroupTitle: string | null = null;
+    let isSubproject = false;
+
+    if (titleRaw && subtitleRaw) {
+      // First row of a parent group — title is the group name
+      currentParentTitle = titleRaw;
+      parentGroupTitle = currentParentTitle;
+      isSubproject = true;
+    } else if (!titleRaw && subtitleRaw) {
+      // Continuation row within the current parent group
+      parentGroupTitle = currentParentTitle;
+      isSubproject = true;
+    } else {
+      // Standalone project — reset the group tracker
+      currentParentTitle = null;
+    }
 
     const { announcedBudgetRaw, announcedBudget } = parseBudget(getCell(row, COLUMN_NAMES.announcedBudget), rowNumber, warnings);
 
@@ -207,7 +253,10 @@ export function parseWorkbookRows(rawRows: Array<Record<string, unknown>>): Pars
       tag,
       titleRaw,
       subtitleRaw,
-      displayTitle: deriveDisplayTitle(titleRaw, subtitleRaw, tag),
+      displayTitle: deriveDisplayTitle(titleRaw, subtitleRaw, tag, isSubproject),
+
+      parentGroupTitle,
+      isSubproject,
 
       category: toRequiredString(getCell(row, COLUMN_NAMES.category), 'category', rowNumber),
       fundedByRaw: toNullableString(getCell(row, COLUMN_NAMES.fundedBy)),
@@ -224,6 +273,8 @@ export function parseWorkbookRows(rawRows: Array<Record<string, unknown>>): Pars
       indicativeCompletionRaw: toNullableString(getCell(row, COLUMN_NAMES.indicativeCompletion)),
       startDateRaw: toNullableString(getCell(row, COLUMN_NAMES.startDate)),
       endDateRaw: toNullableString(getCell(row, COLUMN_NAMES.endDate)),
+      exactStartDateRaw: toNullableString(getCell(row, COLUMN_NAMES.exactStartDate)),
+      exactEndDateRaw: toNullableString(getCell(row, COLUMN_NAMES.exactEndDate)),
       durationInMonthsRaw: toNullableRawValue(getCell(row, COLUMN_NAMES.durationInMonths)),
       lastUpdateRaw: toNullableString(getCell(row, COLUMN_NAMES.lastUpdate)),
       furtheredTimeframeRaw: toNullableString(getCell(row, COLUMN_NAMES.furtheredTimeframe)),
@@ -333,10 +384,23 @@ function applyProjectOverride(project: EvoiaMetaBaseProject, override: EvoiaMeta
     next.comments = override.comments;
   }
 
+  if (override.parentGroupTitle !== undefined) {
+    next.parentGroupTitle = override.parentGroupTitle;
+  }
+  if (override.isSubproject !== undefined) {
+    next.isSubproject = override.isSubproject;
+  }
+  if (override.exactStartDateRaw !== undefined) {
+    next.exactStartDateRaw = override.exactStartDateRaw;
+  }
+  if (override.exactEndDateRaw !== undefined) {
+    next.exactEndDateRaw = override.exactEndDateRaw;
+  }
+
   if (override.displayTitle !== undefined) {
     next.displayTitle = override.displayTitle;
   } else {
-    next.displayTitle = deriveDisplayTitle(next.titleRaw, next.subtitleRaw, next.tag);
+    next.displayTitle = deriveDisplayTitle(next.titleRaw, next.subtitleRaw, next.tag, next.isSubproject);
   }
 
   return evoiaMetaBaseProjectSchema.parse(next);
