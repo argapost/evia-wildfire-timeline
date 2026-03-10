@@ -8,6 +8,7 @@ import type { EvoiaMetaProject } from './schema';
 import {
   CATEGORY_LABELS,
   CATEGORY_SHADES,
+  COLOR_MUTED,
   COLUMN_CATEGORY_ORDER,
   FONT_DISPLAY,
   FUNDING_GROUP_FILLS,
@@ -28,11 +29,19 @@ export type BarLayout = {
   tagX: number;
   tagY: number;
   title: string;
+  /** Multi-line title for emphasized bars (tspan rendering) */
+  titleLines?: string[];
+  titleLineHeight?: number;
   titleX: number;
   titleY: number;
   titleVisible: boolean;
   tagFontSize: number;
   titleFontSize: number;
+  /** Budget label shown to the right of the bar (top projects only) */
+  budgetText?: string;
+  budgetX?: number;
+  budgetFontSize?: number;
+  budgetAnchor?: 'start' | 'middle';
 };
 
 export type GroupHeaderLayout = {
@@ -43,6 +52,8 @@ export type GroupHeaderLayout = {
   width: number;
   height: number;
   fontSize: number;
+  fontFamily?: string;
+  fill?: string;
 };
 
 export type CategoryLabelLayout = {
@@ -52,6 +63,8 @@ export type CategoryLabelLayout = {
   y: number;
   height: number;
   fontSize: number;
+  rotation?: number;
+  textAnchor?: string;
 };
 
 export type SlideLayout = {
@@ -74,6 +87,25 @@ function truncateTitle(value: string, maxChars: number): string {
     return value;
   }
   return `${value.slice(0, Math.max(1, maxChars - 1))}\u2026`;
+}
+
+/** Wrap text into lines that fit within maxCharsPerLine */
+function wrapText(text: string, maxCharsPerLine: number): string[] {
+  if (maxCharsPerLine <= 0) return [text];
+  if (text.length <= maxCharsPerLine) return [text];
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let current = '';
+  for (const word of words) {
+    if (current && current.length + 1 + word.length > maxCharsPerLine) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = current ? `${current} ${word}` : word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
 }
 
 /** Format tag for display: "A1" → "A.1", "AB51" → "AB.51" */
@@ -147,6 +179,8 @@ function computeColumnHeights(
 type Slide1Options = {
   /** Use funding-origin tints instead of neutral category shades */
   fillByFunding?: boolean;
+  /** Scale bar widths proportionally to announced budget */
+  proportionalBudget?: boolean;
   titleText?: string;
 };
 
@@ -197,6 +231,63 @@ export function computeSlide1Layout(
   const barGap = Math.max(1, Math.round(contentHeight * 0.003));
   const headerHeightFactor = 0.65;
 
+  // --- Budget proportional scaling + top project identification ---
+  const minBarFraction = 0.02;
+  let maxBudget = 0;
+  const topProjectIds = new Set<string>();
+  if (options?.proportionalBudget) {
+    for (const p of filtered) {
+      if (p.announcedBudget != null && p.announcedBudget > maxBudget) {
+        maxBudget = p.announcedBudget;
+      }
+    }
+    // Identify top 3 projects by budget for emphasis
+    const byBudget = [...filtered]
+      .filter((p) => p.announcedBudget != null && p.announcedBudget > 0)
+      .sort((a, b) => (b.announcedBudget ?? 0) - (a.announcedBudget ?? 0));
+    for (const p of byBudget.slice(0, 3)) {
+      topProjectIds.add(p.id);
+    }
+  }
+
+  const TOP_MIN_MULTIPLIER = 4;
+  const barPaddingX = Math.max(4, Math.round(barWidth * 0.015));
+  const budgetGap = Math.max(6, Math.round(barWidth * 0.02));
+
+  /**
+   * Compute the actual slot height a top project bar needs at a given barHeight,
+   * accounting for multi-line title text that may exceed the base multiplier.
+   */
+  function topBarSlotHeight(project: EvoiaMetaProject, bh: number): number {
+    const minH = bh * TOP_MIN_MULTIPLIER;
+    if (!topProjectIds.has(project.id)) return bh;
+
+    const tfs = Math.max(10, Math.min(20, Math.round(bh * 1.3)));
+    const tcw = tfs * 0.5;
+    const tlh = Math.round(tfs * 1.3);
+    const wideThreshold = 15 * tcw + barPaddingX * 2;
+
+    const budget = project.announcedBudget ?? 0;
+    const fraction = maxBudget > 0 && budget > 0 ? budget / maxBudget : 0;
+    let abw = Math.max(barWidth * minBarFraction, Math.round(fraction * barWidth));
+
+    let numLines: number;
+    if (abw >= wideThreshold) {
+      const bfs = Math.max(10, Math.min(18, Math.round(bh * 1.0)));
+      const reserve = bfs * 5 + budgetGap * 2;
+      abw = Math.min(abw, barWidth - reserve);
+      abw = Math.max(barWidth * minBarFraction, abw);
+      const cpl = Math.max(8, Math.floor((abw - barPaddingX * 2) / tcw));
+      numLines = wrapText(project.displayTitle, cpl).length;
+    } else {
+      const avail = barWidth - abw - budgetGap;
+      const cpl = Math.max(10, Math.floor(avail / tcw));
+      numLines = wrapText(project.displayTitle, cpl).length;
+    }
+
+    return Math.max(minH, numLines * tlh);
+  }
+
   // --- Find label font size and bar height that fit contentHeight ---
   const labelFontSize = Math.max(16, Math.min(44, Math.round(contentHeight * 0.032)));
 
@@ -210,6 +301,16 @@ export function computeSlide1Layout(
     const colHeights = computeColumnHeights(
       grouped, labelFontSize, barHeight, barGap, categoryGap, headerHeightFactor
     );
+    // Add actual extra height for each top bar (text-aware, not fixed multiplier)
+    for (let c = 0; c < COLUMN_CATEGORY_ORDER.length; c++) {
+      for (const cat of COLUMN_CATEGORY_ORDER[c]) {
+        for (const p of grouped.get(cat) ?? []) {
+          if (topProjectIds.has(p.id)) {
+            colHeights[c] += topBarSlotHeight(p, barHeight) - barHeight;
+          }
+        }
+      }
+    }
     const maxColHeight = Math.max(...colHeights);
 
     if (maxColHeight > contentHeight) {
@@ -229,7 +330,6 @@ export function computeSlide1Layout(
 
   // Approximate characters that fit inside the bar
   const charWidth = titleFontSizeBar * 0.48;
-  const barPaddingX = Math.max(4, Math.round(barWidth * 0.015));
   const maxTitleChars = Math.max(0, Math.floor((barWidth - barPaddingX * 2) / charWidth));
 
   // Approximate characters that fit inside a group header
@@ -261,7 +361,14 @@ export function computeSlide1Layout(
       // Compute group height (bars + headers vs label)
       const catHeaderCount = countGroupHeaders(catProjects);
       const totalItems = catProjects.length + catHeaderCount;
-      const barsHeight = catProjects.length * barHeight + catHeaderCount * headerHeight + (totalItems - 1) * barGap;
+      let totalBarHeights = 0;
+      for (const p of catProjects) {
+        totalBarHeights += topBarSlotHeight(p, barHeight);
+      }
+      const barsHeight =
+        totalBarHeights +
+        catHeaderCount * headerHeight +
+        (totalItems - 1) * barGap;
       const label = CATEGORY_LABELS[category] ?? category.toUpperCase();
       const lblHeight = labelVerticalExtent(label, labelFontSize);
       const groupHeight = Math.max(barsHeight, lblHeight);
@@ -300,29 +407,113 @@ export function computeSlide1Layout(
 
         const barX = colX + tagWidth + tagGap;
         const barY = cursor;
+        const isTop = topProjectIds.has(project.id);
+        // Use text-aware slot height for top bars
+        const actualBarHeight = topBarSlotHeight(project, barHeight);
 
         const barFill = shade ?? (FUNDING_GROUP_FILLS[project.fundingProvenance] ?? '#e4e7ed');
+
+        // Proportional width: scale by budget / maxBudget, with a minimum
+        let actualBarWidth = barWidth;
+        if (options?.proportionalBudget && maxBudget > 0) {
+          const budget = project.announcedBudget ?? 0;
+          const fraction = budget > 0 ? budget / maxBudget : 0;
+          actualBarWidth = Math.max(barWidth * minBarFraction, Math.round(fraction * barWidth));
+        }
+
+        // Top project sizing
+        const topTitleFontSize = Math.max(10, Math.min(20, Math.round(barHeight * 1.3)));
+        const topBudgetFontSize = Math.max(10, Math.min(18, Math.round(barHeight * 1.0)));
+        const topCharWidth = topTitleFontSize * 0.5;
+        const topLineHeight = Math.round(topTitleFontSize * 1.3);
+
+        // Wide vs narrow threshold: can ≥15 chars fit per line inside the bar?
+        const wideThreshold = 15 * topCharWidth + barPaddingX * 2;
+        const isWideTop = isTop && actualBarWidth >= wideThreshold;
+        const isNarrowTop = isTop && !isWideTop;
+
+        // Wide top bars: cap width to leave room for budget to the right
+        if (isWideTop) {
+          const budgetTextReserve = topBudgetFontSize * 5 + budgetGap * 2;
+          actualBarWidth = Math.min(actualBarWidth, barWidth - budgetTextReserve);
+          actualBarWidth = Math.max(barWidth * minBarFraction, actualBarWidth);
+        }
+
+        // Compute title text
+        const actualMaxChars = options?.proportionalBudget && !isTop
+          ? Math.max(0, Math.floor((actualBarWidth - barPaddingX * 2) / charWidth))
+          : maxTitleChars;
+
+        let titleLines: string[] | undefined;
+        let titleLineHeight: number | undefined;
+        let titleYCenter: number;
+        let titleXPos: number;
+
+        if (isWideTop) {
+          // Title inside bar, wrapping within bar width
+          const charsPerLine = Math.max(8, Math.floor((actualBarWidth - barPaddingX * 2) / topCharWidth));
+          titleLines = wrapText(project.displayTitle, charsPerLine);
+          titleLineHeight = topLineHeight;
+          const blockHeight = (titleLines.length - 1) * topLineHeight;
+          titleYCenter = actualBarHeight / 2 - blockHeight / 2;
+          titleXPos = barX + barPaddingX;
+        } else if (isNarrowTop) {
+          // Title outside bar (to the right), wrapping in remaining space
+          const titleStartX = barX + actualBarWidth + budgetGap;
+          const availableWidth = barWidth - actualBarWidth - budgetGap;
+          const charsPerLine = Math.max(10, Math.floor(availableWidth / topCharWidth));
+          titleLines = wrapText(project.displayTitle, charsPerLine);
+          titleLineHeight = topLineHeight;
+          const blockHeight = (titleLines.length - 1) * topLineHeight;
+          titleYCenter = actualBarHeight / 2 - blockHeight / 2;
+          titleXPos = titleStartX;
+        } else {
+          titleYCenter = actualBarHeight / 2;
+          titleXPos = barX + barPaddingX;
+        }
+
+        // Budget positioning: wide → right of bar, narrow → inside bar
+        let budgetText: string | undefined;
+        let budgetX: number | undefined;
+        let budgetFontSizeFinal: number | undefined;
+
+        if (isTop && project.announcedBudget != null) {
+          budgetText = formatBudgetTotal(project.announcedBudget);
+          budgetFontSizeFinal = topBudgetFontSize;
+          if (isWideTop) {
+            budgetX = barX + actualBarWidth + budgetGap;
+          } else {
+            // Center budget inside the narrow bar
+            budgetX = barX + actualBarWidth / 2;
+          }
+        }
 
         bars.push({
           id: project.id,
           x: barX,
           y: barY,
-          width: barWidth,
-          height: barHeight,
+          width: actualBarWidth,
+          height: actualBarHeight,
           fill: barFill,
           tag: project.tag,
           displayTag: formatDisplayTag(project.tag),
           tagX: colX + tagWidth,
-          tagY: barY + barHeight / 2,
-          title: truncateTitle(project.displayTitle, maxTitleChars),
-          titleX: barX + barPaddingX,
-          titleY: barY + barHeight / 2,
-          titleVisible: maxTitleChars >= 4,
+          tagY: barY + actualBarHeight / 2,
+          title: isTop ? project.displayTitle : truncateTitle(project.displayTitle, actualMaxChars),
+          titleLines,
+          titleLineHeight,
+          titleX: titleXPos,
+          titleY: barY + titleYCenter,
+          titleVisible: isTop || actualMaxChars >= 4,
           tagFontSize,
-          titleFontSize: titleFontSizeBar
+          titleFontSize: isTop ? topTitleFontSize : titleFontSizeBar,
+          budgetText,
+          budgetX,
+          budgetFontSize: budgetFontSizeFinal,
+          budgetAnchor: isNarrowTop ? 'middle' : 'start'
         });
 
-        cursor += barHeight;
+        cursor += actualBarHeight;
         isFirstItem = false;
       }
 
@@ -552,6 +743,198 @@ export function computeSlide2Layout(
   };
 }
 
+/**
+ * Slide 6: Stacked horizontal bars by category budget.
+ * 8 horizontal bars (one per category, sorted by total budget descending).
+ * Each bar is subdivided by funding origin (public → private → other).
+ * The 71 project bars morph into their category+funding segment positions.
+ */
+export function computeSlide6Layout(
+  projects: EvoiaMetaProject[],
+  viewportWidth: number,
+  viewportHeight: number
+): SlideLayout {
+  const filtered = projects.filter((p) => !p.tag.startsWith('B'));
+
+  // --- Margins and title area (same as other slides) ---
+  const marginX = Math.round(viewportWidth * 0.05);
+  const marginTop = Math.round(viewportHeight * 0.035);
+  const marginBottom = Math.round(viewportHeight * 0.03);
+
+  const titleFontSize = Math.max(20, Math.min(48, Math.round(viewportWidth * 0.022)));
+  const titleAreaHeight = titleFontSize + Math.round(viewportHeight * 0.025);
+
+  const contentTop = marginTop + titleAreaHeight;
+  const contentHeight = viewportHeight - contentTop - marginBottom;
+  const contentWidth = viewportWidth - marginX * 2;
+
+  // --- Layout areas ---
+  const labelAreaWidth = Math.round(contentWidth * 0.22);
+  const budgetLabelWidth = Math.round(contentWidth * 0.1);
+  const barAreaWidth = contentWidth - labelAreaWidth - budgetLabelWidth;
+  const barAreaLeft = marginX + labelAreaWidth;
+
+  // --- Aggregate budgets per category per funding type ---
+  type CategoryAgg = {
+    category: string;
+    totalBudget: number;
+    fundingBudgets: Map<string, number>;
+    fundingProjects: Map<string, EvoiaMetaProject[]>;
+  };
+
+  const catMap = new Map<string, CategoryAgg>();
+  for (const p of filtered) {
+    let agg = catMap.get(p.category);
+    if (!agg) {
+      agg = {
+        category: p.category,
+        totalBudget: 0,
+        fundingBudgets: new Map(),
+        fundingProjects: new Map()
+      };
+      catMap.set(p.category, agg);
+    }
+    const budget = p.announcedBudget ?? 0;
+    agg.totalBudget += budget;
+    agg.fundingBudgets.set(p.fundingProvenance, (agg.fundingBudgets.get(p.fundingProvenance) ?? 0) + budget);
+    const list = agg.fundingProjects.get(p.fundingProvenance) ?? [];
+    list.push(p);
+    agg.fundingProjects.set(p.fundingProvenance, list);
+  }
+
+  // Sort categories by total budget descending
+  const categories = [...catMap.values()].sort((a, b) => b.totalBudget - a.totalBudget);
+  const maxCategoryBudget = categories[0]?.totalBudget ?? 1;
+
+  // --- Row sizing ---
+  const rowGap = Math.max(4, Math.round(contentHeight * 0.015));
+  const numCategories = categories.length;
+  const totalGaps = (numCategories - 1) * rowGap;
+  const rowHeight = Math.max(12, Math.floor((contentHeight - totalGaps) / numCategories));
+
+  const labelFontSize = Math.max(12, Math.min(28, Math.round(rowHeight * 0.55)));
+  const budgetFontSize = Math.max(10, Math.min(22, Math.round(rowHeight * 0.45)));
+
+  // --- Place bars ---
+  const bars: BarLayout[] = [];
+  const categoryLabels: CategoryLabelLayout[] = [];
+  const groupHeaders: GroupHeaderLayout[] = [];
+
+  let rowY = contentTop;
+
+  for (const cat of categories) {
+    const totalBarWidth = maxCategoryBudget > 0
+      ? Math.round((cat.totalBudget / maxCategoryBudget) * barAreaWidth)
+      : 0;
+
+    // Category label on the left
+    const label = CATEGORY_LABELS[cat.category] ?? cat.category.toUpperCase();
+    categoryLabels.push({
+      category: cat.category,
+      label,
+      x: marginX + labelAreaWidth - Math.round(labelFontSize * 0.5),
+      y: rowY + rowHeight / 2,
+      height: rowHeight,
+      fontSize: labelFontSize,
+      rotation: 0,
+      textAnchor: 'end'
+    });
+
+    // Budget total to the right
+    groupHeaders.push({
+      key: `budget-${cat.category}`,
+      text: formatBudgetTotal(cat.totalBudget),
+      x: barAreaLeft + totalBarWidth + Math.round(budgetFontSize * 0.5),
+      y: rowY,
+      width: budgetLabelWidth,
+      height: rowHeight,
+      fontSize: budgetFontSize,
+      fontFamily: FONT_DISPLAY,
+      fill: COLOR_MUTED
+    });
+
+    // Place project bars within funding segments
+    let segmentX = barAreaLeft;
+
+    for (const fundingKey of FUNDING_GROUP_ORDER) {
+      const segmentBudget = cat.fundingBudgets.get(fundingKey) ?? 0;
+      const segmentProjects = cat.fundingProjects.get(fundingKey) ?? [];
+      if (segmentProjects.length === 0) continue;
+
+      const segmentWidth = cat.totalBudget > 0
+        ? Math.round((segmentBudget / cat.totalBudget) * totalBarWidth)
+        : 0;
+
+      // Sort projects by budget descending within segment
+      const sorted = [...segmentProjects].sort(
+        (a, b) => (b.announcedBudget ?? 0) - (a.announcedBudget ?? 0)
+      );
+
+      const fill = FUNDING_GROUP_FILLS[fundingKey] ?? '#e4e7ed';
+
+      // Distribute project widths proportionally within the segment
+      let projectX = segmentX;
+      let remainingWidth = segmentWidth;
+
+      for (let i = 0; i < sorted.length; i++) {
+        const project = sorted[i];
+        const projectBudget = project.announcedBudget ?? 0;
+        let projectWidth: number;
+
+        if (i === sorted.length - 1) {
+          // Last project gets the remainder to avoid rounding gaps
+          projectWidth = remainingWidth;
+        } else if (segmentBudget > 0 && projectBudget > 0) {
+          projectWidth = Math.max(1, Math.round((projectBudget / segmentBudget) * segmentWidth));
+        } else {
+          // Zero-budget: distribute equally among zero-budget projects
+          const zeroBudgetCount = sorted.filter((p) => (p.announcedBudget ?? 0) === 0).length;
+          projectWidth = Math.max(1, Math.round(segmentWidth / zeroBudgetCount));
+        }
+
+        projectWidth = Math.max(1, Math.min(projectWidth, remainingWidth));
+
+        bars.push({
+          id: project.id,
+          x: projectX,
+          y: rowY,
+          width: projectWidth,
+          height: rowHeight,
+          fill,
+          tag: project.tag,
+          displayTag: formatDisplayTag(project.tag),
+          tagX: projectX,
+          tagY: rowY + rowHeight / 2,
+          title: '',
+          titleX: projectX,
+          titleY: rowY + rowHeight / 2,
+          titleVisible: false,
+          tagFontSize: 0,
+          titleFontSize: 0
+        });
+
+        projectX += projectWidth;
+        remainingWidth -= projectWidth;
+      }
+
+      segmentX += segmentWidth;
+    }
+
+    rowY += rowHeight + rowGap;
+  }
+
+  return {
+    bars,
+    groupHeaders,
+    categoryLabels,
+    titleText: 'BUDGETS BY CATEGORY',
+    titleFontFamily: FONT_DISPLAY,
+    titleFontSize,
+    titleX: marginX,
+    titleY: marginTop + titleFontSize * 0.88
+  };
+}
+
 export function computeSlideLayout(
   projects: EvoiaMetaProject[],
   viewportWidth: number,
@@ -569,6 +952,16 @@ export function computeSlideLayout(
       fillByFunding: true,
       titleText: 'FUNDING BY CATEGORY'
     });
+  }
+  if (slideIndex === 4) {
+    return computeSlide1Layout(projects, viewportWidth, viewportHeight, {
+      fillByFunding: true,
+      proportionalBudget: true,
+      titleText: 'ANNOUNCED BUDGETS'
+    });
+  }
+  if (slideIndex === 5) {
+    return computeSlide6Layout(projects, viewportWidth, viewportHeight);
   }
   return computeSlide1Layout(projects, viewportWidth, viewportHeight);
 }

@@ -13,6 +13,7 @@ import {
   FONT_BODY,
   COLOR_TEXT,
   COLOR_CATEGORY_LABEL,
+  COLOR_MUTED,
   FUNDING_GROUP_ORDER,
   FUNDING_GROUP_FILLS,
   FUNDING_GROUP_TOTAL_COLORS
@@ -36,7 +37,7 @@ type ColumnOverlay = {
   totalColor: string;
 };
 
-const TOTAL_SLIDES = 4;
+const TOTAL_SLIDES = 6;
 
 function useViewportSize() {
   const [size, setSize] = useState({ width: 1920, height: 1080 });
@@ -111,6 +112,7 @@ function computeColumnOverlays(
 export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDeckProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const barsRef = useRef<SVGGElement>(null);
+  const labelsRef = useRef<SVGGElement>(null);
   const overlaysRef = useRef<SVGGElement>(null);
   const isFirstRenderRef = useRef(true);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -208,7 +210,8 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
         return Number((this as HTMLElement).dataset.targetY) || 0;
       })
       .attr('font-size', function () {
-        return Number((this as HTMLElement).dataset.targetFontSize) || 10;
+        const v = (this as HTMLElement).dataset.targetFontSize;
+        return v != null ? Number(v) : 10;
       });
 
     // Animate title text vertical position, font size, and opacity
@@ -225,6 +228,56 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
       .attr('opacity', function () {
         return Number((this as HTMLElement).dataset.targetOpacity) ?? 1;
       });
+
+    // Animate budget labels (right of bar) — position, font size, opacity
+    g.selectAll<SVGTextElement, unknown>('text.deck-bar-budget')
+      .transition()
+      .duration(duration)
+      .ease(easeCubicOut)
+      .attr('x', function () {
+        return Number((this as HTMLElement).dataset.targetX) || 0;
+      })
+      .attr('y', function () {
+        return Number((this as HTMLElement).dataset.targetY) || 0;
+      })
+      .attr('font-size', function () {
+        return Number((this as HTMLElement).dataset.targetFontSize) || 10;
+      })
+      .attr('opacity', function () {
+        return Number((this as HTMLElement).dataset.targetOpacity) ?? 0;
+      });
+
+    // Animate category labels — position, rotation, fontSize
+    if (labelsRef.current) {
+      select(labelsRef.current)
+        .selectAll<SVGTextElement, unknown>('text.deck-cat-label')
+        .each(function () {
+          const el = this as SVGTextElement;
+          const ds = el.dataset;
+          const x = parseFloat(ds.targetX ?? '0');
+          const y = parseFloat(ds.targetY ?? '0');
+          const r = parseFloat(ds.targetRotation ?? '90');
+          const fs = parseFloat(ds.targetFontSize ?? '16');
+          const anchor = ds.targetTextAnchor ?? 'middle';
+          const s = select(el);
+
+          if (!el.hasAttribute('data-initialized')) {
+            // First appearance: position immediately without animation
+            el.setAttribute('data-initialized', '1');
+            s.attr('transform', `translate(${x}, ${y}) rotate(${r})`)
+              .attr('font-size', fs)
+              .attr('text-anchor', anchor);
+          } else {
+            // Animate to new position
+            s.attr('text-anchor', anchor);
+            s.transition()
+              .duration(duration)
+              .ease(easeCubicOut)
+              .attr('transform', `translate(${x}, ${y}) rotate(${r})`)
+              .attr('font-size', fs);
+          }
+        });
+    }
 
     // Animate column overlays (gradient + totals) opacity
     if (overlaysRef.current) {
@@ -303,36 +356,42 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
         {layout.titleText}
       </text>
 
-      {/* Category labels (rotated 90° CW) */}
-      {layout.categoryLabels.map((catLabel) => (
-        <text
-          key={catLabel.category}
-          x={0}
-          y={0}
-          transform={`translate(${catLabel.x}, ${catLabel.y}) rotate(90)`}
-          fontFamily={FONT_DISPLAY}
-          fontSize={catLabel.fontSize}
-          fill={COLOR_CATEGORY_LABEL}
-          textAnchor="middle"
-          dominantBaseline="central"
-          letterSpacing="0.004em"
-          style={{ userSelect: 'none', pointerEvents: 'none' }}
-        >
-          {catLabel.label}
-        </text>
-      ))}
+      {/* Category labels — D3 transitions handle position, rotation, fontSize */}
+      <g ref={labelsRef}>
+        {layout.categoryLabels.map((catLabel) => (
+          <text
+            key={catLabel.category}
+            className="deck-cat-label"
+            x={0}
+            y={0}
+            data-target-x={catLabel.x}
+            data-target-y={catLabel.y}
+            data-target-rotation={catLabel.rotation ?? 90}
+            data-target-font-size={catLabel.fontSize}
+            data-target-text-anchor={catLabel.textAnchor ?? 'middle'}
+            fontFamily={FONT_DISPLAY}
+            fill={COLOR_CATEGORY_LABEL}
+            dominantBaseline="central"
+            letterSpacing="0.004em"
+            style={{ userSelect: 'none', pointerEvents: 'none' }}
+          >
+            {catLabel.label}
+          </text>
+        ))}
+      </g>
 
-      {/* Parent group headers */}
+      {/* Parent group headers / budget totals */}
       {layout.groupHeaders.map((header) => (
         <text
           key={header.key}
           x={header.x}
           y={header.y + header.height / 2}
           dominantBaseline="central"
-          fontFamily={FONT_BODY}
+          fontFamily={header.fontFamily ?? FONT_BODY}
           fontSize={header.fontSize}
           fontWeight={700}
-          fill={COLOR_TEXT}
+          fill={header.fill ?? COLOR_TEXT}
+          letterSpacing={header.fontFamily ? '0.01em' : undefined}
           style={{ pointerEvents: 'none' }}
         >
           {header.text}
@@ -377,7 +436,7 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
             <text
               className="deck-bar-title"
               x={bar.titleX - bar.x}
-              data-target-y={bar.height / 2}
+              data-target-y={(bar.titleY - bar.y)}
               data-target-font-size={bar.titleFontSize}
               data-target-opacity={bar.titleVisible ? 1 : 0}
               dominantBaseline="central"
@@ -385,7 +444,34 @@ export default function AnnouncedProjectsDeck({ projects }: AnnouncedProjectsDec
               fill={COLOR_TEXT}
               style={{ pointerEvents: 'none' }}
             >
-              {bar.title}
+              {bar.titleLines
+                ? bar.titleLines.map((line, lineIdx) => (
+                    <tspan
+                      key={lineIdx}
+                      x={bar.titleX - bar.x}
+                      dy={lineIdx === 0 ? 0 : bar.titleLineHeight ?? 0}
+                    >
+                      {line}
+                    </tspan>
+                  ))
+                : bar.title}
+            </text>
+
+            {/* Budget label — top projects only */}
+            <text
+              className="deck-bar-budget"
+              data-target-x={bar.budgetX != null ? bar.budgetX - bar.x : 0}
+              data-target-y={bar.height / 2}
+              data-target-font-size={bar.budgetFontSize ?? bar.tagFontSize}
+              data-target-opacity={bar.budgetText ? 1 : 0}
+              textAnchor={bar.budgetAnchor ?? 'start'}
+              dominantBaseline="central"
+              fontFamily={FONT_DISPLAY}
+              fill={COLOR_MUTED}
+              letterSpacing="0.01em"
+              style={{ pointerEvents: 'none' }}
+            >
+              {bar.budgetText ?? ''}
             </text>
           </g>
         ))}
