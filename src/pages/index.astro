@@ -1,6 +1,8 @@
 ---
 // Landing page — Talking Around Fire
-// No layout wrapper: full-screen takeover, no scroll.
+// State 0: circular spinning title on black
+// State 1: title animates to linear at bottom, maps fade in
+// State 2: navigate to /archive
 ---
 
 <!doctype html>
@@ -8,222 +10,444 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Talking Around Fire — The case of Evia Island, Greece." />
+    <meta name="description" content="Talking Around Fire — The case of North Evia, Greece." />
     <link rel="stylesheet" href="https://use.typekit.net/dzu6izh.css" />
-    <link rel="preload" as="image" href="/images/Evia2021.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/images/Cover_BS.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/images/Cover.png" />
     <title>Talking Around Fire</title>
     <style>
-      *, *::before, *::after {
-        box-sizing: border-box;
-      }
+      *, *::before, *::after { box-sizing: border-box; }
 
       html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
         overflow: hidden;
+        background: #000;
       }
 
       /* ── Full-screen canvas ── */
       .landing {
         position: fixed;
         inset: 0;
-        background: #c44644;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        /* Prevent text selection on rapid clicks */
+        background: #000;
+        overflow: hidden;
         user-select: none;
         -webkit-user-select: none;
       }
 
-      /* ── Centered content column ── */
-      .landing-inner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        max-width: 92vw;
+      /* ────────────────────────────────
+         Background map images
+         filter: invert(1) hue-rotate(180deg) flips the white background to
+         black (so it blends into the page) while rotating the red fire marks
+         back to red (red inverted = teal; teal + 180° hue = red again).
+      ──────────────────────────────── */
+      .bg-images {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
       }
 
-      /* ── Title ── */
-      .landing-title {
-        font-family: 'bebas-neue-pro', 'Bebas Neue Pro', 'Bebas Neue', 'Arial Narrow', sans-serif;
-        font-size: clamp(1.9rem, 4.3vw, 6.5rem);
-        font-weight: 700;
-        line-height: 0.94;
-        letter-spacing: 0.025em;
-        text-transform: uppercase;
-        color: #ffffff;
-        margin: 0;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        transition: opacity 0.15s ease, font-size 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .landing-inner.is-revealed .landing-title {
-        font-size: clamp(1.2rem, 2.6vw, 3.8rem);
-      }
-
-      .landing-title:hover {
-        opacity: 0.88;
-      }
-
-      /* ── Reveal wrapper: grid trick for height: 0 → auto ── */
-      .landing-reveal-wrap {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 100%;
-      }
-
-      .landing-reveal-wrap.is-open {
-        grid-template-rows: 1fr;
-      }
-
-      /* ── Image reveal (sits above the title) ── */
-      .landing-reveal-image-content {
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Space between image bottom and title */
-        padding-bottom: clamp(1rem, 2.5vh, 2rem);
-        opacity: 0;
-        transform: translateY(-12px);
-        transition: opacity 0.55s ease 0.18s, transform 0.55s ease 0.18s;
-        /* Pre-promote to compositor layer so first paint is instant */
-        will-change: opacity, transform;
-      }
-
-      .landing-reveal-wrap.is-open .landing-reveal-image-content {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      /* ── Subtitle reveal (sits below the title) ── */
-      .landing-reveal-subtitle-content {
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Space between title top and subtitle */
-        padding-top: clamp(0.5rem, 1.2vh, 1rem);
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.5s ease 0.28s, transform 0.5s ease 0.28s;
-      }
-
-      .landing-reveal-wrap.is-open .landing-reveal-subtitle-content {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      /* ── Subtitle text ── */
-      .landing-subtitle {
-        font-family: 'bebas-neue-pro', 'Bebas Neue Pro', 'Bebas Neue', 'Arial Narrow', sans-serif;
-        font-size: clamp(0.85rem, 1.7vw, 1.4rem);
-        font-weight: 400;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: #ffffff;
-        margin: 0;
-        transition: font-size 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .landing-inner.is-revealed .landing-subtitle {
-        font-size: clamp(0.6rem, 1.1vw, 0.95rem);
-      }
-
-      /* ── Satellite image ── */
-      .landing-image-wrap {
-        width: clamp(240px, min(68vw, 62vh), 780px);
-        aspect-ratio: 1 / 1;
-        overflow: hidden;
-        /* Vignette fades the white edges of the satellite composite into the red bg */
-        mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 58%, transparent 100%);
-        -webkit-mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 58%, transparent 100%);
-      }
-
-      .landing-image-wrap img {
+      .bg-images img {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        opacity: 0;
+        filter: invert(1) hue-rotate(180deg);
+        transition: opacity 1.4s ease;
+      }
+
+      .bg-images img.cover-bs { z-index: 1; }
+      .bg-images img.cover    { z-index: 2; transition-delay: 0.9s; }
+
+      .landing.maps-shown .bg-images img.cover-bs,
+      .landing.revealed   .bg-images img.cover-bs { opacity: 0.48; }
+      .landing.maps-shown .bg-images img.cover,
+      .landing.revealed   .bg-images img.cover    { opacity: 0.55; }
+
+      /* ── Circular spinning title ── */
+      .circle-wrap {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        cursor: pointer;
+        /* No transition here — opacity is driven entirely by JS inline style. */
+      }
+
+      .landing.revealed .circle-wrap {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      @keyframes spin-circle {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+      }
+
+      .circle-svg {
         display: block;
-        filter: saturate(0.85) brightness(0.96);
+        overflow: visible;
+        width: 240px;
+        height: 240px;
+        animation: spin-circle 30s linear infinite;
+        transform-origin: 50% 50%;
+      }
+
+      .circle-text-el {
+        font-family: 'bebas-neue-pro', 'Bebas Neue Pro', 'Bebas Neue', 'Arial Narrow', sans-serif;
+        font-size: 45px;
+        font-weight: 900;
+        font-stretch: condensed;
+        fill: #d8d8d8;
+      }
+
+      /* ── Linear title ── */
+      .linear-wrap {
+        position: absolute;
+        left: 24%;
+        bottom: 22%;
+        transform: translateY(0);
+        opacity: 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        width: max-content; /* sized to the title's natural width */
+        pointer-events: none;
+        /* opacity and transform are controlled by JS; no CSS transition needed */
+      }
+
+      .linear-title {
+        font-family: 'bebas-neue-pro', 'Bebas Neue Pro', 'Bebas Neue', 'Arial Narrow', sans-serif;
+        font-size: 34px;
+        font-weight: 700;
+        color: #d8d8d8;
+        margin: 0;
+        line-height: 1;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .linear-subtitle {
+        font-family: 'bebas-neue-pro', 'Bebas Neue Pro', 'Bebas Neue', 'Arial Narrow', sans-serif;
+        font-size: clamp(0.75rem, 1.35vw, 1.05rem);
+        font-weight: 400;
+        color: #666;
+        margin: 0.5rem 0 0;
+        /* fill the container (= title width) and justify:
+           inter-word enlarges word gaps; letter-spacing adds a base
+           inter-letter gap that stays smaller than the word gap */
+        width: 100%;
+        letter-spacing: 0.08em;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: inter-word;
+      }
+
+      /* ── Click hint cursor once maps are showing ── */
+      .landing.maps-shown,
+      .landing.revealed {
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <div class="landing">
-      <div class="landing-inner">
+    <div class="landing" id="landing">
 
-        <!-- Image reveals ABOVE the title → title is pushed downward -->
-        <div class="landing-reveal-wrap" id="landing-image-reveal" aria-hidden="true">
-          <div class="landing-reveal-image-content">
-            <div class="landing-image-wrap">
-              <img
-                src="/images/Evia2021.webp"
-                alt="False-colour satellite composite of Evia Island and surrounding region"
-                draggable="false"
-              />
-            </div>
-          </div>
-        </div>
-
-        <h1 class="landing-title" id="landing-title" role="button" tabindex="0" aria-label="Talking Around Fire — click to continue">
-          Talking around fire
-        </h1>
-
-        <!-- Subtitle reveals BELOW the title -->
-        <div class="landing-reveal-wrap" id="landing-subtitle-reveal" aria-hidden="true">
-          <div class="landing-reveal-subtitle-content">
-            <p class="landing-subtitle">The case of Evia Island, Greece</p>
-          </div>
-        </div>
-
+      <!-- Background maps (fades in on click 1) -->
+      <div class="bg-images">
+        <img src="/images/Cover_BS.png" class="cover-bs" alt="" aria-hidden="true" draggable="false" />
+        <img src="/images/Cover.png"    class="cover"    alt="" aria-hidden="true" draggable="false" />
       </div>
+
+      <!-- Circular spinning title (state 0) -->
+      <div class="circle-wrap" id="circle-wrap">
+        <!--
+          r = 150  →  circumference = 2π × 150 ≈ 942px
+          Previously r=150 + dy=-20 (outward shift). Merged into path radius so
+          getStartPositionOfChar matches the rendered position exactly (no dy gap).
+          textLength="500" spreads "TALKING AROUND FIRE" with letter spacing.
+        -->
+        <svg class="circle-svg" width="240" height="240" viewBox="0 0 320 320"
+             role="img" aria-label="Talking Around Fire">
+          <defs>
+            <path id="text-ring"
+              d="M 160 160 m -150,0
+                 a 150,150 0 1,1 300,0
+                 a 150,150 0 1,1 -300,0" />
+          </defs>
+          <!--
+            No dy — text baseline sits directly on the path.
+            getStartPositionOfChar returns the same position the characters render at.
+          -->
+          <text class="circle-text-el">
+            <textPath href="#text-ring" startOffset="25%" textLength="500" lengthAdjust="spacing">
+              TALKING AROUND FIRE
+            </textPath>
+          </text>
+        </svg>
+      </div>
+
+      <!-- Linear title (state 1, fades in after click) -->
+      <div class="linear-wrap" id="linear-wrap">
+        <h1 class="linear-title">Talking Around Fire</h1>
+        <p class="linear-subtitle">the case of North Evia, Greece</p>
+      </div>
+
     </div>
 
     <script>
       (() => {
-        // Pre-decode the satellite image into GPU memory as soon as the script
-        // runs (end of <body>), so it is fully ready before any click happens.
-        // This is the key fix: rel="preload" fetches bytes but doesn't decode;
-        // img.decode() forces pixel decoding now, not on first paint.
-        const satelliteImg = document.querySelector('.landing-image-wrap img');
-        if (satelliteImg instanceof HTMLImageElement) {
-          satelliteImg.decode().catch(() => {/* ignore — image still loads normally */});
+        // Pre-decode map images so they appear instantly when needed.
+        document.querySelectorAll('.bg-images img').forEach(img => {
+          if (img instanceof HTMLImageElement) img.decode().catch(() => {});
+        });
+
+        let state = 0;
+        const landing    = document.getElementById('landing');
+        const circleWrap = document.getElementById('circle-wrap');
+        const linearWrap = document.getElementById('linear-wrap');
+        const circleSvg  = circleWrap?.querySelector('.circle-svg');
+        const circleText = circleWrap?.querySelector('.circle-text-el');
+        const subtitle   = linearWrap?.querySelector('.linear-subtitle');
+        const h1         = linearWrap?.querySelector('h1');
+
+        /* ── Pre-split h1 into per-letter spans (all opacity:0).
+               Subtitle also starts invisible. ── */
+        const H1_TEXT = (h1?.textContent || '').trim();
+        const letterSpans = [];
+        if (h1 && H1_TEXT) {
+          h1.innerHTML = '';
+          for (const ch of H1_TEXT) {
+            if (ch === ' ') {
+              h1.appendChild(document.createTextNode('\u00a0'));
+            } else {
+              const s = document.createElement('span');
+              s.textContent  = ch;
+              s.style.cssText = 'display:inline;opacity:0;transition:opacity 0.28s ease;';
+              h1.appendChild(s);
+              letterSpans.push(s);
+            }
+          }
+        }
+        if (subtitle) subtitle.style.opacity = '0';
+
+        /* ── Hide circle until Bebas Neue Pro is loaded.
+               Prevents the fallback-font flash where the ring appears larger
+               (Arial Narrow metrics) then snaps smaller when the custom font
+               loads and textLength="500" re-spaces the characters.
+               document.fonts.ready resolves once all declared fonts are ready. ── */
+        if (circleWrap) circleWrap.style.opacity = '0';
+        document.fonts.ready.then(() => {
+          if (state === 0 && circleWrap) {
+            circleWrap.style.transition = 'opacity 0.4s ease';
+            circleWrap.style.opacity    = '1';
+            // Remove the transition after it completes so it doesn't interfere
+            // with the JS-driven opacity changes in phase2.
+            setTimeout(() => { if (circleWrap) circleWrap.style.transition = ''; }, 420);
+          }
+        });
+
+        /* ── Instant fallback (no SVG text API support) ── */
+        function simpleReveal() {
+          circleWrap.style.opacity       = '0';
+          circleWrap.style.pointerEvents = 'none';
+          linearWrap.style.transition    = 'none';
+          linearWrap.style.opacity       = '1';
+          linearWrap.style.transform     = 'translateY(0)';
+          letterSpans.forEach(s => { s.style.opacity = '1'; });
+          landing.classList.add('maps-shown');
+          if (subtitle) {
+            subtitle.style.transition = 'opacity 1.4s ease';
+            subtitle.style.opacity    = '1';
+          }
         }
 
-        let clicks = 0;
-        const title = document.getElementById('landing-title');
-        const inner = title?.closest('.landing-inner');
-        const imageReveal = document.getElementById('landing-image-reveal');
-        const subtitleReveal = document.getElementById('landing-subtitle-reveal');
+        /* ════════════════════════════════════════════════
+           Phase 1 — Speed up circle to the top position.
 
+           Approach:
+           • Read the current animation angle.
+           • Stop the CSS keyframe and lock the inline transform
+             (both changes batched in the same JS task so the
+             browser applies them atomically — no 1-frame snap).
+           • Use a double-rAF (NOT void offsetWidth) to give the
+             browser one natural paint cycle to commit the stopped
+             state before starting the CSS transition.  Forcing a
+             synchronous layout via offsetWidth briefly exposes the
+             SVG's HTML size attributes (320×320) before the CSS
+             override (240×240) is re-applied, causing the circle
+             to visually resize.
+           • toSpin = remaining (just close the arc to 0°); if already
+             near the top (<30°) add one extra revolution so the motion
+             reads clearly. Duration scales with distance at 180°/s.
+           • transitionend fires the exact frame the spin finishes.
+        ════════════════════════════════════════════════ */
+        function phase1() {
+          if (!circleSvg || !circleText) return simpleReveal();
+          landing.style.cursor = 'pointer';
+
+          // Snapshot current angle from the running 30 s animation.
+          const tfStr = window.getComputedStyle(circleSvg).transform;
+          const mat   = tfStr === 'none' ? new DOMMatrix() : new DOMMatrix(tfStr);
+          const angle = ((Math.atan2(mat.b, mat.a) * 180 / Math.PI) % 360 + 360) % 360;
+
+          // Spin only the remaining arc to the top.
+          // If already within 30° of the top, add one full revolution so the
+          // motion is visible — otherwise just go straight to 0°.
+          const remaining = (360 - angle) % 360;
+          const toSpin    = remaining < 30 ? remaining + 360 : remaining;
+          // 180°/s — one revolution every 2 s; minimum 400 ms so the motion reads.
+          const SPEED  = 180;
+          const DUR_MS = Math.max(Math.round(toSpin / SPEED * 1000), 400);
+
+          // Lock inline transform at current angle and stop the CSS animation
+          // in the SAME JS task so both are committed atomically — no stutter.
+          circleSvg.style.transform = `rotate(${angle}deg)`;
+          circleSvg.style.animation = 'none';
+
+          // Double rAF: frame N paints the stopped circle at `angle`,
+          // frame N+1 adds the transition and updates the target — the browser
+          // sees a clear "before" and "after" and runs the CSS transition.
+          requestAnimationFrame(() => {
+            circleSvg.style.transition = `transform ${DUR_MS}ms linear`;
+            requestAnimationFrame(() => {
+              circleSvg.style.transform = `rotate(${angle + toSpin}deg)`;
+            });
+          });
+
+          // transitionend fires the exact frame the spin completes —
+          // more accurate than setTimeout and avoids an extra delay.
+          circleSvg.addEventListener('transitionend', function onDone() {
+            circleSvg.removeEventListener('transitionend', onDone);
+            circleSvg.style.transition = 'none';
+            phase2();
+          });
+        }
+
+        /* ════════════════════════════════════════════════
+           Phase 2 — Crossfade: clone letters fade out T→E
+           while the linear title fades in E→T simultaneously.
+           Both sequences start at the same moment.
+        ════════════════════════════════════════════════ */
+        function phase2() {
+          const STR = 'TALKING AROUND FIRE';
+          const FF  = "'bebas-neue-pro','Bebas Neue Pro','Bebas Neue','Arial Narrow',sans-serif";
+          const FS  = 34; // px
+
+          const ctm = circleSvg.getScreenCTM();
+          if (!ctm) return simpleReveal();
+
+          // Measure all letter positions while SVG text is still visible.
+          const cloneEls = [];
+          for (let i = 0; i < STR.length; i++) {
+            if (STR[i] === ' ') continue;
+            try {
+              const sp  = circleText.getStartPositionOfChar(i);
+              const rot = circleText.getRotationOfChar(i);
+              const pt  = circleSvg.createSVGPoint();
+              pt.x = sp.x; pt.y = sp.y;
+              const sc = pt.matrixTransform(ctm);
+
+              const el = document.createElement('div');
+              el.textContent = STR[i];
+              const capTop = sc.y - FS * 0.82;
+              el.style.cssText = [
+                'position:fixed;left:0;top:0;margin:0;padding:0',
+                `font-family:${FF};font-size:${FS}px`,
+                'font-weight:900;font-stretch:condensed',
+                'color:#d8d8d8;line-height:1;letter-spacing:0;white-space:nowrap',
+                'transform-origin:0 0',
+                `transform:translate(${sc.x}px,${capTop}px) rotate(${rot}deg)`,
+                'opacity:1;transition:opacity 0.32s ease;will-change:opacity',
+              ].join(';');
+              cloneEls.push(el);
+            } catch (_) { return simpleReveal(); }
+          }
+
+          // Mount overlay, hide original SVG text, hide circle wrap.
+          const overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:100;';
+          cloneEls.forEach(el => overlay.appendChild(el));
+          document.body.appendChild(overlay);
+          circleText.style.opacity       = '0';
+          circleWrap.style.opacity       = '0';
+          circleWrap.style.pointerEvents = 'none';
+
+          // Make the linear title container instantly visible so letter spans
+          // can start their opacity transitions straight away.
+          linearWrap.style.transition = 'none';
+          linearWrap.style.opacity    = '1';
+          linearWrap.style.transform  = 'translateY(0)';
+
+          const n        = cloneEls.length; // equals letterSpans.length
+          const INTERVAL = 50;  // ms between letters
+          const FADE_DUR = 320; // clone fade duration
+
+          // Clones fade out T→E (forward order, delay = i × INTERVAL).
+          cloneEls.forEach((el, i) => {
+            setTimeout(() => { el.style.opacity = '0'; }, i * INTERVAL);
+          });
+
+          // Title spans fade in E→T (reverse order, same stagger timing).
+          // letterSpans[n-1] = 'e' fires at delay 0 (alongside T clone),
+          // letterSpans[0]   = 'T' fires at delay (n-1)×INTERVAL (alongside E clone).
+          letterSpans.forEach((span, i) => {
+            setTimeout(() => { span.style.opacity = '1'; }, (n - 1 - i) * INTERVAL);
+          });
+
+          // Remove overlay and advance once the last clone has fully faded.
+          setTimeout(() => {
+            overlay.remove();
+            phase4();
+          }, (n - 1) * INTERVAL + FADE_DUR);
+        }
+
+        /* ════════════════════════════════════════════════
+           Phase 4 — Cover_BS fades in.
+        ════════════════════════════════════════════════ */
+        function phase4() {
+          landing.classList.add('maps-shown');
+          // Cover.png follows automatically via its CSS transition-delay: 0.9s.
+          // Subtitle comes in ~0.9 s later alongside Cover.
+          setTimeout(phase5, 900);
+        }
+
+        /* ════════════════════════════════════════════════
+           Phase 5 — Subtitle fades in (Cover is already
+           fading in from the CSS 0.9 s delay).
+        ════════════════════════════════════════════════ */
+        function phase5() {
+          if (subtitle) {
+            subtitle.style.transition = 'opacity 1.4s ease';
+            subtitle.style.opacity    = '1';
+          }
+        }
+
+        /* ── State machine ── */
         function advance() {
-          clicks += 1;
-
-          if (clicks === 1) {
-            imageReveal?.classList.add('is-open');
-            imageReveal?.removeAttribute('aria-hidden');
-            subtitleReveal?.classList.add('is-open');
-            subtitleReveal?.removeAttribute('aria-hidden');
-            inner?.classList.add('is-revealed');
-          } else {
-            window.location.href = '/archive';
-          }
+          if (state === 0) { state = 1; phase1(); }
+          else if (state === 1) { window.location.href = '/archive'; }
         }
 
-        title?.addEventListener('click', advance);
+        // State 0: only the circle is clickable.
+        circleWrap?.addEventListener('click', e => {
+          e.stopPropagation();
+          if (state === 0) advance();
+        });
 
-        title?.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            advance();
-          }
+        // State 1: click anywhere on the landing to navigate.
+        landing?.addEventListener('click', () => {
+          if (state === 1) advance();
+        });
+
+        // Keyboard support.
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); advance(); }
         });
       })();
     </script>
