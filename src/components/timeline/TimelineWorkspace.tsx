@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   TimelineSelectionContext,
   buildTimelineQuery,
@@ -14,10 +14,7 @@ import {
   type TimelineFilterState
 } from '@/lib/timeline';
 import D3Timeline from './D3Timeline';
-import EventDetailPanel from './EventDetailPanel';
 import TimelineLegend from './TimelineLegend';
-
-const LazyEventMapPanel = lazy(() => import('./EventMapPanel'));
 
 function arraysEqual(a: string[], b: string[]): boolean {
   if (a.length !== b.length) {
@@ -45,7 +42,6 @@ function filtersEqual(a: TimelineFilterState, b: TimelineFilterState): boolean {
 }
 
 export default function TimelineWorkspace() {
-  const showMap = false;
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [filters, setFilters] = useState<TimelineFilterState>(() => createEmptyFilters());
   const [sourcesById, setSourcesById] = useState<SourceLookup>({});
@@ -196,32 +192,12 @@ export default function TimelineWorkspace() {
   return (
     <TimelineSelectionContext.Provider value={selectionState}>
       <section className="timeline-workspace" aria-label="Timeline workspace">
-        <div className="detail-slot" aria-live="polite">
-          {selectedEvent ? (
-            <EventDetailPanel selectedEvent={selectedEvent} sourcesById={sourcesById} mediaById={mediaById} />
-          ) : null}
-        </div>
-
         <D3Timeline
           events={filteredEvents}
           selectedEventId={selectedEventId}
           onSelectEvent={(eventId) => setSelectedEventId(eventId)}
         />
-
-        <div className={`workspace-panels ${showMap ? '' : 'is-map-hidden'}`.trim()} aria-label="Legend and map panels">
-          <TimelineLegend events={filteredEvents} />
-          {showMap ? (
-            <Suspense
-              fallback={
-                <section className="map-panel" aria-label="Map panel loading state" aria-live="polite">
-                  <p>Loading map module...</p>
-                </section>
-              }
-            >
-              <LazyEventMapPanel selectedEvent={selectedEvent} events={filteredEvents} />
-            </Suspense>
-          ) : null}
-        </div>
+        <TimelineLegend events={filteredEvents} />
       </section>
     </TimelineSelectionContext.Provider>
   );

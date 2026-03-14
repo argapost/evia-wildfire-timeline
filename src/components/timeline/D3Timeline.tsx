@@ -491,10 +491,18 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
               })}
 
               <line x1={0} x2={innerWidth} y1={dividerY} y2={dividerY} className="timeline-divider-line" />
-              <text x={8} y={dividerY - centerGap - 8} className="timeline-zone-label">
+              <text
+                className="timeline-zone-label"
+                transform={`translate(4, ${dividerY - centerGap - 4}) rotate(-90)`}
+                textAnchor="start"
+              >
                 Evia island events
               </text>
-              <text x={8} y={dividerY + centerGap + 14} className="timeline-zone-label">
+              <text
+                className="timeline-zone-label"
+                transform={`translate(4, ${dividerY + centerGap + 4}) rotate(-90)`}
+                textAnchor="end"
+              >
                 Rest of Greece events
               </text>
 
