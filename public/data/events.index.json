@@ -1,6 +1,758 @@
 [
   {
-    "id": "evia-2021-event",
+    "id": "evia-1967-political-event",
+    "slug": "political-event",
+    "title": "Political event",
+    "summary": "Military coup and imposition of a dictatorship",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "1967-04-21",
+    "end": "1974-07-23",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "1967-04-21 to 1974-07-23",
+    "startTs": -85190400000,
+    "endTs": 143855999000,
+    "actors": [],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-1973-17th-nov",
+    "slug": "17th-nov",
+    "title": "17th NOV",
+    "summary": "Polytechnic Uprising – Mass nationwide anti-dictatorship protests",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "1973-11-14",
+    "end": "1973-11-17",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "1973-11-14 to 1973-11-17",
+    "startTs": 122083200000,
+    "endTs": 122428799000,
+    "actors": [],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-1974-political-event",
+    "slug": "political-event",
+    "title": "Political event",
+    "summary": "Fall of the military dictatorship",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "1974-07-23",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "1974-07-23",
+    "startTs": 143769600000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-1979-fek-289a",
+    "slug": "fek-289a",
+    "title": "FEK 289A",
+    "summary": "National Forest cadastre was established by Law 998",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "1979-12-29",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "1979-12-29",
+    "startTs": 315273600000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-1981-fek-208a",
+    "slug": "fek-208a",
+    "title": "FEK 208A",
+    "summary": "Presidential Decree regarding the creation of forest cooperatives",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "1981-08-06",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "1981-08-06",
+    "startTs": 365904000000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-2000-political-event",
+    "slug": "political-event",
+    "title": "Political event",
+    "summary": "Greece joins the eurozone",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2000-06-19",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2000-06-19",
+    "startTs": 961372800000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2009-political-event",
+    "slug": "political-event",
+    "title": "Political event",
+    "summary": "Prime Minister George Papandreou's announcement  from Kastelorizo,officially requesting the activation of a joint European Union (EU) and International Monetary Fund (IMF) financial bailout package.",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2009-04-23",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2009-04-23",
+    "startTs": 1240444800000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-2010-general-strike",
+    "slug": "general-strike",
+    "title": "General strike",
+    "summary": "General strike and massive protest in Athens on the eve of the vote on the 1st Memorandum in Parliament; three Marfin Bank employees are killed in an arson attack on the Stadiou Street branch.",
+    "body": "",
+    "category": "civil-society-action",
+    "start": "2010-05-05",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2010-05-05",
+    "startTs": 1273017600000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2010-legislation-changes",
+    "slug": "legislation-changes",
+    "title": "Legislation changes",
+    "summary": "The 1st Memorandum is voted by 157 members of the Greek Parliament",
+    "body": "",
+    "category": "legislation",
+    "start": "2010-05-06",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2010-05-06",
+    "startTs": 1273104000000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2012-legislation-changes",
+    "slug": "legislation-changes",
+    "title": "Legislation changes",
+    "summary": "The second and harshest bailout memorandum is approved by 199 members of Parliament.",
+    "body": "",
+    "category": "legislation",
+    "start": "2012-12-12",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2012-12-12",
+    "startTs": 1355270400000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2013-legislation-changes",
+    "slug": "legislation-changes",
+    "title": "Legislation changes",
+    "summary": "The 2013-2016 medium term program is approved with 153 votes",
+    "body": "",
+    "category": "legislation",
+    "start": "2013-11-07",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2013-11-07",
+    "startTs": 1383782400000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2015-event",
+    "slug": "event",
+    "title": "Event",
+    "summary": "Capital controls were imposed and current support programme expires a few days later",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2015-06-29",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2015-06-29",
+    "startTs": 1435536000000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-2015-referendum",
+    "slug": "referendum",
+    "title": "Referendum",
+    "summary": "Bailout referendum",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2015-07-05",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2015-07-05",
+    "startTs": 1436054400000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
+    "id": "evia-2015-legislation-changes",
+    "slug": "legislation-changes",
+    "title": "Legislation changes",
+    "summary": "The third bailout memorandum is approved by the parliament with 222 votes.",
+    "body": "",
+    "category": "legislation",
+    "start": "2015-08-14",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2015-08-14",
+    "startTs": 1439510400000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2017-fek-1366",
+    "slug": "fek-1366",
+    "title": "FEK 1366Β",
+    "summary": "Ratification of Forest Maps",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2017-04-21",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2017-04-21",
+    "startTs": 1492732800000,
+    "endTs": null,
+    "actors": [
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2017-kythera",
+    "slug": "kythera",
+    "title": "KYTHERA",
+    "summary": "Between 2,000 and 3,750 hectares of forest and farmland were burnt. It affected more than a fifth, and possibly up to a third, of the island’s vegetation, leading to a state of emergency. Gale-force winds made the fire harder to contain.",
+    "body": "",
+    "category": "wildfire",
+    "start": "2017-08-04",
+    "end": "2017-08-07",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2017-08-04 to 2017-08-07",
+    "startTs": 1501804800000,
+    "endTs": 1502150399000,
+    "actors": [
+      "actor-fire-department"
+    ],
+    "places": [
+      "place-kythera"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-kythera",
+        "name": "Kythera",
+        "slug": "kythera"
+      }
+    ]
+  },
+  {
+    "id": "evia-2018-attica",
+    "slug": "attica",
+    "title": "ATTICA",
+    "summary": "ATTICA",
+    "body": "",
+    "category": "wildfire",
+    "start": "2018-07-23",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2018-07-23",
+    "startTs": 1532304000000,
+    "endTs": null,
+    "actors": [
+      "actor-fire-department"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2018-attica-1",
+    "slug": "attica",
+    "title": "ATTICA",
+    "summary": "ATTICA",
+    "body": "",
+    "category": "wildfire",
+    "start": "2018-07-23",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2018-07-23",
+    "startTs": 1532304000000,
+    "endTs": null,
+    "actors": [
+      "actor-fire-department"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2018-political-event",
+    "slug": "political-event",
+    "title": "Political event",
+    "summary": "Greece's official exit from the bailout memorandum.",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2018-08-21",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2018-08-21",
+    "startTs": 1534809600000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-event-2",
     "slug": "event",
     "title": "Event",
     "summary": "License is granted by the Regulatory Energy Authority (RAE)for electricity generation via wind farm at Telethrio Mountain in Northern",
@@ -54,7 +806,8 @@
     "startTs": 1627948800000,
     "endTs": 1628380799000,
     "actors": [
-      "actor-fire-brigade"
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
     ],
     "places": [
       "place-attica"
@@ -66,9 +819,14 @@
     "featured": false,
     "actorLabels": [
       {
-        "id": "actor-fire-brigade",
-        "name": "Fire Brigade",
-        "slug": "fire-brigade"
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
       }
     ],
     "placeLabels": [
@@ -94,7 +852,8 @@
     "startTs": 1627948800000,
     "endTs": 1628899199000,
     "actors": [
-      "actor-fire-brigade"
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
     ],
     "places": [
       "place-north-evia"
@@ -106,9 +865,14 @@
     "featured": false,
     "actorLabels": [
       {
-        "id": "actor-fire-brigade",
-        "name": "Fire Brigade",
-        "slug": "fire-brigade"
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
       }
     ],
     "placeLabels": [
@@ -134,7 +898,8 @@
     "startTs": 1628035200000,
     "endTs": 1628726399000,
     "actors": [
-      "actor-fire-brigade"
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
     ],
     "places": [
       "place-peloponese"
@@ -146,9 +911,14 @@
     "featured": false,
     "actorLabels": [
       {
-        "id": "actor-fire-brigade",
-        "name": "Fire Brigade",
-        "slug": "fire-brigade"
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
       }
     ],
     "placeLabels": [
@@ -174,7 +944,8 @@
     "startTs": 1628121600000,
     "endTs": 1628380799000,
     "actors": [
-      "actor-fire-brigade"
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
     ],
     "places": [
       "place-attica"
@@ -186,9 +957,14 @@
     "featured": false,
     "actorLabels": [
       {
-        "id": "actor-fire-brigade",
-        "name": "Fire Brigade",
-        "slug": "fire-brigade"
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
       }
     ],
     "placeLabels": [
@@ -203,7 +979,7 @@
     "id": "evia-2021-press-conference",
     "slug": "press-conference",
     "title": "Press conference",
-    "summary": "Direct assignment of the regeneration programme for N.Evia to S.Benos",
+    "summary": "During the press conference, Prime Minister Kuriakos Mitsotakis directly assigned the regeneration programme for N.Evia to S.Benos and the private comitttee of Diazoma",
     "body": "",
     "category": "reconstruction-governance",
     "start": "2021-08-10",
@@ -255,7 +1031,7 @@
     "id": "evia-2021-donation-grant-announcement",
     "slug": "donation-grant-announcement",
     "title": "Donation grant announcement",
-    "summary": "Stavros Niarchos foundation announced 15 million donation grant for the immediate relief of those affected by this year�s fires",
+    "summary": "Stavros Niarchos foundation announced 15 million donation grant for the immediate relief of those affected by this year’s fires",
     "body": "",
     "category": "private-actor",
     "start": "2021-08-12",
@@ -364,7 +1140,8 @@
     "startTs": 1628899200000,
     "endTs": 1632009599000,
     "actors": [
-      "actor-fire-brigade"
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
     ],
     "places": [
       "place-north-evia"
@@ -376,9 +1153,14 @@
     "featured": false,
     "actorLabels": [
       {
-        "id": "actor-fire-brigade",
-        "name": "Fire Brigade",
-        "slug": "fire-brigade"
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
       }
     ],
     "placeLabels": [
@@ -403,7 +1185,10 @@
     "displayDate": "2021-08-16",
     "startTs": 1629072000000,
     "endTs": null,
-    "actors": [],
+    "actors": [
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
+    ],
     "places": [
       "place-attica"
     ],
@@ -412,7 +1197,18 @@
     "imageRefs": [],
     "coverImage": null,
     "featured": false,
-    "actorLabels": [],
+    "actorLabels": [
+      {
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
+      }
+    ],
     "placeLabels": [
       {
         "id": "place-attica",
@@ -422,9 +1218,9 @@
     ]
   },
   {
-    "id": "evia-2021-meeting-at-megaro-maximou",
-    "slug": "meeting-at-megaro-maximou",
-    "title": "Meeting at Megaro Maximou",
+    "id": "evia-2021-announcement-meeting-event-by-the-greek-government",
+    "slug": "announcement-meeting-event-by-the-greek-government",
+    "title": "Announcement / Meeting / Event by the greek government",
     "summary": "Meeting at Maximou\nPresentation of immediate and long-term mesures",
     "body": "",
     "category": "reconstruction-governance",
@@ -520,9 +1316,49 @@
     ]
   },
   {
-    "id": "evia-2021-meeting-of-stavros-benos-with-mayors-of-n-evia-and-regional",
-    "slug": "meeting-of-stavros-benos-with-mayors-of-n-evia-and-regional",
-    "title": "Meeting of Stavros Benos with mayors of N. Evia and regional governor",
+    "id": "evia-2021-event-1",
+    "slug": "event",
+    "title": "Event",
+    "summary": "License is revoked by the Regulatory Energy Authority (RAE)\nfor electricity generation via wind farm at Telethrio Mountain in Northern Evia",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2021-08-27",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-08-27",
+    "startTs": 1630022400000,
+    "endTs": null,
+    "actors": [
+      "actor-regulatory-energy-authority-rae"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-regulatory-energy-authority-rae",
+        "name": "Regulatory Energy Authority (RAE)",
+        "slug": "regulatory-energy-authority-rae"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-announcement-meeting-event-by-local-municipalities",
+    "slug": "announcement-meeting-event-by-local-municipalities",
+    "title": "Announcement / Meeting / Event  by local municipalities",
     "summary": "Meeting of Stavros Benos with mayors of N. Evia and regional governor",
     "body": "",
     "category": "municipal-action",
@@ -602,9 +1438,9 @@
     ]
   },
   {
-    "id": "evia-2021-full-suppression-of-the-fire-fronts-announced-by-the-fire-br",
-    "slug": "full-suppression-of-the-fire-fronts-announced-by-the-fire-br",
-    "title": "Full suppression of the fire fronts announced by the fire brigade",
+    "id": "evia-2021-event",
+    "slug": "event",
+    "title": "Event",
     "summary": "Full suppression of the fire fronts announced by the fire brigade",
     "body": "",
     "category": "state-agency-action",
@@ -616,7 +1452,7 @@
     "startTs": 1631923200000,
     "endTs": null,
     "actors": [
-      "actor-fire-brigade"
+      "actor-fire-department"
     ],
     "places": [
       "place-north-evia"
@@ -628,9 +1464,9 @@
     "featured": false,
     "actorLabels": [
       {
-        "id": "actor-fire-brigade",
-        "name": "Fire Brigade",
-        "slug": "fire-brigade"
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
       }
     ],
     "placeLabels": [
@@ -642,9 +1478,49 @@
     ]
   },
   {
-    "id": "evia-2021-consecutive-days-of-severe-rainfall",
-    "slug": "consecutive-days-of-severe-rainfall",
-    "title": "Consecutive days of severe rainfall",
+    "id": "evia-2021-1st-bulletin-knoukla",
+    "slug": "1st-bulletin-knoukla",
+    "title": "1st bulletin 'KNOUKLA'",
+    "summary": "1st Information bulletin is published by the Initiative of citizens affected by the fire in N. Evia",
+    "body": "",
+    "category": "civil-society-action",
+    "start": "2021-10-02",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-10-02",
+    "startTs": 1633132800000,
+    "endTs": null,
+    "actors": [
+      "actor-initiative-of-citizens-affected-by-the-fire"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-initiative-of-citizens-affected-by-the-fire",
+        "name": "Initiative of citizens affected by the fire",
+        "slug": "initiative-of-citizens-affected-by-the-fire"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-athina",
+    "slug": "athina",
+    "title": "ATHINA'",
     "summary": "floodings..",
     "body": "",
     "category": "flood",
@@ -674,10 +1550,10 @@
     ]
   },
   {
-    "id": "evia-2021-1st-bulletin-knoukla",
-    "slug": "1st-bulletin-knoukla",
-    "title": "1st bulletin 'KNOUKLA'",
-    "summary": "1st Information bulletin by Initiative  in N. Evia",
+    "id": "evia-2021-2nd-bulletin-knoukla",
+    "slug": "2nd-bulletin-knoukla",
+    "title": "2nd bulletin 'KNOUKLA'",
+    "summary": "2ne Information bulletin is published by the Initiative of citizens affected by the fire in N. Evia, with analysis of the current situation and a list of their demands and needs.",
     "body": "",
     "category": "civil-society-action",
     "start": "2021-10-14",
@@ -717,7 +1593,7 @@
     "id": "evia-2021-contracts-signed-between-private-actors",
     "slug": "contracts-signed-between-private-actors",
     "title": "Contracts signed between private actors",
-    "summary": "Contracts signed between private actors",
+    "summary": "Period during which the contracts between the private committee 'Diazoma', the sponsors and the consultant agencies that were to be involved in the design of the 'Evia Meta' regeneration masterplan where signed",
     "body": "",
     "category": "contract",
     "start": "2021-10-20",
@@ -728,6 +1604,7 @@
     "startTs": 1634688000000,
     "endTs": 1638489599000,
     "actors": [
+      "actor-s-benos",
       "actor-diazoma"
     ],
     "places": [
@@ -739,6 +1616,11 @@
     "coverImage": null,
     "featured": false,
     "actorLabels": [
+      {
+        "id": "actor-s-benos",
+        "name": "S. Benos",
+        "slug": "s-benos"
+      },
       {
         "id": "actor-diazoma",
         "name": "Diazoma",
@@ -754,10 +1636,50 @@
     ]
   },
   {
-    "id": "evia-2021-demonstration-by-the-initiative-of-n-evia-against-the-imposi",
-    "slug": "demonstration-by-the-initiative-of-n-evia-against-the-imposi",
-    "title": "Demonstration by the Initiative of N. Evia against the imposition of the Diazoma committee",
-    "summary": "Demonstration by the Initiative  in N. Evia against the imposition of the S.Benos committee. ''While the forest is burning, instead of fire trucks, they sent us Benos''",
+    "id": "evia-2021-announcement-meeting-event-by-local-municipalities-1",
+    "slug": "announcement-meeting-event-by-local-municipalities",
+    "title": "Announcement / Meeting / Event  by local municipalities",
+    "summary": "Tour of artistic groups within the area in solidarity of the local residents through cultural events",
+    "body": "",
+    "category": "municipal-action",
+    "start": "2021-10-28",
+    "end": "2021-10-30",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-10-28 to 2021-10-30",
+    "startTs": 1635379200000,
+    "endTs": 1635638399000,
+    "actors": [
+      "actor-initiative-of-citizens-affected-by-the-fire"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-initiative-of-citizens-affected-by-the-fire",
+        "name": "Initiative of citizens affected by the fire",
+        "slug": "initiative-of-citizens-affected-by-the-fire"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-demonstration",
+    "slug": "demonstration",
+    "title": "Demonstration",
+    "summary": "Protest organised by the Initiative in N. Evia against the imposition of the Diazoma committee. ''While the forest is burning, instead of fire trucks, they sent us Benos''",
     "body": "",
     "category": "civil-society-action",
     "start": "2021-11-06",
@@ -790,6 +1712,572 @@
         "id": "place-attica",
         "name": "Attica",
         "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-announcement",
+    "slug": "announcement",
+    "title": "Announcement",
+    "summary": "Christos Triantopoullos announcedt of 20mil. For the relief of floodings in Evia",
+    "body": "",
+    "category": "reconstruction-governance",
+    "start": "2021-11-10",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-11-10",
+    "startTs": 1636502400000,
+    "endTs": null,
+    "actors": [
+      "actor-christos-trantopoulos",
+      "actor-greek-central-government"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-christos-trantopoulos",
+        "name": "Christos Trantopoulos",
+        "slug": "christos-trantopoulos"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-announcement-meetings-events-demonstrations-by-civil-society-1",
+    "slug": "announcement-meetings-events-demonstrations-by-civil-society",
+    "title": "Announcement / Meetings / Events / Demonstrations by civil society",
+    "summary": "Protest organised in Athens by the Union of the Temporary employees of the Fire Department is met with violence by MAT police",
+    "body": "",
+    "category": "civil-society-action",
+    "start": "2021-12-05",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-12-05",
+    "startTs": 1638662400000,
+    "endTs": null,
+    "actors": [
+      "actor-union-of-the-temporary-employees-of-the-fire-department"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-union-of-the-temporary-employees-of-the-fire-department",
+        "name": "Union of the Temporary employees of the Fire Department",
+        "slug": "union-of-the-temporary-employees-of-the-fire-department"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-official-meeting",
+    "slug": "official-meeting",
+    "title": "Official meeting",
+    "summary": "1st Meeting_Presentation of time schedule for the preparation of the 14 studies of the Masterplan for North Evia : 'Evia Meta'.  Prime Minister Mitsotakis emphasized, a \"very specific and structured plan for the total reconstruction of northern Evia\" , which \"will constitute the model for a new way of understanding holistic development, using the institution of integrated spatial investments, so that all the initiatives we undertake are part of a specific plan that can leverage the comparative advantages of each region, and first and foremost give hope to the people who were tested in northern Evia that it is worth remaining in their place and that their children will have a better future than them\".",
+    "body": "",
+    "category": "reconstruction-governance",
+    "start": "2021-12-11",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-12-11",
+    "startTs": 1639180800000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-diazoma",
+      "actor-greek-central-government",
+      "actor-s-benos"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-diazoma",
+        "name": "Diazoma",
+        "slug": "diazoma"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-s-benos",
+        "name": "S. Benos",
+        "slug": "s-benos"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-open-meeting",
+    "slug": "open-meeting",
+    "title": "Open Meeting",
+    "summary": "Meeting of DIAZOMA with mayors of the local municipalities of Limni, Mantoudi, Agia Anna & Istiaia, Aidipsos and local citizens",
+    "body": "",
+    "category": "municipal-action",
+    "start": "2021-12-14",
+    "end": "2021-12-15",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-12-14 to 2021-12-15",
+    "startTs": 1639440000000,
+    "endTs": 1639612799000,
+    "actors": [
+      "actor-s-benos",
+      "actor-diazoma",
+      "actor-local-municipality-of-limni",
+      "actor-mantoudi",
+      "actor-agia-anna",
+      "actor-local-municipality-of-istiaia",
+      "actor-aidipsos",
+      "actor-mayor-of-limni"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-s-benos",
+        "name": "S. Benos",
+        "slug": "s-benos"
+      },
+      {
+        "id": "actor-diazoma",
+        "name": "Diazoma",
+        "slug": "diazoma"
+      },
+      {
+        "id": "actor-local-municipality-of-limni",
+        "name": "Local Municipality of Limni",
+        "slug": "local-municipality-of-limni"
+      },
+      {
+        "id": "actor-mantoudi",
+        "name": "Mantoudi",
+        "slug": "mantoudi"
+      },
+      {
+        "id": "actor-agia-anna",
+        "name": "Agia Anna",
+        "slug": "agia-anna"
+      },
+      {
+        "id": "actor-local-municipality-of-istiaia",
+        "name": "Local Municipality of Istiaia",
+        "slug": "local-municipality-of-istiaia"
+      },
+      {
+        "id": "actor-aidipsos",
+        "name": "Aidipsos",
+        "slug": "aidipsos"
+      },
+      {
+        "id": "actor-mayor-of-limni",
+        "name": "Mayor of Limni",
+        "slug": "mayor-of-limni"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
+      }
+    ]
+  },
+  {
+    "id": "evia-2022-fek-873d",
+    "slug": "fek-873d",
+    "title": "FEK 873D",
+    "summary": "Approval of the Forest Maps of Evia",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2022-11-24",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2022-11-24",
+    "startTs": 1669248000000,
+    "endTs": null,
+    "actors": [
+      "actor-greek-central-government",
+      "actor-ministry-of-environment-energy",
+      "actor-forestry-service"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-ministry-of-environment-energy",
+        "name": "Ministry of Environment & Energy",
+        "slug": "ministry-of-environment-energy"
+      },
+      {
+        "id": "actor-forestry-service",
+        "name": "Forestry Service",
+        "slug": "forestry-service"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2023-announcement-meeting-event-by-the-greek-government",
+    "slug": "announcement-meeting-event-by-the-greek-government",
+    "title": "Announcement / Meeting / Event by the greek government",
+    "summary": "Press Release: “A Composition of Dreams”. Official submission of the Masterplan 'Evia Meta' and the strategic studies for North Evia to the Prime Minister. 71 projects and actions with a budget of €400 million",
+    "body": "",
+    "category": "reconstruction-governance",
+    "start": "2023-01-16",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2023-01-16",
+    "startTs": 1673827200000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government",
+      "actor-s-benos"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-s-benos",
+        "name": "S. Benos",
+        "slug": "s-benos"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2023-legislation-changes",
+    "slug": "legislation-changes",
+    "title": "Legislation changes",
+    "summary": "Creation of the committee responsible for Issues of State Relief and Rehabilitation from Natural Disasters",
+    "body": "",
+    "category": "legislation",
+    "start": "2023-01-16",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2023-01-16",
+    "startTs": 1673827200000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government",
+      "actor-christos-trantopoulos"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-christos-trantopoulos",
+        "name": "Christos Trantopoulos",
+        "slug": "christos-trantopoulos"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2023-rhodes",
+    "slug": "rhodes",
+    "title": "RHODES",
+    "summary": "RHODES",
+    "body": "",
+    "category": "wildfire",
+    "start": "2023-07-18",
+    "end": "2023-07-28",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2023-07-18 to 2023-07-28",
+    "startTs": 1689638400000,
+    "endTs": 1690588799000,
+    "actors": [
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
+    ],
+    "places": [
+      "place-rhodes"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-rhodes",
+        "name": "Rhodes",
+        "slug": "rhodes"
+      }
+    ]
+  },
+  {
+    "id": "evia-2023-evros",
+    "slug": "evros",
+    "title": "EVROS",
+    "summary": "EVROS",
+    "body": "",
+    "category": "wildfire",
+    "start": "2023-08-19",
+    "end": "2023-09-04",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2023-08-19 to 2023-09-04",
+    "startTs": 1692403200000,
+    "endTs": 1693871999000,
+    "actors": [
+      "actor-fire-department",
+      "actor-ministry-of-civil-protection"
+    ],
+    "places": [
+      "place-evros"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      },
+      {
+        "id": "actor-ministry-of-civil-protection",
+        "name": "Ministry of Civil Protection",
+        "slug": "ministry-of-civil-protection"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-evros",
+        "name": "Evros",
+        "slug": "evros"
+      }
+    ]
+  },
+  {
+    "id": "evia-2024-fek-63a",
+    "slug": "fek-63a",
+    "title": "FEK 63A",
+    "summary": "Law 5106: Introduction of Hybrid Co-operative schemes for the management of biomass within public forests.",
+    "body": "",
+    "category": "state-agency-action",
+    "start": "2024-01-05",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2024-01-05",
+    "startTs": 1704412800000,
+    "endTs": null,
+    "actors": [
+      "actor-greek-central-government",
+      "actor-ministry-of-environment-energy"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-ministry-of-environment-energy",
+        "name": "Ministry of Environment & Energy",
+        "slug": "ministry-of-environment-energy"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2026-event",
+    "slug": "event",
+    "title": "Event",
+    "summary": "Decision of the district attorney that no one should be held responsible for the wildfires in N. Evia 2021.",
+    "body": "Source: https://expressevia.com/2026/01/%CE%B7-%CE%B4%CE%B9%CE%BA%CE%B1%CE%B9%CE%BF%CF%83%CF%8D%CE%BD%CE%B7-%CE%B2%CE%AC%CE%B6%CE%B5%CE%B9-%CF%83%CF%84%CE%BF-%CE%B1%CF%81%CF%87%CE%B5%CE%AF%CE%BF-%CF%84%CE%B7%CE%BD-%CF%85%CF%80%CF%8C%CE%B8/",
+    "category": "state-agency-action",
+    "start": "2026-01-29",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2026-01-29",
+    "startTs": 1769644800000,
+    "endTs": null,
+    "actors": [
+      "actor-public-prosecutor-of-chalkida",
+      "actor-judiciary"
+    ],
+    "places": [
+      "place-north-evia"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-public-prosecutor-of-chalkida",
+        "name": "Public Prosecutor of Chalkida",
+        "slug": "public-prosecutor-of-chalkida"
+      },
+      {
+        "id": "actor-judiciary",
+        "name": "Judiciary",
+        "slug": "judiciary"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-north-evia",
+        "name": "North Evia",
+        "slug": "north-evia"
       }
     ]
   }

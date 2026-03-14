@@ -235,8 +235,9 @@ function buildLabelVisibility(
   selectedEventId: string | null,
 ): Map<string, boolean> {
   const labels = new Map<string, boolean>();
+  const alwaysShow = new Set(['wildfire', 'flood']);
   for (const event of events) {
-    labels.set(event.id, event.id === selectedEventId);
+    labels.set(event.id, event.id === selectedEventId || alwaysShow.has(event.category));
   }
   return labels;
 }
@@ -534,12 +535,18 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                 const iconFile = getCategorySvgIcon(event.category, hasDuration);
                 const iconHref = `${ICON_BASE}${iconFile}`;
 
-                // Point events: 16×16 icon centred on the start position
+                // Fire/suppression/flood point events use the full lane height
+                // to match the visual weight of their duration counterparts
+                const isEnvironmental = event.category === 'wildfire' || event.category === 'suppression' || event.category === 'flood';
+                const pointH = isEnvironmental ? bandLaneH : pointIconSize;
+                const pointW = isEnvironmental ? bandLaneH * (24 / 14) : 16;
+
+                // Point events: icon centred on the start position
                 // Duration events: keep native aspect ratio (24:14), tile via pattern
-                const iconW = hasDuration ? widthPx : 16;
-                const iconH = hasDuration ? bandLaneH : pointIconSize;
-                const iconX = hasDuration ? xStart : xStart - pointIconSize / 2;
-                const iconY = hasDuration ? yTop : yMid - pointIconSize / 2;
+                const iconW = hasDuration ? widthPx : pointW;
+                const iconH = hasDuration ? bandLaneH : pointH;
+                const iconX = hasDuration ? xStart : xStart - pointW / 2;
+                const iconY = hasDuration ? yTop : yMid - pointH / 2;
                 // For duration: one tile keeps the SVG's native 24×14 ratio
                 const tileW = bandLaneH * (24 / 14);
                 const patternId = `pat-${event.id.replace(/[^a-zA-Z0-9-]/g, '')}`;
@@ -564,7 +571,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                         onSelectEvent(event.id);
                       }
                     }}
-                    style={{ opacity: isSelected ? 1 : 0.85 }}
+                    style={{ opacity: 1 }}
                   >
                     {hasDuration ? (
                       <>
@@ -617,9 +624,9 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
 
                     {labelVisibility.get(event.id) && (
                       <text
-                        x={hasDuration ? xStart + Math.min(10, widthPx + 6) : xStart + 12}
-                        y={yMid - 5}
-                        className={`timeline-event-label ${isSelected ? 'is-selected' : ''}`}
+                        x={hasDuration ? xStart + 4 : xStart + 12}
+                        y={isEnvironmental ? yTop + 12 : yMid - 5}
+                        className={isEnvironmental ? 'timeline-zone-label timeline-fire-label' : `timeline-event-label ${isSelected ? 'is-selected' : ''}`}
                       >
                         {truncateLabel(event.title, visibleSpanDays > 365.25 * 6 ? 28 : 42)}
                       </text>
