@@ -14,6 +14,7 @@ import {
   type TimelineFilterState
 } from '@/lib/timeline';
 import D3Timeline from './D3Timeline';
+import EventDetailCard from './EventDetailCard';
 import TimelineLegend from './TimelineLegend';
 
 function arraysEqual(a: string[], b: string[]): boolean {
@@ -197,7 +198,10 @@ export default function TimelineWorkspace() {
           selectedEventId={selectedEventId}
           onSelectEvent={(eventId) => setSelectedEventId(eventId)}
         />
-        <TimelineLegend events={filteredEvents} />
+        <div className="timeline-bottom-row">
+          <TimelineLegend events={filteredEvents} />
+          {selectedEvent && <EventDetailCard event={selectedEvent} />}
+        </div>
       </section>
     </TimelineSelectionContext.Provider>
   );

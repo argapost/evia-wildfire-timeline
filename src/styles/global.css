@@ -346,6 +346,7 @@ a:hover {
 }
 
 .timeline-host {
+  position: relative;
   width: 100%;
   overflow: hidden;
   background: transparent;
@@ -362,6 +363,66 @@ a:hover {
 
 .timeline-host:active {
   cursor: grabbing;
+}
+
+.timeline-bottom-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding-right: 18px;
+}
+
+.timeline-bottom-row .legend-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-detail-card {
+  flex-shrink: 0;
+  width: 280px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: rgba(180, 180, 180, 0.28);
+  padding: 16px;
+}
+
+.event-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid var(--color-swatch-blue-2);
+  padding-bottom: 8px;
+}
+
+.event-detail-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.event-detail-date {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-swatch-blue-2);
+}
+
+.event-detail-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #adadad;
+  margin-bottom: 6px;
+}
+
+.event-detail-summary {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #adadad;
 }
 
 .timeline-empty-label {
@@ -438,6 +499,7 @@ a:hover {
 
 .timeline-event {
   cursor: pointer;
+  outline: none;
 }
 
 .timeline-zone-label.timeline-fire-label {

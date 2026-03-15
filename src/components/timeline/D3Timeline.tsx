@@ -28,6 +28,7 @@ type PositionedEvent = TimelineEvent & {
   band: BandId;
   laneIndex: number;
   y: number;
+  laneH: number;
 };
 
 type BandInfo = {
@@ -89,6 +90,8 @@ function classifyBand(event: TimelineEvent): BandId {
   return 'rest';
 }
 
+const environmentalCategories = new Set(['wildfire', 'suppression', 'flood']);
+
 function packBand(
   events: TimelineEvent[],
   band: BandId
@@ -107,6 +110,64 @@ function packBand(
     return a.id.localeCompare(b.id);
   });
 
+  // Evia & Attica: pack environmental events (fire/suppression/flood) normally,
+  // then put all other events on a single shared lane.
+  if (band === 'evia' || band === 'attica') {
+    const envEvents = sorted.filter((e) => environmentalCategories.has(e.category));
+    const otherEvents = sorted.filter((e) => !environmentalCategories.has(e.category));
+
+    const laneEndTs: number[] = [];
+    const result: Array<TimelineEvent & { laneIndex: number; band: BandId }> = [];
+
+    for (const event of envEvents) {
+      const eventEndTs = getEventEndTs(event);
+      let laneIndex = laneEndTs.findIndex((laneEnd) => laneEnd <= event.startTs);
+      if (laneIndex === -1) {
+        laneIndex = laneEndTs.length;
+        laneEndTs.push(eventEndTs);
+      } else {
+        laneEndTs[laneIndex] = eventEndTs;
+      }
+      result.push({ ...event, laneIndex, band });
+    }
+
+    // Non-environmental duration events: own lanes right after environmental
+    const pointEvents = otherEvents.filter((e) => !e.endTs || e.endTs === e.startTs);
+    const durationEvents = otherEvents.filter((e) => e.endTs && e.endTs !== e.startTs);
+
+    const durBaseLane = laneEndTs.length;
+    const durLaneEndTs: number[] = [];
+    for (const event of durationEvents) {
+      const eventEndTs = getEventEndTs(event);
+      let subLane = durLaneEndTs.findIndex((laneEnd) => laneEnd <= event.startTs);
+      if (subLane === -1) {
+        subLane = durLaneEndTs.length;
+        durLaneEndTs.push(eventEndTs);
+      } else {
+        durLaneEndTs[subLane] = eventEndTs;
+      }
+      result.push({ ...event, laneIndex: durBaseLane + subLane, band });
+    }
+
+    // Point events: pack on lanes right after duration events
+    const pointBaseLane = durBaseLane + durLaneEndTs.length;
+    const pointLaneEndTs: number[] = [];
+    for (const event of pointEvents) {
+      const eventEndTs = getEventEndTs(event);
+      let subLane = pointLaneEndTs.findIndex((laneEnd) => laneEnd <= event.startTs);
+      if (subLane === -1) {
+        subLane = pointLaneEndTs.length;
+        pointLaneEndTs.push(eventEndTs);
+      } else {
+        pointLaneEndTs[subLane] = eventEndTs;
+      }
+      result.push({ ...event, laneIndex: pointBaseLane + subLane, band });
+    }
+
+    return result;
+  }
+
+  // Default packing for other bands
   const laneEndTs: number[] = [];
 
   return sorted.map((event) => {
@@ -134,7 +195,6 @@ const bandDefs: { id: BandId; label: string; laneHeight: number }[] = [
   { id: 'rest', label: 'REST OF GREECE', laneHeight: defaultLaneHeight },
 ];
 
-const dividerGap = 20;
 
 function computeBandLayout(events: TimelineEvent[]): BandLayout {
   const grouped: Record<BandId, TimelineEvent[]> = { evia: [], attica: [], rest: [] };
@@ -151,29 +211,52 @@ function computeBandLayout(events: TimelineEvent[]): BandLayout {
     (b) => Math.max(1, b.events.reduce((mx, e) => Math.max(mx, e.laneIndex + 1), 0))
   );
 
-  const bandHeights = laneCounts.map(
-    (lc, i) => lc * packed[i].def.laneHeight + Math.max(0, lc - 1) * laneGap
+  // Compute per-lane heights: environmental lanes in Evia use eviaLaneHeight, others use defaultLaneHeight
+  const perLaneHeights: number[][] = packed.map((b, bi) => {
+    const lc = laneCounts[bi];
+    if (b.def.id !== 'evia') {
+      return Array(lc).fill(defaultLaneHeight) as number[];
+    }
+    // For Evia: check which lanes have environmental events
+    const laneHasEnv = new Set<number>();
+    for (const e of b.events) {
+      if (environmentalCategories.has(e.category)) laneHasEnv.add(e.laneIndex);
+    }
+    return Array.from({ length: lc }, (_, lane) =>
+      laneHasEnv.has(lane) ? eviaLaneHeight : defaultLaneHeight
+    );
+  });
+
+  // Compute cumulative Y offsets per lane within each band
+  const laneYOffsets: number[][] = perLaneHeights.map((heights) => {
+    const offsets: number[] = [];
+    let y = 0;
+    for (let i = 0; i < heights.length; i++) {
+      offsets.push(y);
+      y += heights[i] + laneGap;
+    }
+    return offsets;
+  });
+
+  const bandHeights = perLaneHeights.map((heights) =>
+    heights.reduce((sum, h) => sum + h, 0) + Math.max(0, heights.length - 1) * laneGap
   );
 
-  // Compute top-Y for each band.
-  // Between Evia and Attica: no gap — the fire bars sit right on the divider line.
-  // Between Attica and Rest: normal dividerGap.
+  // Compute top-Y for each band. No gaps between bands.
   const topYs: number[] = [];
   let cursor = 0;
   for (let i = 0; i < bandDefs.length; i++) {
     topYs.push(cursor);
-    const gapAfter = i === 0 ? 0 : dividerGap;
-    cursor += bandHeights[i] + gapAfter;
+    cursor += bandHeights[i];
   }
 
   const totalHeight = cursor;
 
-  // Divider Y positions: Evia/Attica line sits at the bottom edge of the Evia band.
-  // Attica/Rest line sits centered in the gap between those bands.
+  // Divider Y positions: each divider sits at the bottom edge of the upper band.
   const dividers: number[] = [];
-  dividers.push(topYs[0] + bandHeights[0]); // Evia/Attica: right at the bottom of Evia
+  dividers.push(topYs[0] + bandHeights[0]); // Evia/Attica
   if (bandDefs.length > 2) {
-    dividers.push(topYs[1] + bandHeights[1] + dividerGap / 2); // Attica/Rest: centered in gap
+    dividers.push(topYs[1] + bandHeights[1]); // Attica/Rest
   }
 
   const bands: BandInfo[] = bandDefs.map((def, i) => ({
@@ -185,14 +268,15 @@ function computeBandLayout(events: TimelineEvent[]): BandLayout {
   }));
 
   const positionedEvents: PositionedEvent[] = packed.flatMap((b, bi) => {
-    const lh = b.def.laneHeight;
-    const maxLane = laneCounts[bi] - 1;
+    const offsets = laneYOffsets[bi];
+
     return b.events.map((event) => ({
       ...event,
-      // Evia band: reverse lanes so lane 0 (fire/suppression) sits at the bottom, near the divider
+      laneH: perLaneHeights[bi][event.laneIndex],
+      // Evia: reverse lanes so lane 0 (fire/suppression) sits at the bottom, near the divider
       y: b.def.id === 'evia'
-        ? topYs[bi] + (maxLane - event.laneIndex) * (lh + laneGap)
-        : topYs[bi] + event.laneIndex * (lh + laneGap),
+        ? topYs[bi] + (bandHeights[bi] - offsets[event.laneIndex] - perLaneHeights[bi][event.laneIndex])
+        : topYs[bi] + offsets[event.laneIndex],
     }));
   });
 
@@ -232,12 +316,11 @@ function buildFireSeasons(domain: [Date, Date]): FireSeason[] {
 
 function buildLabelVisibility(
   events: PositionedEvent[],
-  selectedEventId: string | null,
 ): Map<string, boolean> {
   const labels = new Map<string, boolean>();
   const alwaysShow = new Set(['wildfire', 'flood']);
   for (const event of events) {
-    labels.set(event.id, event.id === selectedEventId || alwaysShow.has(event.category));
+    labels.set(event.id, alwaysShow.has(event.category));
   }
   return labels;
 }
@@ -398,8 +481,8 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
   };
 
   const labelVisibility = useMemo(() => {
-    return buildLabelVisibility(layout.events, selectedEventId);
-  }, [layout.events, selectedEventId]);
+    return buildLabelVisibility(layout.events);
+  }, [layout.events]);
 
   return (
     <section className="timeline-card" aria-label="Timeline engine">
@@ -430,8 +513,8 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
 
             {tickSpec.minorTicks.map((tick) => {
               const x = visibleScale(tick);
-              const isJan1 = tick.getMonth() === 0 && tick.getDate() === 1;
-              const is15th = tick.getDate() === 15;
+              const isJan1 = tick.getUTCMonth() === 0 && tick.getUTCDate() === 1;
+              const is15th = tick.getUTCDate() === 15;
               return (
                 <line
                   key={`minor-${tick.toISOString()}`}
@@ -445,13 +528,13 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
             })}
 
             {/* Fixed year label in upper-left when zoomed in and no Jan tick visible */}
-            {visibleSpanDays < 365 && !tickSpec.majorTicks.some((t) => t.getMonth() === 0) && (
+            {visibleSpanDays < 365 && !tickSpec.majorTicks.some((t) => t.getUTCMonth() === 0) && (
               <text
                 x={4}
                 y={-8}
                 className="timeline-tick-label timeline-tick-label-year"
               >
-                {visibleDomain[0].getFullYear()}
+                {visibleDomain[0].getUTCFullYear()}
               </text>
             )}
 
@@ -471,7 +554,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
 
             {tickSpec.majorTicks.map((tick) => {
               const x = visibleScale(tick);
-              const isJanuary = tick.getMonth() === 0;
+              const isJanuary = tick.getUTCMonth() === 0;
               return (
                 <g key={`major-${tick.toISOString()}`}>
                   <line
@@ -491,13 +574,16 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
 
             {/* Band labels rotated 90° (outside clip so they don't get cut) */}
             {layout.bands.map((band) => {
-              const topY = band.topY + verticalOffset + 4;
+              // EVIA label near the bottom of the band (close to the divider)
+              const labelY = band.id === 'evia'
+                ? band.topY + band.bandHeight + verticalOffset - 4
+                : band.topY + verticalOffset + 4;
               return (
                 <text
                   key={band.id}
                   className="timeline-zone-label"
-                  transform={`translate(14, ${topY}) rotate(-90)`}
-                  textAnchor="end"
+                  transform={`translate(14, ${labelY}) rotate(-90)`}
+                  textAnchor={band.id === 'evia' ? 'start' : 'end'}
                 >
                   {band.label}
                 </text>
@@ -526,9 +612,9 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                 const xStart = visibleScale(new Date(event.startTs));
                 const xEnd = visibleScale(new Date(event.endTs ?? event.startTs));
                 const hasDuration = !!(event.endTs && event.endTs !== event.startTs);
-                const bandLaneH = event.band === 'evia' ? eviaLaneHeight : defaultLaneHeight;
+                const laneH = event.laneH;
                 const yTop = event.y + verticalOffset;
-                const yMid = yTop + bandLaneH / 2;
+                const yMid = yTop + laneH / 2;
                 const isSelected = event.id === selectedEventId;
                 const widthPx = Math.max(eventMinWidth, xEnd - xStart);
 
@@ -536,19 +622,29 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                 const iconHref = `${ICON_BASE}${iconFile}`;
 
                 // Fire/suppression/flood point events use the full lane height
-                // to match the visual weight of their duration counterparts
                 const isEnvironmental = event.category === 'wildfire' || event.category === 'suppression' || event.category === 'flood';
-                const pointH = isEnvironmental ? bandLaneH : pointIconSize;
-                const pointW = isEnvironmental ? bandLaneH * (24 / 14) : 16;
+                const pointH = isEnvironmental ? laneH : pointIconSize;
+                const pointW = isEnvironmental ? laneH * (24 / 14) : 16;
+
+                // Legislation events: center on the Evia/Attica divider line
+                const isLegislation = event.category === 'legislation' || event.category === 'forestry-policy';
+                const dividerY = layout.dividers.length > 0 ? layout.dividers[0] + verticalOffset : yTop;
 
                 // Point events: icon centred on the start position
                 // Duration events: keep native aspect ratio (24:14), tile via pattern
-                const iconW = hasDuration ? widthPx : pointW;
-                const iconH = hasDuration ? bandLaneH : pointH;
-                const iconX = hasDuration ? xStart : xStart - pointW / 2;
-                const iconY = hasDuration ? yTop : yMid - pointH / 2;
+                const selectedScale = (!hasDuration && isSelected) ? 1.5 : 1;
+                const legScale = isLegislation ? 1.5 : 1;
+                const finalScale = Math.max(selectedScale, legScale);
+                const finalW = pointW * finalScale;
+                const finalH = pointH * finalScale;
+                const iconW = hasDuration ? widthPx : finalW;
+                const iconH = hasDuration ? laneH : finalH;
+                const iconX = hasDuration ? xStart : xStart - finalW / 2;
+                const iconY = isLegislation
+                  ? dividerY - finalH / 2
+                  : hasDuration ? yTop : yMid - finalH / 2;
                 // For duration: one tile keeps the SVG's native 24×14 ratio
-                const tileW = bandLaneH * (24 / 14);
+                const tileW = laneH * (24 / 14);
                 const patternId = `pat-${event.id.replace(/[^a-zA-Z0-9-]/g, '')}`;
 
                 const bandLabel = event.band === 'evia' ? 'Evia' : event.band === 'attica' ? 'Attica' : 'rest of Greece';
@@ -610,23 +706,11 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                         preserveAspectRatio="xMidYMid meet"
                       />
                     )}
-                    {isSelected && (
-                      <rect
-                        x={iconX - 1}
-                        y={iconY - 1}
-                        width={iconW + 2}
-                        height={iconH + 2}
-                        fill="none"
-                        stroke="var(--color-text)"
-                        strokeWidth={1.2}
-                      />
-                    )}
-
                     {labelVisibility.get(event.id) && (
                       <text
                         x={hasDuration ? xStart + 4 : xStart + 12}
                         y={isEnvironmental ? yTop + 12 : yMid - 5}
-                        className={isEnvironmental ? 'timeline-zone-label timeline-fire-label' : `timeline-event-label ${isSelected ? 'is-selected' : ''}`}
+                        className="timeline-zone-label timeline-fire-label"
                       >
                         {truncateLabel(event.title, visibleSpanDays > 365.25 * 6 ? 28 : 42)}
                       </text>
@@ -636,7 +720,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
               })}
             </g>
 
-            {/* Divider lines — rendered last so they draw on top of events */}
+            {/* Divider lines — rendered after clip group so they draw on top of events */}
             {layout.dividers.map((dy, i) => (
               <line
                 key={`div-${i}`}
@@ -647,6 +731,31 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent }: D
                 className={`timeline-divider-line ${i === 0 ? 'divider-primary' : 'divider-secondary'}`}
               />
             ))}
+
+            {/* Legislation symbols — rendered after dividers so they appear on top */}
+            {layout.events
+              .filter((e) => e.category === 'legislation' || e.category === 'forestry-policy')
+              .map((event) => {
+                const xStart = visibleScale(new Date(event.startTs));
+                const hasDuration = !!(event.endTs && event.endTs !== event.startTs);
+                const iconFile = getCategorySvgIcon(event.category, hasDuration);
+                const iconHref = `${ICON_BASE}${iconFile}`;
+                const dividerY = layout.dividers[0] + verticalOffset;
+                const legSize = pointIconSize * 1.5;
+                const legW = 16 * 1.5;
+                return (
+                  <image
+                    key={`leg-${event.id}`}
+                    href={iconHref}
+                    x={xStart - legW / 2}
+                    y={dividerY - legSize / 2}
+                    width={legW}
+                    height={legSize}
+                    preserveAspectRatio="xMidYMid meet"
+                    style={{ pointerEvents: 'none' }}
+                  />
+                );
+              })}
           </g>
         </svg>
       </div>

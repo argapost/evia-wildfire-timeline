@@ -1179,12 +1179,12 @@
     "body": "",
     "category": "wildfire",
     "start": "2021-08-16",
-    "end": null,
+    "end": "2021-08-19",
     "datePrecision": "day",
     "isOngoing": false,
-    "displayDate": "2021-08-16",
+    "displayDate": "2021-08-16 to 2021-08-19",
     "startTs": 1629072000000,
-    "endTs": null,
+    "endTs": 1629417599000,
     "actors": [
       "actor-fire-department",
       "actor-ministry-of-civil-protection"

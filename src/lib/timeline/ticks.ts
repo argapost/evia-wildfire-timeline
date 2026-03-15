@@ -1,10 +1,9 @@
 ﻿import {
-  scaleTime,
-  timeDay,
-  timeFormat,
-  timeMonth,
-  timeWeek,
-  timeYear,
+  scaleUtc,
+  utcDay,
+  utcFormat,
+  utcMonth,
+  utcYear,
   type ScaleTime,
   type CountableTimeInterval,
   type TimeInterval
@@ -26,9 +25,9 @@ type TickMode = {
   withDailyTicks?: boolean;
 };
 
-const formatYear = timeFormat('%Y');
-const formatMonthYear = timeFormat('%b %Y');
-const formatDayMonth = timeFormat('%d %b');
+const formatYear = utcFormat('%Y');
+const formatMonthYear = utcFormat('%b %Y');
+const formatDayMonth = utcFormat('%d %b');
 
 function everyOrFallback(interval: CountableTimeInterval, step: number): TimeInterval {
   return interval.every(step) ?? interval;
@@ -39,24 +38,24 @@ function getTickMode(spanMs: number): TickMode {
 
   if (spanYears > 90) {
     return {
-      major: everyOrFallback(timeYear, 10),
-      minor: everyOrFallback(timeYear, 5),
+      major: everyOrFallback(utcYear, 10),
+      minor: everyOrFallback(utcYear, 5),
       format: formatYear
     };
   }
 
   if (spanYears > 35) {
     return {
-      major: everyOrFallback(timeYear, 5),
-      minor: everyOrFallback(timeYear, 1),
+      major: everyOrFallback(utcYear, 5),
+      minor: everyOrFallback(utcYear, 1),
       format: formatYear
     };
   }
 
   if (spanYears > 8) {
     return {
-      major: everyOrFallback(timeYear, 1),
-      minor: everyOrFallback(timeMonth, 6),
+      major: everyOrFallback(utcYear, 1),
+      minor: everyOrFallback(utcMonth, 6),
       format: formatYear
     };
   }
@@ -64,33 +63,33 @@ function getTickMode(spanMs: number): TickMode {
   // Fully zoomed out (~3–8 years): Jan (thick line + year) + Jul (thin line + label)
   if (spanYears > 2.5) {
     return {
-      major: timeMonth,
-      minor: timeMonth,
-      format: (d: Date) => d.getMonth() === 0 ? formatYear(d) : 'Jul',
-      filterMajor: (d: Date) => d.getMonth() === 0 || d.getMonth() === 6,
+      major: utcMonth,
+      minor: utcMonth,
+      format: (d: Date) => d.getUTCMonth() === 0 ? formatYear(d) : 'Jul',
+      filterMajor: (d: Date) => d.getUTCMonth() === 0 || d.getUTCMonth() === 6,
       noMinor: true,
     };
   }
 
   // ~24 months view: Jan (thick + year) + Apr, Jul, Oct (thin lines + labels)
   if (spanYears > 1.2) {
-    const formatMonth = timeFormat('%b');
+    const formatMonth = utcFormat('%b');
     return {
-      major: timeMonth,
-      minor: timeMonth,
-      format: (d: Date) => d.getMonth() === 0 ? formatYear(d) : formatMonth(d),
-      filterMajor: (d: Date) => d.getMonth() % 3 === 0,
+      major: utcMonth,
+      minor: utcMonth,
+      format: (d: Date) => d.getUTCMonth() === 0 ? formatYear(d) : formatMonth(d),
+      filterMajor: (d: Date) => d.getUTCMonth() % 3 === 0,
       noMinor: true,
     };
   }
 
   // ~6 months to 3 months (max zoom): all months + 1st/15th + daily dotted lines
   if (spanYears <= 0.5) {
-    const formatMonth = timeFormat('%b');
+    const formatMonth = utcFormat('%b');
     return {
-      major: timeMonth,
-      minor: timeMonth,
-      format: (d: Date) => d.getMonth() === 0 ? formatYear(d) : formatMonth(d),
+      major: utcMonth,
+      minor: utcMonth,
+      format: (d: Date) => d.getUTCMonth() === 0 ? formatYear(d) : formatMonth(d),
       minorFirstAnd15th: true,
       withDailyTicks: true,
     };
@@ -98,11 +97,11 @@ function getTickMode(spanMs: number): TickMode {
 
   // 18 months to 6 months: all months labeled + 1st and 15th grid lines
   {
-    const formatMonth = timeFormat('%b');
+    const formatMonth = utcFormat('%b');
     return {
-      major: timeMonth,
-      minor: timeMonth,
-      format: (d: Date) => d.getMonth() === 0 ? formatYear(d) : formatMonth(d),
+      major: utcMonth,
+      minor: utcMonth,
+      format: (d: Date) => d.getUTCMonth() === 0 ? formatYear(d) : formatMonth(d),
       minorFirstAnd15th: true,
     };
   }
@@ -120,11 +119,11 @@ export function buildTickSpec(scale: ScaleTime<number, number>): TimelineTickSpe
     // No minor ticks at this zoom level
   } else if (mode.minorFirstAnd15th) {
     const firsts = scale.ticks(mode.minor);
-    const fifteenths = firsts.map((d) => new Date(d.getFullYear(), d.getMonth(), 15));
+    const fifteenths = firsts.map((d) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 15)));
     minorTicks = [...firsts, ...fifteenths].sort((a, b) => a.getTime() - b.getTime());
   } else if (mode.minor15thOnly) {
     minorTicks = scale.ticks(mode.minor).map(
-      (d) => new Date(d.getFullYear(), d.getMonth(), 15)
+      (d) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 15))
     );
   } else {
     minorTicks = scale.ticks(mode.minor);
@@ -133,8 +132,8 @@ export function buildTickSpec(scale: ScaleTime<number, number>): TimelineTickSpe
   // Daily ticks: all days except 1st and 15th (those are already minor ticks)
   let dailyTicks: Date[] = [];
   if (mode.withDailyTicks) {
-    dailyTicks = scale.ticks(timeDay).filter(
-      (d) => d.getDate() !== 1 && d.getDate() !== 15
+    dailyTicks = scale.ticks(utcDay).filter(
+      (d) => d.getUTCDate() !== 1 && d.getUTCDate() !== 15
     );
   }
 
@@ -147,6 +146,6 @@ export function buildTickSpec(scale: ScaleTime<number, number>): TimelineTickSpe
 }
 
 export function createBaseTimeScale(domain: [Date, Date], range: [number, number]): ScaleTime<number, number> {
-  return scaleTime().domain(domain).range(range);
+  return scaleUtc().domain(domain).range(range);
 }
 
