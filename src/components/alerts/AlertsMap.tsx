@@ -18,6 +18,7 @@ import { MAP_CENTER, MAP_ZOOM, REGION_COLORS } from '@/lib/alerts/constants';
 type AlertsMapProps = {
   alerts: ProcessedAlert[];
   currentIndex: number;
+  currentDate: string | null; // YYYY-MM-DD from the active alert's timestamp
   selectedAlert: ProcessedAlert | null;
   onSelectAlert: (alert: ProcessedAlert | null) => void;
 };
@@ -42,7 +43,13 @@ const ACTIVE_ARROWS_LAYER = 'active-arrows';
 const ACTIVE_FROM_LAYER = 'active-from';
 const ACTIVE_TO_LAYER = 'active-to';
 
-const ALL_LAYERS = [
+// Burn scar
+const BURN_SCAR_SOURCE = 'burn-scar';
+const BURN_SCAR_LAYER = 'burn-scar-fill';
+const BURN_SCAR_OUTLINE_LAYER = 'burn-scar-outline';
+
+// Only evacuation layers get chronologicalIndex filters — NOT burn scar
+const EVAC_LAYERS = [
   PAST_FROM_LAYER,
   ACTIVE_CURVES_LAYER, ACTIVE_ARROWS_LAYER, ACTIVE_FROM_LAYER, ACTIVE_TO_LAYER
 ];
@@ -292,7 +299,34 @@ const ACTIVE_FILTER: ExpressionSpecification = ['==', ['get', 'chronologicalInde
 function ensureLayers(map: Map): void {
   const empty: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] };
 
-  // Sources
+  // ── Burn scar (bottom-most overlay) ──
+  if (!map.getSource(BURN_SCAR_SOURCE))
+    map.addSource(BURN_SCAR_SOURCE, { type: 'geojson', data: empty });
+
+  if (!map.getLayer(BURN_SCAR_LAYER))
+    map.addLayer({
+      id: BURN_SCAR_LAYER,
+      type: 'fill',
+      source: BURN_SCAR_SOURCE,
+      paint: {
+        'fill-color': '#ff4400',
+        'fill-opacity': 0.15,
+      },
+    });
+
+  if (!map.getLayer(BURN_SCAR_OUTLINE_LAYER))
+    map.addLayer({
+      id: BURN_SCAR_OUTLINE_LAYER,
+      type: 'line',
+      source: BURN_SCAR_SOURCE,
+      paint: {
+        'line-color': '#ff4400',
+        'line-width': 1.5,
+        'line-opacity': 0.5,
+      },
+    });
+
+  // ── Evacuation sources ──
   if (!map.getSource(EVAC_CURVES_SOURCE))
     map.addSource(EVAC_CURVES_SOURCE, { type: 'geojson', data: empty });
   if (!map.getSource(EVAC_ARROWS_SOURCE))
@@ -396,7 +430,7 @@ function updateSourceData(map: Map, alerts: ProcessedAlert[], currentIndex: numb
   if (arrowsSrc) arrowsSrc.setData(buildArrowheadsGeoJSON(alerts, currentIndex));
 
   // Update filters to highlight the active alert
-  for (const id of ALL_LAYERS) {
+  for (const id of EVAC_LAYERS) {
     const layer = map.getLayer(id);
     if (!layer) continue;
 
@@ -427,6 +461,7 @@ function updateSourceData(map: Map, alerts: ProcessedAlert[], currentIndex: numb
 export default function AlertsMap({
   alerts,
   currentIndex,
+  currentDate,
   selectedAlert,
   onSelectAlert
 }: AlertsMapProps) {
@@ -437,6 +472,8 @@ export default function AlertsMap({
   const [mapError, setMapError] = useState<string | null>(null);
   const [basemap, setBasemap] = useState<BasemapId>('satellite');
 
+  // Burn scar cache (preloaded on mount)
+  const burnScarCacheRef = useRef<Map<string, GeoJSON.FeatureCollection>>(new Map());
 
   const onSelectAlertRef = useRef(onSelectAlert);
   onSelectAlertRef.current = onSelectAlert;
@@ -446,6 +483,9 @@ export default function AlertsMap({
 
   const currentIndexRef = useRef(currentIndex);
   currentIndexRef.current = currentIndex;
+
+  const currentDateRef = useRef(currentDate);
+  currentDateRef.current = currentDate;
 
   // ── Initialization ──
   useEffect(() => {
@@ -478,6 +518,21 @@ export default function AlertsMap({
           ensureLayers(map);
           updateSourceData(map, alertsRef.current, currentIndex);
           isReadyRef.current = true;
+
+          // Load initial burn scar
+          const initDate = currentDateRef.current;
+          if (initDate) {
+            fetch(`/data/evia/burn-scar/cumulative/${initDate}.geojson`)
+              .then(r => r.ok ? r.json() : null)
+              .then(data => {
+                if (data) {
+                  burnScarCacheRef.current.set(initDate, data);
+                  const src = map.getSource(BURN_SCAR_SOURCE) as GeoJSONSource | undefined;
+                  if (src) src.setData(data);
+                }
+              })
+              .catch(() => {});
+          }
         });
 
         map.on('error', (event) => {
@@ -542,6 +597,53 @@ export default function AlertsMap({
     updateSourceData(map, alerts, currentIndex);
   }, [alerts, currentIndex]);
 
+  // ── Preload all burn scar GeoJSONs on mount ──
+  useEffect(() => {
+    const dates = [];
+    for (let d = 3; d <= 24; d++) {
+      dates.push(`2021-08-${String(d).padStart(2, '0')}`);
+    }
+    for (const date of dates) {
+      fetch(`/data/evia/burn-scar/cumulative/${date}.geojson`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data) burnScarCacheRef.current.set(date, data);
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  // ── Update burn scar when currentDate changes ──
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isReadyRef.current) return;
+
+    const src = map.getSource(BURN_SCAR_SOURCE) as GeoJSONSource | undefined;
+    if (!src) return;
+
+    if (!currentDate) {
+      src.setData({ type: 'FeatureCollection', features: [] });
+      return;
+    }
+
+    const cached = burnScarCacheRef.current.get(currentDate);
+    if (cached) {
+      src.setData(cached);
+    } else {
+      // Fallback fetch if not cached yet
+      fetch(`/data/evia/burn-scar/cumulative/${currentDate}.geojson`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data) {
+            burnScarCacheRef.current.set(currentDate, data);
+            // Re-check map is still ready and date hasn't changed
+            const s = map.getSource(BURN_SCAR_SOURCE) as GeoJSONSource | undefined;
+            if (s) s.setData(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [currentDate]);
 
   // ── Render ──
   if (mapError) {

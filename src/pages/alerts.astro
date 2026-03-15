@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AlertsReplayModule from '../components/alerts/AlertsReplayModule';
-import { alerts, alertsSummary } from '../lib/alerts/data';
+import { alerts } from '../lib/alerts/data';
 ---
 
 <BaseLayout
@@ -18,14 +18,8 @@ import { alerts, alertsSummary } from '../lib/alerts/data';
     </header>
 
     <div class="alerts-workspace">
-      <AlertsReplayModule client:load alerts={alerts} summary={alertsSummary} />
+      <AlertsReplayModule client:load alerts={alerts} />
     </div>
-
-    <nav class="alerts-nav">
-      <a href="/reconstruction">Reconstruction</a>
-      <a href="/timeline">Timeline</a>
-      <a href="/">Home</a>
-    </nav>
   </div>
 </BaseLayout>
 
@@ -33,7 +27,6 @@ import { alerts, alertsSummary } from '../lib/alerts/data';
   .alerts-page {
     --alert-red: #c74949;
     --alert-blue: #3a6fb5;
-    --alert-surface: #f7f8fb;
   }
 
   .alerts-header {
@@ -78,27 +71,6 @@ import { alerts, alertsSummary } from '../lib/alerts/data';
 
   .alerts-workspace {
     margin-top: 0;
-  }
-
-  .alerts-nav {
-    display: flex;
-    gap: 1.5rem;
-    padding: 1.2rem 0;
-    border-top: 1px solid var(--color-rule);
-    margin-top: 2rem;
-  }
-
-  .alerts-nav a {
-    font-family: var(--font-sans);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-muted);
-    text-decoration: none;
-  }
-
-  .alerts-nav a:hover {
-    color: var(--color-text);
   }
 
   @media (max-width: 640px) {

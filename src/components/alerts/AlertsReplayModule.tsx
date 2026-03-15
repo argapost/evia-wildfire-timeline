@@ -1,19 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { ProcessedAlert, AlertsSummary } from '@/lib/alerts/schema';
+import type { ProcessedAlert } from '@/lib/alerts/schema';
 import type { PlaybackSpeed } from '@/lib/alerts/constants';
 import { PLAYBACK_SPEEDS, TIMELINE_START } from '@/lib/alerts/constants';
 import AlertsMap from './AlertsMap';
 import AlertsTimeline from './AlertsTimeline';
 import AlertDetailCard from './AlertDetailCard';
-import AlertsFrequencyChart from './AlertsFrequencyChart';
-import AlertsAnalysisPanel from './AlertsAnalysisPanel';
 
 type AlertsReplayModuleProps = {
   alerts: ProcessedAlert[];
-  summary: AlertsSummary;
 };
 
-export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModuleProps) {
+export default function AlertsReplayModule({ alerts }: AlertsReplayModuleProps) {
   const [currentTime, setCurrentTime] = useState<Date>(TIMELINE_START);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<PlaybackSpeed>(PLAYBACK_SPEEDS[0]);
@@ -181,6 +178,10 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [filteredAlerts, resolvedArrayIndex, handlePlayPause]);
 
+  // Current date from the active alert (for burn scar layer)
+  const currentAlert = filteredAlerts[resolvedArrayIndex];
+  const currentDate = currentAlert ? currentAlert.timestamp.slice(0, 10) : null;
+
   // Alert counter display
   const alertCounter = resolvedArrayIndex >= 0
     ? `${resolvedArrayIndex + 1} / ${filteredAlerts.length}`
@@ -253,19 +254,13 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
       </div>
 
       {/* ── Map + Timeline block ── */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: 'calc(100vh - 14rem)',
-          minHeight: '28rem',
-        }}
-      >
+      <div>
         {/* Map container */}
-        <div style={{ position: 'relative', flex: 1, minHeight: '300px' }}>
+        <div style={{ position: 'relative', height: 'calc(100vh - 16rem)', minHeight: '400px' }}>
           <AlertsMap
             alerts={filteredAlerts}
             currentIndex={resolvedChronoIndex}
+            currentDate={currentDate}
             selectedAlert={selectedAlert}
             onSelectAlert={handleSelectAlert}
           />
@@ -285,11 +280,6 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
         />
       </div>
 
-      {/* ── Analysis sections ── */}
-      <div style={{ marginTop: '2rem' }}>
-        <AlertsFrequencyChart alerts={filteredAlerts} />
-        <AlertsAnalysisPanel alerts={filteredAlerts} />
-      </div>
     </div>
   );
 }

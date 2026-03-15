@@ -3766,6 +3766,118 @@
     }
   },
   {
+    "tweet_id": "1423614377601769472",
+    "created_at_utc": "2021-08-06T11:58:11+00:00",
+    "created_at_local": "2021-08-06T14:58:11+03:00",
+    "text": "⚠️ Ενεργοποίηση 1️⃣1️⃣2️⃣ 🆘 Αν βρίσκεστε στον #Θεολόγο εκκενώστε τώρα προς #Λεκούνα - #Βλυχάδα ‼️ Δασική πυρκαγιά στην περιοχή σας @pyrosvestiki @hellenicpolice",
+    "lang": "el",
+    "author_id": "1187287012442804225",
+    "conversation_id": "1423614377601769472",
+    "in_reply_to_user_id": null,
+    "possibly_sensitive": false,
+    "reply_settings": "everyone",
+    "source": null,
+    "public_metrics": {
+      "retweet_count": 194,
+      "reply_count": 1,
+      "like_count": 114,
+      "quote_count": 6,
+      "bookmark_count": 0,
+      "impression_count": 0
+    },
+    "entities": {
+      "mentions": [
+        {
+          "start": 136,
+          "end": 149,
+          "username": "pyrosvestiki",
+          "id": "158003436"
+        },
+        {
+          "start": 150,
+          "end": 165,
+          "username": "hellenicpolice",
+          "id": "119014566"
+        }
+      ],
+      "hashtags": [
+        {
+          "start": 48,
+          "end": 56,
+          "tag": "Θεολόγο"
+        },
+        {
+          "start": 77,
+          "end": 85,
+          "tag": "Λεκούνα"
+        },
+        {
+          "start": 88,
+          "end": 96,
+          "tag": "Βλυχάδα"
+        }
+      ]
+    },
+    "geo": {},
+    "referenced_tweets": [],
+    "source_username": "112Greece",
+    "source_url": "https://x.com/112Greece/status/1423614377601769472",
+    "raw_tweet": {
+      "lang": "el",
+      "edit_history_tweet_ids": [
+        "1423614377601769472"
+      ],
+      "entities": {
+        "mentions": [
+          {
+            "start": 136,
+            "end": 149,
+            "username": "pyrosvestiki",
+            "id": "158003436"
+          },
+          {
+            "start": 150,
+            "end": 165,
+            "username": "hellenicpolice",
+            "id": "119014566"
+          }
+        ],
+        "hashtags": [
+          {
+            "start": 48,
+            "end": 56,
+            "tag": "Θεολόγο"
+          },
+          {
+            "start": 77,
+            "end": 85,
+            "tag": "Λεκούνα"
+          },
+          {
+            "start": 88,
+            "end": 96,
+            "tag": "Βλυχάδα"
+          }
+        ]
+      },
+      "id": "1423614377601769472",
+      "author_id": "1187287012442804225",
+      "public_metrics": {
+        "retweet_count": 194,
+        "reply_count": 1,
+        "like_count": 114,
+        "quote_count": 6,
+        "bookmark_count": 0,
+        "impression_count": 0
+      },
+      "created_at": "2021-08-06T11:58:11.000Z",
+      "text": "⚠️ Ενεργοποίηση 1️⃣1️⃣2️⃣ \n\n🆘 Αν βρίσκεστε στον #Θεολόγο εκκενώστε τώρα προς #Λεκούνα - #Βλυχάδα \n\n‼️ Δασική πυρκαγιά στην περιοχή σας\n\n@pyrosvestiki @hellenicpolice",
+      "conversation_id": "1423614377601769472",
+      "possibly_sensitive": false,
+      "reply_settings": "everyone"
+    }
+  },
+  {
     "tweet_id": "1423611940773957639",
     "created_at_utc": "2021-08-06T11:48:30+00:00",
     "created_at_local": "2021-08-06T14:48:30+03:00",
