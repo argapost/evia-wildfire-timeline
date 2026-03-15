@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AlertsReplayModule from '../components/alerts/AlertsReplayModule';
+import { alerts as allAlerts, alertsSummary } from '../lib/alerts/data';
+
+const alerts = allAlerts.filter(a =>
+  a.fireRegion === 'evia'
+);
+---
+
+<BaseLayout
+  title="112 Alerts | Evia Wildfire Timeline"
+  description="Chronological replay of 112 emergency evacuation alerts during the August 2021 Greek wildfires."
+>
+  <section class="page-intro">
+    <p class="eyebrow">112 Emergency Alerts</p>
+    <h1>August 2021 evacuation orders</h1>
+    <p>
+      Chronological replay of {alertsSummary.totalAlerts} emergency alerts issued by @112Greece
+      during the August 2021 wildfire crisis. Alerts span {alertsSummary.dateRange.first.slice(0, 10)} to
+      {alertsSummary.dateRange.last.slice(0, 10)}, covering fires across Evia, Attica, Ilia, Messinia, and more.
+    </p>
+    <p style="font-family: var(--font-sans); font-size: 0.82rem; color: var(--color-muted); letter-spacing: 0.03em;">
+      Space: play/pause. Arrow keys: step between alerts. Home/End: jump to start/end.
+    </p>
+    <nav class="nav-links">
+      <a href="/reconstruction">Reconstruction module</a>
+      <a href="/timeline">Timeline workspace</a>
+      <a href="/">Home</a>
+    </nav>
+  </section>
+
+  <div class="alerts-workspace">
+    <AlertsReplayModule client:load alerts={alerts} summary={alertsSummary} />
+  </div>
+</BaseLayout>
+
+<style>
+  .alerts-workspace {
+    margin-top: var(--space-4);
+  }
+</style>
