@@ -98,3 +98,26 @@ export function getCategorySvgIcon(category: TimelineEvent['category'], isDurati
   if (!entry) return '_otherstateagencies1dayevent.svg';
   return isDuration ? entry.duration : entry.point;
 }
+
+const spatialPlanningIcons: Record<string, string> = {
+  'phase-i': '_spatialplanning-phase1.svg',
+  'phase-ii': '_spatialplanning-phase2.svg',
+  'phase-iii': '_spatialplanning-completed.svg',
+};
+
+/**
+ * Resolves the correct SVG icon for an event, applying per-event overrides
+ * for forestry service, spatial planning, Diazoma, and civil society events.
+ */
+export function resolveEventIcon(event: TimelineEvent, hasDuration: boolean): string {
+  if (event.slug === 'works-by-the-forestry-service')
+    return hasDuration ? '_forestryserviceworks.svg' : '_forestryserviceworks1dayevent.svg';
+  if (event.summary.includes('Special Urban Planning'))
+    return spatialPlanningIcons[event.slug] ?? '_spatialplanning-phase1.svg';
+  if (event.id === 'evia-2021-announcement-meeting-event-by-local-municipalities-1')
+    return hasDuration ? '_civilsocitey-morethan1day.svg' : '_civilsociety.svg';
+  if (event.slug === 'announcements-events-meetings-works-by-diazoma'
+    || (event.slug === 'open-meeting' && event.actors.includes('actor-diazoma')))
+    return hasDuration ? '_diazomaevents-morethan1day.svg' : '_diazomaevents1dayevent.svg';
+  return getCategorySvgIcon(event.category, hasDuration);
+}

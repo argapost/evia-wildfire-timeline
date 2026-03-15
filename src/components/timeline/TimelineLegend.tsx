@@ -49,15 +49,11 @@ export default function TimelineLegend({ events: _events }: TimelineLegendProps)
           <Icon src="_generalelections.svg" />
           <span>Elections</span>
         </span>
-        <span className="legend-entry">
-          <WideIcon src="_forestryserviceworks.svg" />
-          <span>Forestry Service works</span>
-        </span>
       </div>
 
       {/* Row 3: section header */}
       <div className="legend-row legend-section-label">
-        Announcements-Events-Meetings organised by
+        Announcements-Events-Meetings-Works by
       </div>
 
       {/* Rows 4–9: dual-symbol entries (1-day point + multi-day duration) */}
@@ -93,7 +89,14 @@ export default function TimelineLegend({ events: _events }: TimelineLegendProps)
         <span className="legend-entry">
           <Icon src="_diazomaevents1dayevent.svg" />
           <WideIcon src="_diazomaevents-morethan1day.svg" />
-          <span>Meetings-Events-Works by &lsquo;DIAZOMA&rsquo;</span>
+          <span>&lsquo;DIAZOMA&rsquo;</span>
+        </span>
+      </div>
+      <div className="legend-row">
+        <span className="legend-entry">
+          <Icon src="_forestryserviceworks1dayevent.svg" />
+          <WideIcon src="_forestryserviceworks.svg" />
+          <span>Forestry Service</span>
         </span>
       </div>
       <div className="legend-row">

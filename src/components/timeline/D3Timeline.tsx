@@ -10,7 +10,7 @@ import {
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import {
   getCategoryLabel,
-  getCategorySvgIcon,
+  resolveEventIcon,
 } from '@/lib/timeline/categories';
 import { buildTickSpec, createBaseTimeScale } from '@/lib/timeline/ticks';
 import type { TimelineEvent } from '@/lib/timeline/types';
@@ -143,18 +143,28 @@ function packBand(
     const pointEvents = otherEvents.filter((e) => !e.endTs || e.endTs === e.startTs);
     const durationEvents = otherEvents.filter((e) => e.endTs && e.endTs !== e.startTs);
 
-    // Spatial planning events all share one lane
+    // Spatial planning and forestry service events each share one lane (overlap allowed)
     const spatialEvents = durationEvents.filter((e) => isSpatialPlanning(e));
-    const otherDurationEvents = durationEvents.filter((e) => !isSpatialPlanning(e));
+    const forestryEvents = durationEvents.filter((e) => e.slug === 'works-by-the-forestry-service');
+    const otherDurationEvents = durationEvents.filter(
+      (e) => !isSpatialPlanning(e) && e.slug !== 'works-by-the-forestry-service'
+    );
 
     const durBaseLane = laneEndTs.length;
     let nextDurLane = 0;
 
     if (spatialEvents.length > 0) {
       for (const event of spatialEvents) {
-        result.push({ ...event, laneIndex: durBaseLane, band });
+        result.push({ ...event, laneIndex: durBaseLane + nextDurLane, band });
       }
-      nextDurLane = 1;
+      nextDurLane += 1;
+    }
+
+    if (forestryEvents.length > 0) {
+      for (const event of forestryEvents) {
+        result.push({ ...event, laneIndex: durBaseLane + nextDurLane, band });
+      }
+      nextDurLane += 1;
     }
 
     const durLaneEndTs: number[] = [];
@@ -373,22 +383,8 @@ function truncateLabel(label: string, maxChars: number): string {
 
 const ICON_BASE = '/images/legend/';
 
-const spatialPlanningIcons: Record<string, string> = {
-  'phase-i': '_spatialplanning-phase1.svg',
-  'phase-ii': '_spatialplanning-phase2.svg',
-  'phase-iii': '_spatialplanning-completed.svg',
-};
-
 function isSpatialPlanning(event: TimelineEvent): boolean {
   return event.summary.includes('Special Urban Planning');
-}
-
-function resolveIcon(event: TimelineEvent, hasDuration: boolean): string {
-  if (event.slug === 'works-by-the-forestry-service') return '_forestryserviceworks.svg';
-  if (isSpatialPlanning(event)) return spatialPlanningIcons[event.slug] ?? '_spatialplanning-phase1.svg';
-  if (event.id === 'evia-2021-announcement-meeting-event-by-local-municipalities-1')
-    return hasDuration ? '_civilsocitey-morethan1day.svg' : '_civilsociety.svg';
-  return getCategorySvgIcon(event.category, hasDuration);
 }
 
 export default function D3Timeline({ events, selectedEventId, onSelectEvent, focusDomain, highlightedIds }: D3TimelineProps) {
@@ -685,7 +681,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
                 const isSelected = event.id === selectedEventId;
                 const widthPx = Math.max(eventMinWidth, xEnd - xStart);
 
-                const iconFile = resolveIcon(event, hasDuration);
+                const iconFile = resolveEventIcon(event, hasDuration);
                 const iconHref = `${ICON_BASE}${iconFile}`;
 
                 // Fire/suppression/flood point events use the full lane height
@@ -816,7 +812,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
               .map((event) => {
                 const xStart = visibleScale(new Date(event.startTs));
                 const hasDuration = !!(event.endTs && event.endTs !== event.startTs);
-                const iconFile = getCategorySvgIcon(event.category, hasDuration);
+                const iconFile = resolveEventIcon(event, hasDuration);
                 const iconHref = `${ICON_BASE}${iconFile}`;
                 const dividerY = layout.dividers[0] + verticalOffset;
                 const legSize = pointIconSize * 1.5;
