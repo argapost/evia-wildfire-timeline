@@ -40,9 +40,16 @@ export const ALERT_TYPE_LABELS: Record<string, string> = {
   general: 'General'
 };
 
-/** Map initial viewport: centered on the Evia/Attica area */
-export const MAP_CENTER: [number, number] = [23.6, 38.6];
-export const MAP_ZOOM = 8.3;
+/** Map viewports per region filter */
+export const MAP_VIEWS: Record<string, { center: [number, number]; zoom: number }> = {
+  all:    { center: [23.6, 38.5], zoom: 8.3 },
+  evia:   { center: [23.249, 38.834], zoom: 9.5 },
+  attica: { center: [23.598, 38.190], zoom: 9 },
+};
+
+/** Default map viewport (used for initial load) */
+export const MAP_CENTER: [number, number] = MAP_VIEWS.all.center;
+export const MAP_ZOOM = MAP_VIEWS.all.zoom;
 
 /** Playback constants */
 export const PLAYBACK_SPEEDS = [1, 2, 5, 10] as const;

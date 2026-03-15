@@ -261,6 +261,7 @@ export default function AlertsReplayModule({ alerts }: AlertsReplayModuleProps) 
             alerts={filteredAlerts}
             currentIndex={resolvedChronoIndex}
             currentDate={currentDate}
+            regionFilter={regionFilter}
             selectedAlert={selectedAlert}
             onSelectAlert={handleSelectAlert}
           />

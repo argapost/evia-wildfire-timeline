@@ -10,7 +10,7 @@ import type {
   MapGeoJSONFeature
 } from 'maplibre-gl';
 import type { ProcessedAlert } from '@/lib/alerts/schema';
-import { MAP_CENTER, MAP_ZOOM, REGION_COLORS } from '@/lib/alerts/constants';
+import { MAP_CENTER, MAP_ZOOM, MAP_VIEWS, REGION_COLORS } from '@/lib/alerts/constants';
 
 
 // ── Types ──
@@ -18,7 +18,8 @@ import { MAP_CENTER, MAP_ZOOM, REGION_COLORS } from '@/lib/alerts/constants';
 type AlertsMapProps = {
   alerts: ProcessedAlert[];
   currentIndex: number;
-  currentDate: string | null; // YYYY-MM-DD from the active alert's timestamp
+  currentDate: string | null;
+  regionFilter: string;
   selectedAlert: ProcessedAlert | null;
   onSelectAlert: (alert: ProcessedAlert | null) => void;
 };
@@ -462,6 +463,7 @@ export default function AlertsMap({
   alerts,
   currentIndex,
   currentDate,
+  regionFilter,
   selectedAlert,
   onSelectAlert
 }: AlertsMapProps) {
@@ -578,6 +580,15 @@ export default function AlertsMap({
       isReadyRef.current = false;
     };
   }, []);
+
+  // ── Fly to region when filter changes ──
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isReadyRef.current) return;
+
+    const view = MAP_VIEWS[regionFilter] ?? MAP_VIEWS.all;
+    map.flyTo({ center: view.center, zoom: view.zoom, duration: 800 });
+  }, [regionFilter]);
 
   // ── Switch basemap (visibility toggle, no setStyle) ──
   useEffect(() => {
