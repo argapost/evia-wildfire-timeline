@@ -73,8 +73,8 @@ const MAP_STYLE: StyleSpecification = {
     }
   },
   layers: [
-    { id: 'basemap-osm', type: 'raster', source: 'osm', paint: {}, layout: { visibility: 'visible' } },
-    { id: 'basemap-satellite', type: 'raster', source: 'satellite', paint: {}, layout: { visibility: 'none' } }
+    { id: 'basemap-osm', type: 'raster', source: 'osm', paint: {}, layout: { visibility: 'none' } },
+    { id: 'basemap-satellite', type: 'raster', source: 'satellite', paint: {}, layout: { visibility: 'visible' } }
   ]
 };
 
@@ -328,7 +328,7 @@ function ensureLayers(map: Map): void {
       source: EVAC_CURVES_SOURCE,
       filter: ACTIVE_FILTER,
       paint: {
-        'line-color': ARROW_COLOR_OSM,
+        'line-color': ARROW_COLOR_SAT,
         'line-width': 3,
         'line-opacity': 0.85,
         'line-dasharray': [2, 2]
@@ -343,7 +343,7 @@ function ensureLayers(map: Map): void {
       source: EVAC_ARROWS_SOURCE,
       filter: ACTIVE_FILTER,
       layout: {
-        'icon-image': ARROWHEAD_ICON_OSM,
+        'icon-image': ARROWHEAD_ICON_SAT,
         'icon-size': 0.6,
         'icon-rotate': ['get', 'bearing'],
         'icon-rotation-alignment': 'map',
@@ -435,7 +435,7 @@ export default function AlertsMap({
   const isReadyRef = useRef(false);
 
   const [mapError, setMapError] = useState<string | null>(null);
-  const [basemap, setBasemap] = useState<BasemapId>('osm');
+  const [basemap, setBasemap] = useState<BasemapId>('satellite');
 
 
   const onSelectAlertRef = useRef(onSelectAlert);

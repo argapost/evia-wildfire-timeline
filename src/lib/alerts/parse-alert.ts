@@ -70,7 +70,8 @@ export function expandCompoundHashtags(
 export function extractFromToLocations(
   text: string,
   hashtags: Array<{ tag: string; start: number; end: number }>,
-  gazetteer: Gazetteer
+  gazetteer: Gazetteer,
+  fireRegion?: string
 ): { from: GeocodedLocation[]; to: GeocodedLocation[] } {
   const prosIndex = text.indexOf('προς');
 
@@ -78,7 +79,9 @@ export function extractFromToLocations(
   const toLocations: GeocodedLocation[] = [];
 
   for (const hashtag of hashtags) {
-    const entry = gazetteer[hashtag.tag];
+    // Try region-specific override first (e.g. "Παλαιοχώρι@evia"), then plain tag
+    const regionKey = fireRegion ? `${hashtag.tag}@${fireRegion}` : null;
+    const entry = (regionKey && gazetteer[regionKey]) || gazetteer[hashtag.tag];
     if (!entry || entry.lat === null || entry.lon === null) {
       continue;
     }
@@ -111,6 +114,16 @@ export function determineFireRegion(
   hashtags: Array<{ tag: string }>,
   gazetteer: Gazetteer
 ): string {
+  // Explicit region qualifiers (null-coord entries like #Ηλείας, #Ευβοίας, #Αττικής)
+  // override the majority vote — they're direct signals from the tweet author
+  for (const hashtag of hashtags) {
+    const entry = gazetteer[hashtag.tag];
+    if (entry && entry.lat === null && entry.region !== 'other') {
+      return entry.region;
+    }
+  }
+
+  // Fallback: majority vote from geocoded hashtag regions
   const regionCounts = new Map<string, number>();
 
   for (const hashtag of hashtags) {

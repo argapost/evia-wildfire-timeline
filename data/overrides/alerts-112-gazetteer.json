@@ -155,15 +155,9 @@
     "nameEn": "Drosopigi",
     "region": "attica_north"
   },
-  "Ιπποκράτειο": {
-    "lat": 37.983464,
-    "lon": 23.758654,
-    "nameEn": "Ippokrateio",
-    "region": "attica_north"
-  },
   "Ιπποκράτειο_Πολιτεία": {
-    "lat": 37.983464,
-    "lon": 23.758654,
+    "lat": 38.202969,
+    "lon": 23.803842,
     "nameEn": "Ippokrateio Politeia",
     "region": "attica_north"
   },
@@ -180,14 +174,14 @@
     "region": "attica_north"
   },
   "Σταμάτας": {
-    "lat": 38.120989,
-    "lon": 23.860182,
+    "lat": 38.126384,
+    "lon": 23.871251,
     "nameEn": "Stamata",
     "region": "attica_north"
   },
   "Ροδόπολης": {
-    "lat": 37.893739,
-    "lon": 23.754245,
+    "lat": 38.116697,
+    "lon": 23.875852,
     "nameEn": "Rodopoli",
     "region": "attica_north"
   },
@@ -198,8 +192,8 @@
     "region": "attica_north"
   },
   "Βαρνάβα": {
-    "lat": 37.92087,
-    "lon": 23.732288,
+    "lat": 38.223812,
+    "lon": 23.92252,
     "nameEn": "Varnava",
     "region": "attica_north"
   },
@@ -264,14 +258,14 @@
     "region": "attica_north"
   },
   "Μαραθώνα": {
-    "lat": 38.082854,
-    "lon": 23.710398,
+    "lat": 38.153175,
+    "lon": 23.961258,
     "nameEn": "Marathon",
     "region": "attica_north"
   },
   "Βόθωνα": {
-    "lat": 38.154,
-    "lon": 23.95,
+    "lat": 38.175905,
+    "lon": 23.92216,
     "nameEn": "Vothona",
     "region": "attica_north"
   },
@@ -300,8 +294,8 @@
     "region": "attica_north"
   },
   "Αγίου_Στεφάνου": {
-    "lat": 37.99704,
-    "lon": 23.747641,
+    "lat": 38.141904,
+    "lon": 23.858815,
     "nameEn": "Agios Stefanos",
     "region": "attica_north"
   },
@@ -324,16 +318,16 @@
     "region": "attica_north"
   },
   "Ποντίων": {
-    "lat": 37.965744,
-    "lon": 23.561505,
+    "lat": 38.149226,
+    "lon": 23.856914,
     "nameEn": "Pontion",
     "region": "attica_north"
   },
   "Άγιο_Γεώργιο": {
-    "lat": 37.963156,
-    "lon": 23.539791,
+    "lat": 38.127406,
+    "lon": 23.332324,
     "nameEn": "Agios Georgios",
-    "region": "attica_north"
+    "region": "attica_west"
   },
   "Δροσιά": {
     "lat": 38.109001,
@@ -396,8 +390,8 @@
     "region": "attica_west"
   },
   "ΑγίαΠαρασκευή": {
-    "lat": 38.142996,
-    "lon": 23.27384,
+    "lat": 38.144088,
+    "lon": 23.273785,
     "nameEn": "Agia Paraskevi",
     "region": "attica_west"
   },
@@ -828,14 +822,14 @@
     "region": "evia"
   },
   "Βρυσάκι": {
-    "lat": 38.484621,
-    "lon": 23.489087,
+    "lat": 38.139413,
+    "lon": 23.879317,
     "nameEn": "Vrysaki",
-    "region": "evia"
+    "region": "attica_north"
   },
   "Καπιτένια": {
-    "lat": 38.875,
-    "lon": 23.26,
+    "lat": 38.141157,
+    "lon": 23.87822,
     "nameEn": "Kapitenia",
     "region": "attica_north"
   },
@@ -1002,10 +996,10 @@
     "region": "arcadia"
   },
   "Παλαιοχώρι": {
-    "lat": 38.820935,
-    "lon": 23.251872,
+    "lat": 38.124438,
+    "lon": 23.414757,
     "nameEn": "Palaiochori",
-    "region": "evia"
+    "region": "attica_west"
   },
   "Πύρρης": {
     "lat": 37.616047,
@@ -1230,20 +1224,20 @@
     "region": "other"
   },
   "ΑγιάΠαρασκευή": {
-    "lat": 38.142996,
-    "lon": 23.27384,
+    "lat": 38.144769,
+    "lon": 23.866429,
     "nameEn": "Agia Paraskevi",
-    "region": "attica_west"
+    "region": "attica_north"
   },
   "ΑγίαΣκέπη": {
-    "lat": 38.135,
-    "lon": 23.838,
+    "lat": 38.139413,
+    "lon": 23.879317,
     "nameEn": "Agia Skepi",
     "region": "attica_north"
   },
   "ΛόφοςΚουρεμένου": {
-    "lat": 38.14,
-    "lon": 23.835,
+    "lat": 38.139413,
+    "lon": 23.879317,
     "nameEn": "Lofos Koursmenou",
     "region": "attica_north"
   },
@@ -1254,9 +1248,33 @@
     "region": "evia"
   },
   "ΑγίουΣτεφάνου": {
-    "lat": 37.99704,
-    "lon": 23.747641,
+    "lat": 38.141904,
+    "lon": 23.858815,
     "nameEn": "Agios Stefanos",
     "region": "attica_north"
+  },
+  "Θεολόγο": {
+    "lat": 38.651253,
+    "lon": 23.172259,
+    "nameEn": "Theologo",
+    "region": "evia"
+  },
+  "Ιπποκράτειο": {
+    "lat": 38.202969,
+    "lon": 23.803842,
+    "nameEn": "Ippokrateio",
+    "region": "attica_north"
+  },
+  "Παλαιοχώρι@evia": {
+    "lat": 38.821242,
+    "lon": 23.251886,
+    "nameEn": "Palaiochori",
+    "region": "evia"
+  },
+  "Παλαιοχώρι@arcadia": {
+    "lat": 37.7,
+    "lon": 22.062,
+    "nameEn": "Palaiochori",
+    "region": "arcadia"
   }
 }

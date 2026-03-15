@@ -1,14 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AlertsReplayModule from '../components/alerts/AlertsReplayModule';
-import { alerts as allAlerts, alertsSummary } from '../lib/alerts/data';
-
-const alerts = allAlerts.filter(a =>
-  a.fireRegion === 'evia'
-);
-const eviaCount = alerts.length;
-const firstDate = alerts[0]?.timestamp?.slice(0, 10) ?? '';
-const lastDate = alerts[alerts.length - 1]?.timestamp?.slice(0, 10) ?? '';
+import { alerts, alertsSummary } from '../lib/alerts/data';
 ---
 
 <BaseLayout
@@ -18,23 +11,9 @@ const lastDate = alerts[alerts.length - 1]?.timestamp?.slice(0, 10) ?? '';
   <div class="alerts-page">
     <header class="alerts-header">
       <div class="alerts-header__left">
-        <p class="alerts-header__eyebrow">112 Emergency Alerts &mdash; Evia, Northern Euboea</p>
+        <p class="alerts-header__eyebrow">112 Emergency Alerts</p>
         <h1 class="alerts-header__title">Evacuation Orders</h1>
         <p class="alerts-header__subtitle">August 2021</p>
-      </div>
-      <div class="alerts-header__right">
-        <div class="alerts-header__stat">
-          <span class="alerts-header__stat-value">{eviaCount}</span>
-          <span class="alerts-header__stat-label">alerts</span>
-        </div>
-        <div class="alerts-header__stat">
-          <span class="alerts-header__stat-value">{firstDate.slice(8)}&ndash;{lastDate.slice(8)}</span>
-          <span class="alerts-header__stat-label">Aug 2021</span>
-        </div>
-        <div class="alerts-header__meta">
-          <span class="alerts-header__key"><kbd>Space</kbd> play</span>
-          <span class="alerts-header__key"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> step</span>
-        </div>
       </div>
     </header>
 
@@ -97,66 +76,6 @@ const lastDate = alerts[alerts.length - 1]?.timestamp?.slice(0, 10) ?? '';
     line-height: 1;
   }
 
-  .alerts-header__right {
-    display: flex;
-    align-items: flex-end;
-    gap: 1.5rem;
-    flex-shrink: 0;
-  }
-
-  .alerts-header__stat {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
-  .alerts-header__stat-value {
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    line-height: 1;
-    letter-spacing: 0.02em;
-    color: var(--color-text);
-  }
-
-  .alerts-header__stat-label {
-    font-family: var(--font-sans);
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-muted);
-    margin-top: 0.15rem;
-  }
-
-  .alerts-header__meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.15rem;
-    padding-left: 1.5rem;
-    border-left: 1px solid var(--color-rule);
-  }
-
-  .alerts-header__key {
-    font-family: var(--font-sans);
-    font-size: 0.62rem;
-    letter-spacing: 0.04em;
-    color: var(--color-muted);
-  }
-
-  .alerts-header__key kbd {
-    display: inline-block;
-    font-family: var(--font-sans);
-    font-size: 0.58rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    border: 1px solid var(--color-rule);
-    border-radius: 2px;
-    padding: 0.05em 0.35em;
-    margin-right: 0.15em;
-    color: var(--color-text);
-    background: var(--color-surface-soft);
-  }
-
   .alerts-workspace {
     margin-top: 0;
   }
@@ -186,16 +105,6 @@ const lastDate = alerts[alerts.length - 1]?.timestamp?.slice(0, 10) ?? '';
     .alerts-header {
       flex-direction: column;
       align-items: flex-start;
-    }
-    .alerts-header__right {
-      width: 100%;
-      justify-content: flex-start;
-    }
-    .alerts-header__meta {
-      border-left: none;
-      padding-left: 0;
-      flex-direction: row;
-      gap: 0.8rem;
     }
   }
 </style>

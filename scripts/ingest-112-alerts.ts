@@ -76,7 +76,7 @@ function processAlert(
   const alertType = classifyAlertType(raw.text);
   const expandedHashtags = expandCompoundHashtags(raw.text, raw.entities.hashtags, gazetteer);
   const fireRegion = determineFireRegion(expandedHashtags, gazetteer);
-  const { from, to } = extractFromToLocations(raw.text, expandedHashtags, gazetteer);
+  const { from, to } = extractFromToLocations(raw.text, expandedHashtags, gazetteer, fireRegion);
   const allLocations = [...from, ...to];
   const centroid = computeCentroid(allLocations.length > 0 ? allLocations : from);
   const evacuationEdges = buildEvacuationEdges(from, to);

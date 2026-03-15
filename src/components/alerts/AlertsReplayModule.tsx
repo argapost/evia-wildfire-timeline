@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ProcessedAlert, AlertsSummary } from '@/lib/alerts/schema';
 import type { PlaybackSpeed } from '@/lib/alerts/constants';
 import { PLAYBACK_SPEEDS, TIMELINE_START } from '@/lib/alerts/constants';
@@ -47,17 +47,23 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
     };
   }, [currentTime, isPlaying]);
 
-  // Compute current position: array index of the most recent alert at currentTime
-  const rawIdx = alerts.findIndex(
+  // Region filter groups
+  const ATTICA_REGIONS = ['attica_north', 'attica_west', 'attica_south'];
+
+  const SHOWN_REGIONS = new Set([...ATTICA_REGIONS, 'evia']);
+
+  const filteredAlerts = useMemo(() => {
+    if (regionFilter === 'all') return alerts.filter((a) => SHOWN_REGIONS.has(a.fireRegion));
+    if (regionFilter === 'attica') return alerts.filter((a) => ATTICA_REGIONS.includes(a.fireRegion));
+    return alerts.filter((a) => a.fireRegion === regionFilter);
+  }, [alerts, regionFilter]);
+
+  // Compute current position within filtered alerts
+  const rawIdx = filteredAlerts.findIndex(
     (a) => new Date(a.timestamp).getTime() > currentTime.getTime()
   );
-  const resolvedArrayIndex = rawIdx === -1 ? alerts.length - 1 : Math.max(0, rawIdx - 1);
-  // The actual chronologicalIndex property (for map filters)
-  const resolvedChronoIndex = alerts[resolvedArrayIndex]?.chronologicalIndex ?? 0;
-
-  // Filter alerts by region
-  const filteredAlerts =
-    regionFilter === 'all' ? alerts : alerts.filter((a) => a.fireRegion === regionFilter);
+  const resolvedArrayIndex = rawIdx === -1 ? filteredAlerts.length - 1 : Math.max(0, rawIdx - 1);
+  const resolvedChronoIndex = filteredAlerts[resolvedArrayIndex]?.chronologicalIndex ?? 0;
 
   // Playback: step through alerts, 1 second per alert
   const playIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -72,25 +78,21 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
       return;
     }
 
-    // Start from the current position
+    // Start from the current position, advance every interval
     playIndexRef.current = resolvedArrayIndex;
 
-    // Step to next alert immediately, then every 1 second
-    const step = () => {
+    const intervalMs = 1000 / playbackSpeed;
+    playIntervalRef.current = setInterval(() => {
       const nextIdx = playIndexRef.current + 1;
-      if (nextIdx >= alerts.length) {
+      if (nextIdx >= filteredAlerts.length) {
         setIsPlaying(false);
         return;
       }
       playIndexRef.current = nextIdx;
-      const nextAlert = alerts[nextIdx];
+      const nextAlert = filteredAlerts[nextIdx];
       setCurrentTime(new Date(nextAlert.timestamp));
       setSelectedAlert(nextAlert);
-    };
-
-    step(); // first step immediately
-    const intervalMs = 1000 / playbackSpeed;
-    playIntervalRef.current = setInterval(step, intervalMs);
+    }, intervalMs);
 
     return () => {
       if (playIntervalRef.current !== null) {
@@ -98,7 +100,7 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
         playIntervalRef.current = null;
       }
     };
-  }, [isPlaying, playbackSpeed, alerts]);
+  }, [isPlaying, playbackSpeed, filteredAlerts]);
 
   const handlePlayPause = useCallback(() => {
     setIsPlaying((prev) => !prev);
@@ -139,7 +141,7 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
           break;
         case 'ArrowRight': {
           e.preventDefault();
-          const nextAlert = alerts[resolvedArrayIndex + 1];
+          const nextAlert = filteredAlerts[resolvedArrayIndex + 1];
           if (nextAlert) {
             setCurrentTime(new Date(nextAlert.timestamp));
             setSelectedAlert(nextAlert);
@@ -150,7 +152,7 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
         case 'ArrowLeft': {
           e.preventDefault();
           if (resolvedArrayIndex > 0) {
-            const prevAlert = alerts[resolvedArrayIndex - 1];
+            const prevAlert = filteredAlerts[resolvedArrayIndex - 1];
             setCurrentTime(new Date(prevAlert.timestamp));
             setSelectedAlert(prevAlert);
             setIsPlaying(false);
@@ -165,8 +167,8 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
           break;
         case 'End':
           e.preventDefault();
-          if (alerts.length > 0) {
-            const last = alerts[alerts.length - 1];
+          if (filteredAlerts.length > 0) {
+            const last = filteredAlerts[filteredAlerts.length - 1];
             setCurrentTime(new Date(last.timestamp));
             setSelectedAlert(last);
             setIsPlaying(false);
@@ -177,25 +179,86 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [alerts, resolvedArrayIndex, handlePlayPause]);
-
-  const availableRegions = Array.from(new Set(alerts.map((a) => a.fireRegion))).sort();
+  }, [filteredAlerts, resolvedArrayIndex, handlePlayPause]);
 
   // Alert counter display
   const alertCounter = resolvedArrayIndex >= 0
-    ? `${resolvedArrayIndex + 1} / ${alerts.length}`
-    : `0 / ${alerts.length}`;
+    ? `${resolvedArrayIndex + 1} / ${filteredAlerts.length}`
+    : `0 / ${filteredAlerts.length}`;
+
+  // Region filter options with counts
+  const ATTICA_REGIONS_SET = new Set(ATTICA_REGIONS);
+  const eviaCount = alerts.filter((a) => a.fireRegion === 'evia').length;
+  const atticaCount = alerts.filter((a) => ATTICA_REGIONS_SET.has(a.fireRegion)).length;
+
+  // Reset to start when region changes
+  const handleRegionChange = useCallback((region: string) => {
+    setRegionFilter(region);
+    setCurrentTime(TIMELINE_START);
+    setSelectedAlert(null);
+    setIsPlaying(false);
+  }, []);
 
   return (
     <div style={{ fontFamily: 'var(--font-sans)' }}>
+      {/* ── Region filter bar ── */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '8px 0',
+          borderTop: '1px solid var(--color-rule)',
+          borderBottom: '1px solid var(--color-rule)',
+        }}
+      >
+        <div style={{ display: 'flex', gap: 4 }}>
+          {[
+            { id: 'all', label: 'All', count: eviaCount + atticaCount },
+            { id: 'evia', label: 'Evia', count: eviaCount },
+            { id: 'attica', label: 'Attica', count: atticaCount },
+          ].map(({ id, label, count }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => handleRegionChange(id)}
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: '0.62rem',
+                fontWeight: regionFilter === id ? 600 : 400,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                background: regionFilter === id ? 'var(--color-text)' : 'transparent',
+                color: regionFilter === id ? '#fff' : 'var(--color-muted)',
+                border: '1px solid ' + (regionFilter === id ? 'var(--color-text)' : 'var(--color-rule)'),
+                padding: '3px 10px',
+                cursor: 'pointer',
+                borderRadius: 2,
+              }}
+            >
+              {label} ({count})
+            </button>
+          ))}
+        </div>
+        <div
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '0.65rem',
+            letterSpacing: '0.06em',
+            color: 'var(--color-muted)',
+          }}
+        >
+          {alertCounter}
+        </div>
+      </div>
+
       {/* ── Map + Timeline block ── */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          height: 'calc(100vh - 12rem)',
+          height: 'calc(100vh - 14rem)',
           minHeight: '28rem',
-          borderTop: '1px solid var(--color-rule)',
         }}
       >
         {/* Map container */}
@@ -206,25 +269,6 @@ export default function AlertsReplayModule({ alerts, summary }: AlertsReplayModu
             selectedAlert={selectedAlert}
             onSelectAlert={handleSelectAlert}
           />
-
-          {/* Alert counter overlay — top left, below basemap toggle */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 58,
-              left: 8,
-              background: 'rgba(31, 47, 143, 0.88)',
-              color: '#fff',
-              fontFamily: 'var(--font-display)',
-              fontSize: '0.8rem',
-              letterSpacing: '0.08em',
-              padding: '3px 10px',
-              borderRadius: '2px',
-              zIndex: 1,
-            }}
-          >
-            {alertCounter}
-          </div>
 
           <AlertDetailCard alert={selectedAlert} onClose={handleCloseDetail} />
         </div>

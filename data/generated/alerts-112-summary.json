@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-03-15T12:13:33.815Z",
-  "totalAlerts": 74,
+  "generatedAt": "2026-03-15T15:22:39.836Z",
+  "totalAlerts": 75,
   "dateRange": {
     "first": "2021-08-01T19:46:51+03:00",
     "last": "2021-08-23T13:09:25+03:00"
   },
   "countByRegion": {
     "rhodes": 4,
-    "attica_north": 24,
-    "attica_west": 7,
+    "attica_north": 22,
+    "attica_west": 8,
     "messinia": 3,
-    "evia": 15,
+    "evia": 16,
     "other": 2,
-    "ilia": 8,
+    "ilia": 9,
     "grevena": 1,
     "fokida": 4,
     "arcadia": 2,
@@ -20,12 +20,12 @@
     "attica_south": 3
   },
   "countByType": {
-    "evacuation": 63,
+    "evacuation": 64,
     "shelter_in_place": 7,
     "fire_danger": 4
   },
   "peakDay": "2021-08-05",
   "peakDayCount": 16,
-  "geocodedAlertCount": 72,
-  "evacuationEdgeCount": 188
+  "geocodedAlertCount": 73,
+  "evacuationEdgeCount": 190
 }
