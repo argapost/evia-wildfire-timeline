@@ -48,9 +48,9 @@ body {
 }
 
 .site-shell {
-  width: min(100%, 1680px);
+  width: min(100%, 1440px);
   margin: 0 auto;
-  padding: clamp(1.2rem, 2.5vw, 2.4rem) clamp(1.2rem, 5vw, 5.5rem) clamp(2.4rem, 4vw, 4rem);
+  padding: clamp(2.4rem, 3vw, 3.5rem) clamp(3rem, 6vw, 7rem) clamp(3rem, 5vw, 5rem);
 }
 
 .page-intro {
@@ -356,12 +356,37 @@ a:hover {
   flex: 1;
   min-height: 0;
 }
-n.timeline-host.compact-host {
+.timeline-host.compact-host {
   flex: 0 0 auto;
 }
 
 .timeline-card.compact-card {
   flex: 0 0 auto;
+}
+
+.timeline-top-row {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.timeline-top-row .legend-panel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.timeline-top-row .legend-row {
+  margin: 0;
+}
+
+.timeline-selected-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 .timeline-host:focus-visible {

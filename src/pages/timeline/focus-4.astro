@@ -12,27 +12,30 @@ import TimelineWorkspace from '../../components/timeline/TimelineWorkspace.tsx';
 
   <div class="focus4-layout">
     <div class="focus4-photo-area"></div>
-    <TimelineWorkspace
-      client:load
-      focusDomain={['1965-01-01', '2026-03-16']}
-      highlightedIds={[
-        'evia-1979-fek-289a',
-        'evia-1998-fek-112a',
-        'evia-1986-fek-44a',
-        'evia-2024-fek-63a',
-      ]}
-      displayOptions={{
-        hideLabels: true,
-        hideFireSeasons: true,
-        hideFireEvents: true,
-        hideDurationEvents: true,
-        allPointsOnDivider: true,
-        pointsAboveDivider: true,
-        solidYearMultiple: 5,
-        compactTimelineHeight: 80,
-        legendCategories: ['legislation', 'forestry-policy', 'major-political-event'],
-      }}
-    />
+    <div class="focus4-timeline-wrap">
+      <TimelineWorkspace
+        client:load
+        focusDomain={['1965-01-01', '2026-03-16']}
+        highlightedIds={[
+          'evia-1979-fek-289a',
+          'evia-1998-fek-112a',
+          'evia-1986-fek-44a',
+          'evia-2024-fek-63a',
+        ]}
+        displayOptions={{
+          hideLabels: true,
+          hideFireSeasons: true,
+          hideFireEvents: true,
+          hideDurationEvents: true,
+          allPointsOnDivider: true,
+          pointsAboveDivider: true,
+          solidYearMultiple: 5,
+          compactTimelineHeight: 80,
+          legendCategories: ['legislation', 'forestry-policy', 'major-political-event'],
+          legendAbove: true,
+        }}
+      />
+    </div>
   </div>
 
   <style is:global>
@@ -51,12 +54,22 @@ import TimelineWorkspace from '../../components/timeline/TimelineWorkspace.tsx';
     .focus4-photo-area {
       flex: 1 1 0;
       min-height: 0;
-      margin-bottom: -80px;
     }
-    .focus4-layout :global(.timeline-workspace) {
-      flex: 0 0 auto;
+    .focus4-timeline-wrap {
+      transform: translateY(-80px);
+    }
+    .focus4-timeline-wrap :global(.timeline-workspace) {
       height: auto;
       min-height: 0;
+    }
+    .focus4-timeline-wrap :global(.timeline-bottom-row) {
+      padding-left: 26px;
+      padding-right: 18px;
+      gap: var(--space-3);
+    }
+    .focus4-timeline-wrap :global(.timeline-bottom-row .event-detail-card) {
+      flex: 1 1 0;
+      width: auto;
     }
   </style>
 

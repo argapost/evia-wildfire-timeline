@@ -56,6 +56,8 @@ export type TimelineDisplayOptions = {
   compactTimelineHeight?: number;
   /** If set, only show these categories in the legend */
   legendCategories?: string[];
+  /** Place legend above the timeline instead of below */
+  legendAbove?: boolean;
   /** Year multiples that get solid grid lines; all others are dotted */
   solidYearMultiple?: number;
 };
@@ -228,9 +230,24 @@ export default function TimelineWorkspace({ focusDomain, highlightedIds, display
     );
   }
 
+  const legendAbove = displayOptions?.legendAbove ?? false;
+
+  // Is the selected event different from the highlighted ones?
+  const showSelectedOverlay = selectedEvent && highlightedSet && !highlightedSet.has(selectedEvent.id);
+
   return (
     <TimelineSelectionContext.Provider value={selectionState}>
       <section className="timeline-workspace" aria-label="Timeline workspace">
+        {legendAbove && (
+          <div className="timeline-top-row">
+            <TimelineLegend events={filteredEvents} displayOptions={displayOptions} />
+            {showSelectedOverlay && (
+              <div className="timeline-selected-overlay">
+                <EventDetailCard event={selectedEvent} />
+              </div>
+            )}
+          </div>
+        )}
         <D3Timeline
           events={filteredEvents}
           selectedEventId={selectedEventId}
@@ -240,10 +257,11 @@ export default function TimelineWorkspace({ focusDomain, highlightedIds, display
           displayOptions={displayOptions}
         />
         <div className="timeline-bottom-row">
-          <TimelineLegend events={filteredEvents} displayOptions={displayOptions} />
+          {!legendAbove && <TimelineLegend events={filteredEvents} displayOptions={displayOptions} />}
+          {!legendAbove && showSelectedOverlay && <EventDetailCard event={selectedEvent} />}
           {highlightedEvents.length > 0
             ? highlightedEvents.map((ev) => <EventDetailCard key={ev.id} event={ev} />)
-            : selectedEvent && <EventDetailCard event={selectedEvent} />}
+            : !showSelectedOverlay && selectedEvent && <EventDetailCard event={selectedEvent} />}
         </div>
       </section>
     </TimelineSelectionContext.Provider>
