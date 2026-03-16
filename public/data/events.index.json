@@ -1,18 +1,18 @@
 [
   {
-    "id": "evia-1967-political-event",
-    "slug": "political-event",
-    "title": "Political event",
+    "id": "evia-1967-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "Military coup and imposition of a dictatorship",
     "body": "",
-    "category": "state-agency-action",
+    "category": "major-political-event",
     "start": "1967-04-21",
-    "end": "1974-07-23",
+    "end": null,
     "datePrecision": "day",
     "isOngoing": false,
-    "displayDate": "1967-04-21 to 1974-07-23",
+    "displayDate": "1967-04-21",
     "startTs": -85190400000,
-    "endTs": 143855999000,
+    "endTs": null,
     "actors": [],
     "places": [
       "place-greece"
@@ -37,7 +37,7 @@
     "title": "17th NOV",
     "summary": "Polytechnic Uprising – Mass nationwide anti-dictatorship protests",
     "body": "",
-    "category": "state-agency-action",
+    "category": "major-political-event",
     "start": "1973-11-14",
     "end": "1973-11-17",
     "datePrecision": "day",
@@ -64,12 +64,12 @@
     ]
   },
   {
-    "id": "evia-1974-political-event",
-    "slug": "political-event",
-    "title": "Political event",
+    "id": "evia-1974-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "Fall of the military dictatorship",
     "body": "",
-    "category": "state-agency-action",
+    "category": "major-political-event",
     "start": "1974-07-23",
     "end": null,
     "datePrecision": "day",
@@ -101,7 +101,7 @@
     "title": "FEK 289A",
     "summary": "National Forest cadastre was established by Law 998",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-policy",
     "start": "1979-12-29",
     "end": null,
     "datePrecision": "day",
@@ -109,7 +109,10 @@
     "displayDate": "1979-12-29",
     "startTs": 315273600000,
     "endTs": null,
-    "actors": [],
+    "actors": [
+      "actor-greek-central-government",
+      "actor-ministry-of-environment-energy"
+    ],
     "places": [
       "place-greece"
     ],
@@ -118,7 +121,18 @@
     "imageRefs": [],
     "coverImage": null,
     "featured": false,
-    "actorLabels": [],
+    "actorLabels": [
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-ministry-of-environment-energy",
+        "name": "Ministry of Environment & Energy",
+        "slug": "ministry-of-environment-energy"
+      }
+    ],
     "placeLabels": [
       {
         "id": "place-greece",
@@ -131,9 +145,9 @@
     "id": "evia-1981-fek-208a",
     "slug": "fek-208a",
     "title": "FEK 208A",
-    "summary": "Presidential Decree regarding the creation of forest cooperatives",
+    "summary": "Presidential Decree regarding the creation of obligatory forest cooperatives",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-policy",
     "start": "1981-08-06",
     "end": null,
     "datePrecision": "day",
@@ -141,7 +155,10 @@
     "displayDate": "1981-08-06",
     "startTs": 365904000000,
     "endTs": null,
-    "actors": [],
+    "actors": [
+      "actor-greek-central-government",
+      "actor-ministry-of-environment-energy"
+    ],
     "places": [
       "place-greece"
     ],
@@ -150,7 +167,18 @@
     "imageRefs": [],
     "coverImage": null,
     "featured": false,
-    "actorLabels": [],
+    "actorLabels": [
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-ministry-of-environment-energy",
+        "name": "Ministry of Environment & Energy",
+        "slug": "ministry-of-environment-energy"
+      }
+    ],
     "placeLabels": [
       {
         "id": "place-greece",
@@ -160,12 +188,92 @@
     ]
   },
   {
-    "id": "evia-2000-political-event",
-    "slug": "political-event",
-    "title": "Political event",
+    "id": "evia-1986-fek-44a",
+    "slug": "fek-44a",
+    "title": "FEK 44A",
+    "summary": "Presidential Decree for the procedure for granting the exploitation, maintenance and improvement of forests belonging to the State and public sector legal entities to forestry cooperatives.",
+    "body": "",
+    "category": "forestry-policy",
+    "start": "1986-04-17",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "1986-04-17",
+    "startTs": 514080000000,
+    "endTs": null,
+    "actors": [
+      "actor-forestry-service"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-forestry-service",
+        "name": "Forestry Service",
+        "slug": "forestry-service"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-1998-fek-112a",
+    "slug": "fek-112a",
+    "title": "FEK 112A",
+    "summary": "Assignment of the responsibility and the operational planning of fire suppression in forests and forested areas to the Fire Service.",
+    "body": "",
+    "category": "forestry-policy",
+    "start": "1998-05-25",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "1998-05-25",
+    "startTs": 896054400000,
+    "endTs": null,
+    "actors": [
+      "actor-forestry-service"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-forestry-service",
+        "name": "Forestry Service",
+        "slug": "forestry-service"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2000-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "Greece joins the eurozone",
     "body": "",
-    "category": "state-agency-action",
+    "category": "major-political-event",
     "start": "2000-06-19",
     "end": null,
     "datePrecision": "day",
@@ -206,12 +314,12 @@
     ]
   },
   {
-    "id": "evia-2009-political-event",
-    "slug": "political-event",
-    "title": "Political event",
+    "id": "evia-2009-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "Prime Minister George Papandreou's announcement  from Kastelorizo,officially requesting the activation of a joint European Union (EU) and International Monetary Fund (IMF) financial bailout package.",
     "body": "",
-    "category": "state-agency-action",
+    "category": "major-political-event",
     "start": "2009-04-23",
     "end": null,
     "datePrecision": "day",
@@ -284,12 +392,12 @@
     ]
   },
   {
-    "id": "evia-2010-legislation-changes",
-    "slug": "legislation-changes",
-    "title": "Legislation changes",
+    "id": "evia-2010-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "The 1st Memorandum is voted by 157 members of the Greek Parliament",
     "body": "",
-    "category": "legislation",
+    "category": "major-political-event",
     "start": "2010-05-06",
     "end": null,
     "datePrecision": "day",
@@ -330,12 +438,12 @@
     ]
   },
   {
-    "id": "evia-2012-legislation-changes",
-    "slug": "legislation-changes",
-    "title": "Legislation changes",
+    "id": "evia-2012-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "The second and harshest bailout memorandum is approved by 199 members of Parliament.",
     "body": "",
-    "category": "legislation",
+    "category": "major-political-event",
     "start": "2012-12-12",
     "end": null,
     "datePrecision": "day",
@@ -381,7 +489,7 @@
     "title": "PHASE I",
     "summary": "Phase I of the Special Urban Planning for the municipality Limni,Mantoudi, Agia Anna",
     "body": "",
-    "category": "state-agency-action",
+    "category": "spatial-planning",
     "start": "2013-07-01",
     "end": "2014-01-15",
     "datePrecision": "day",
@@ -416,12 +524,12 @@
     ]
   },
   {
-    "id": "evia-2013-legislation-changes",
-    "slug": "legislation-changes",
-    "title": "Legislation changes",
+    "id": "evia-2013-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "The 2013-2016 medium term program is approved with 153 votes",
     "body": "",
-    "category": "legislation",
+    "category": "major-political-event",
     "start": "2013-11-07",
     "end": null,
     "datePrecision": "day",
@@ -467,7 +575,7 @@
     "title": "PHASE II",
     "summary": "Phase II of the Special Urban Planning for the municipality Limni,Mantoudi, Agia Anna",
     "body": "",
-    "category": "state-agency-action",
+    "category": "spatial-planning",
     "start": "2014-08-14",
     "end": "2015-03-20",
     "datePrecision": "day",
@@ -507,7 +615,7 @@
     "title": "PHASE III",
     "summary": "Phase III of the Special Urban Planning for the municipality Limni,Mantoudi, Agia Anna",
     "body": "",
-    "category": "state-agency-action",
+    "category": "spatial-planning",
     "start": "2015-05-01",
     "end": "2017-05-19",
     "datePrecision": "day",
@@ -593,7 +701,7 @@
     "title": "Referendum",
     "summary": "Bailout referendum",
     "body": "",
-    "category": "state-agency-action",
+    "category": "major-political-event",
     "start": "2015-07-05",
     "end": null,
     "datePrecision": "day",
@@ -634,12 +742,12 @@
     ]
   },
   {
-    "id": "evia-2015-legislation-changes",
-    "slug": "legislation-changes",
-    "title": "Legislation changes",
+    "id": "evia-2015-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "The third bailout memorandum is approved by the parliament with 222 votes.",
     "body": "",
-    "category": "legislation",
+    "category": "major-political-event",
     "start": "2015-08-14",
     "end": null,
     "datePrecision": "day",
@@ -683,9 +791,9 @@
     "id": "evia-2017-fek-1366",
     "slug": "fek-1366",
     "title": "FEK 1366Β",
-    "summary": "Ratification of Forest Maps",
+    "summary": "Ratification of Forest Maps in Attica",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-policy",
     "start": "2017-04-21",
     "end": null,
     "datePrecision": "day",
@@ -840,12 +948,12 @@
     ]
   },
   {
-    "id": "evia-2018-political-event",
-    "slug": "political-event",
-    "title": "Political event",
+    "id": "evia-2018-major-political-event",
+    "slug": "major-political-event",
+    "title": "Major political event",
     "summary": "Greece's official exit from the bailout memorandum.",
     "body": "",
-    "category": "state-agency-action",
+    "category": "major-political-event",
     "start": "2018-08-21",
     "end": null,
     "datePrecision": "day",
@@ -1096,58 +1204,6 @@
     ]
   },
   {
-    "id": "evia-2021-press-conference",
-    "slug": "press-conference",
-    "title": "Press conference",
-    "summary": "During the press conference, Prime Minister Kuriakos Mitsotakis directly assigned the regeneration programme for N.Evia to S.Benos and the private comitttee of Diazoma",
-    "body": "",
-    "category": "reconstruction-governance",
-    "start": "2021-08-10",
-    "end": null,
-    "datePrecision": "day",
-    "isOngoing": false,
-    "displayDate": "2021-08-10",
-    "startTs": 1628553600000,
-    "endTs": null,
-    "actors": [
-      "actor-prime-minister",
-      "actor-greek-central-government",
-      "actor-s-benos"
-    ],
-    "places": [
-      "place-attica"
-    ],
-    "tags": [],
-    "sourceRefs": [],
-    "imageRefs": [],
-    "coverImage": null,
-    "featured": false,
-    "actorLabels": [
-      {
-        "id": "actor-prime-minister",
-        "name": "Prime Minister",
-        "slug": "prime-minister"
-      },
-      {
-        "id": "actor-greek-central-government",
-        "name": "Greek central government",
-        "slug": "greek-central-government"
-      },
-      {
-        "id": "actor-s-benos",
-        "name": "S. Benos",
-        "slug": "s-benos"
-      }
-    ],
-    "placeLabels": [
-      {
-        "id": "place-attica",
-        "name": "Attica",
-        "slug": "attica"
-      }
-    ]
-  },
-  {
     "id": "evia-2021-donation-grant-announcement",
     "slug": "donation-grant-announcement",
     "title": "Donation grant announcement",
@@ -1183,6 +1239,58 @@
         "id": "actor-stravros-niarchos-foundation",
         "name": "Stravros Niarchos Foundation",
         "slug": "stravros-niarchos-foundation"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2021-press-conference",
+    "slug": "press-conference",
+    "title": "Press conference",
+    "summary": "During the press conference, Prime Minister Kuriakos Mitsotakis directly assigned the regeneration programme for N.Evia to S.Benos and the private comitttee of Diazoma",
+    "body": "",
+    "category": "reconstruction-governance",
+    "start": "2021-08-12",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-08-12",
+    "startTs": 1628726400000,
+    "endTs": null,
+    "actors": [
+      "actor-prime-minister",
+      "actor-greek-central-government",
+      "actor-s-benos"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-prime-minister",
+        "name": "Prime Minister",
+        "slug": "prime-minister"
+      },
+      {
+        "id": "actor-greek-central-government",
+        "name": "Greek central government",
+        "slug": "greek-central-government"
+      },
+      {
+        "id": "actor-s-benos",
+        "name": "S. Benos",
+        "slug": "s-benos"
       }
     ],
     "placeLabels": [
@@ -1887,7 +1995,7 @@
     "title": "Works by the Forestry Service",
     "summary": "Restoration and improvement construction works on forest roads of the area",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-works",
     "start": "2021-12-01",
     "end": "2023-11-30",
     "datePrecision": "day",
@@ -2025,7 +2133,7 @@
     "title": "Announcements-Events-Meetings-Works by Diazoma",
     "summary": "Masterplan studies of 'Evia Meta'",
     "body": "",
-    "category": "state-agency-action",
+    "category": "reconstruction-governance",
     "start": "2021-12-12",
     "end": "2023-01-15",
     "datePrecision": "day",
@@ -2065,7 +2173,7 @@
     "title": "Open Meeting",
     "summary": "Meeting of Diazoma with mayors of the local municipalities of Limni, Mantoudi, Agia Anna & Istiaia, Aidipsos and local citizens",
     "body": "",
-    "category": "state-agency-action",
+    "category": "reconstruction-governance",
     "start": "2021-12-14",
     "end": "2021-12-15",
     "datePrecision": "day",
@@ -2147,7 +2255,7 @@
     "title": "Works by the Forestry Service",
     "summary": "Τechnical works for the management of the stream 'Xiropotamos' & the complex of water sub-basins of the southwestern  slopes of Mount Kandili",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-works",
     "start": "2022-01-20",
     "end": "2023-07-02",
     "datePrecision": "day",
@@ -2187,7 +2295,7 @@
     "title": "Works by the Forestry Service",
     "summary": "Reforestation event organisde by Limni’s forestry office, sponsored by WE 4all",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-works",
     "start": "2022-02-14",
     "end": null,
     "datePrecision": "day",
@@ -2227,7 +2335,7 @@
     "title": "Works by the Forestry Service",
     "summary": "Restoration and maintenance projects of forest recreation areas",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-works",
     "start": "2022-02-28",
     "end": "2023-07-27",
     "datePrecision": "day",
@@ -2267,7 +2375,7 @@
     "title": "Announcements-Events-Meetings-Works by Diazoma",
     "summary": "Meeting of DIAZOMA with local formal entities and local citizens with presentations of the 1st phase of the studies",
     "body": "",
-    "category": "state-agency-action",
+    "category": "reconstruction-governance",
     "start": "2022-03-18",
     "end": "2022-03-21",
     "datePrecision": "day",
@@ -2313,7 +2421,7 @@
     "title": "Announcements-Events-Meetings-Works by Diazoma",
     "summary": "Meeting of DIAZOMA with local formal entities and local citizens",
     "body": "",
-    "category": "state-agency-action",
+    "category": "reconstruction-governance",
     "start": "2022-06-03",
     "end": "2022-06-05",
     "datePrecision": "day",
@@ -2431,7 +2539,7 @@
     "title": "Works by the Forestry Service",
     "summary": "Completion of reforestation of areas of the pulic forest of Limni",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-works",
     "start": "2022-11-22",
     "end": "2022-11-24",
     "datePrecision": "day",
@@ -2469,9 +2577,9 @@
     "id": "evia-2022-fek-873d",
     "slug": "fek-873d",
     "title": "FEK 873D",
-    "summary": "Approval of the Forest Maps of Evia",
+    "summary": "Partial ratification of the Forest Maps of Evia",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-policy",
     "start": "2022-11-24",
     "end": null,
     "datePrecision": "day",
@@ -2627,7 +2735,7 @@
     "title": "PHASE I",
     "summary": "Phase I of the Special Urban Planning for the municipalities of Limni,Mantoudi, Agia Anna & Istiaia, Aidipsos",
     "body": "",
-    "category": "state-agency-action",
+    "category": "spatial-planning",
     "start": "2023-01-16",
     "end": "2023-07-31",
     "datePrecision": "day",
@@ -2667,7 +2775,7 @@
     "title": "Works by the Forestry Service",
     "summary": "Construction works for fire prevention projects funded by ANTINERO II",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-works",
     "start": "2023-06-20",
     "end": "2023-02-14",
     "datePrecision": "day",
@@ -2753,7 +2861,7 @@
     "title": "PHASE II",
     "summary": "Phase II of the Special Urban Planning for the municipalities of Limni,Mantoudi, Agia Anna & Istiaia, Aidipsos",
     "body": "",
-    "category": "state-agency-action",
+    "category": "spatial-planning",
     "start": "2023-07-31",
     "end": "2025-07-31",
     "datePrecision": "day",
@@ -2839,7 +2947,7 @@
     "title": "FEK 63A",
     "summary": "Law 5106: Introduction of Hybrid Co-operative schemes for the management of biomass within public forests.",
     "body": "",
-    "category": "state-agency-action",
+    "category": "forestry-policy",
     "start": "2024-01-05",
     "end": null,
     "datePrecision": "day",
@@ -2885,7 +2993,7 @@
     "title": "PHASE IΙΙ",
     "summary": "Phase II of the Special Urban Planning for the municipalities of Limni,Mantoudi, Agia Anna & Istiaia, Aidipsos",
     "body": "",
-    "category": "state-agency-action",
+    "category": "spatial-planning",
     "start": "2025-07-31",
     "end": "2026-03-18",
     "datePrecision": "day",

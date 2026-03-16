@@ -20,7 +20,9 @@ export const categoryValues = [
   'election',
   'private-actor',
   'study-report',
-  'infrastructure'
+  'infrastructure',
+  'major-political-event',
+  'forestry-works'
 ] as const;
 
 export const actorTypeValues = [

@@ -15,6 +15,7 @@ import {
 import { buildTickSpec, createBaseTimeScale } from '@/lib/timeline/ticks';
 import type { TimelineEvent } from '@/lib/timeline/types';
 import { useElementSize } from '@/lib/utils';
+import type { TimelineDisplayOptions } from './TimelineWorkspace';
 
 type D3TimelineProps = {
   events: TimelineEvent[];
@@ -24,6 +25,7 @@ type D3TimelineProps = {
   focusDomain?: [string, string];
   /** Event IDs to visually highlight (scale 1.5×) on focused pages. */
   highlightedIds?: Set<string>;
+  displayOptions?: TimelineDisplayOptions;
 };
 
 type BandId = 'evia' | 'attica' | 'rest';
@@ -387,7 +389,10 @@ function isSpatialPlanning(event: TimelineEvent): boolean {
   return event.summary.includes('Special Urban Planning');
 }
 
-export default function D3Timeline({ events, selectedEventId, onSelectEvent, focusDomain, highlightedIds }: D3TimelineProps) {
+/** Years that get solid grid lines on focus-4 (5-year multiples from 1965-2020) */
+const SOLID_YEARS = new Set([1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020]);
+
+export default function D3Timeline({ events, selectedEventId, onSelectEvent, focusDomain, highlightedIds, displayOptions }: D3TimelineProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const zoomBehaviorRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
@@ -400,9 +405,22 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
   const hasEvents = events.length > 0;
   const layout = useMemo(() => computeBandLayout(events), [events]);
 
-  const minimumTimelineHeight = Math.max(220, Math.round(hostHeight));
-  const timelineHeight = Math.max(layout.height, minimumTimelineHeight);
-  const verticalOffset = Math.max(0, Math.round((timelineHeight - layout.height) / 2));
+  const hideLabels = displayOptions?.hideLabels ?? false;
+  const hideFireSeasons = displayOptions?.hideFireSeasons ?? false;
+  const allPointsOnDivider = displayOptions?.allPointsOnDivider ?? false;
+  const solidYearMultiple = displayOptions?.solidYearMultiple;
+  const hideFireEvents = displayOptions?.hideFireEvents ?? false;
+  const pointsAboveDivider = displayOptions?.pointsAboveDivider ?? false;
+  const hideDurationEvents = displayOptions?.hideDurationEvents ?? false;
+  const compactTimelineHeight = displayOptions?.compactTimelineHeight;
+
+  const minimumTimelineHeight = compactTimelineHeight ?? Math.max(220, Math.round(hostHeight));
+  const timelineHeight = compactTimelineHeight ?? Math.max(layout.height, minimumTimelineHeight);
+  // When compact, center the primary divider (Evia/Attica) in the visible area
+  const verticalOffset = compactTimelineHeight && layout.dividers.length > 0
+    ? Math.round(timelineHeight / 2 - layout.dividers[0])
+    : Math.max(0, Math.round((timelineHeight - layout.height) / 2));
+
   const svgHeight = margin.top + timelineHeight + margin.bottom;
   const innerWidth = Math.max(minimumInnerWidth, width - margin.left - margin.right);
 
@@ -542,9 +560,9 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
   }, [layout.events]);
 
   return (
-    <section className="timeline-card" aria-label="Timeline engine">
+    <section className={`timeline-card${compactTimelineHeight ? " compact-card" : ""}`} aria-label="Timeline engine">
       <div
-        className="timeline-host"
+        className={`timeline-host${compactTimelineHeight ? " compact-host" : ""}`}
         ref={hostRef}
         tabIndex={hasEvents ? 0 : -1}
         onKeyDown={handleKeyDown}
@@ -572,6 +590,13 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
               const x = visibleScale(tick);
               const isJan1 = tick.getUTCMonth() === 0 && tick.getUTCDate() === 1;
               const is15th = tick.getUTCDate() === 15;
+              // When solidYearMultiple is set, non-solid years become dotted
+              const yearIsSolid = solidYearMultiple
+                ? SOLID_YEARS.has(tick.getUTCFullYear())
+                : true;
+              const className = isJan1
+                ? (yearIsSolid ? 'timeline-tick-year' : 'timeline-tick-daily')
+                : 'timeline-tick-minor';
               return (
                 <line
                   key={`minor-${tick.toISOString()}`}
@@ -579,7 +604,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
                   x2={x}
                   y1={is15th ? 8 : 0}
                   y2={timelineHeight}
-                  className={isJan1 ? 'timeline-tick-year' : 'timeline-tick-minor'}
+                  className={className}
                 />
               );
             })}
@@ -612,11 +637,18 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
             {tickSpec.majorTicks.map((tick) => {
               const x = visibleScale(tick);
               const isJanuary = tick.getUTCMonth() === 0;
+              // When solidYearMultiple is set, non-solid Jan lines become dotted
+              const yearIsSolid = solidYearMultiple
+                ? SOLID_YEARS.has(tick.getUTCFullYear())
+                : true;
+              const lineClass = isJanuary
+                ? (yearIsSolid ? 'timeline-tick-major' : 'timeline-tick-daily')
+                : 'timeline-tick-secondary';
               return (
                 <g key={`major-${tick.toISOString()}`}>
                   <line
                     x1={x} x2={x} y1={0} y2={timelineHeight}
-                    className={isJanuary ? 'timeline-tick-major' : 'timeline-tick-secondary'}
+                    className={lineClass}
                   />
                   <text
                     x={x + 2}
@@ -630,7 +662,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
             })}
 
             {/* Band labels rotated 90° (outside clip so they don't get cut) */}
-            {layout.bands.map((band) => {
+            {!hideLabels && layout.bands.map((band) => {
               // EVIA label near the bottom of the band (close to the divider)
               const labelY = band.id === 'evia'
                 ? band.topY + band.bandHeight + verticalOffset - 4
@@ -648,7 +680,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
             })}
 
             <g clipPath={`url(#${clipId})`}>
-              {fireSeasons.map((season) => {
+              {!hideFireSeasons && fireSeasons.map((season) => {
                 const xStart = visibleScale(new Date(season.startTs));
                 const xEnd = visibleScale(new Date(season.endTs));
                 const widthPx = Math.max(1, xEnd - xStart);
@@ -671,6 +703,15 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
                 const bIsPoint = !b.endTs || b.endTs === b.startTs;
                 if (aIsPoint === bIsPoint) return 0;
                 return aIsPoint ? 1 : -1;
+              }).filter((event) => {
+                if (hideFireEvents) {
+                  const cat = event.category;
+                  if (cat === 'wildfire' || cat === 'suppression' || cat === 'flood') return false;
+                }
+                return true;
+              }).filter((event) => {
+                if (hideDurationEvents && event.endTs && event.endTs !== event.startTs) return false;
+                return true;
               }).map((event) => {
                 const xStart = visibleScale(new Date(event.startTs));
                 const xEnd = visibleScale(new Date(event.endTs ?? event.startTs));
@@ -704,19 +745,30 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
                 const iconW = hasDuration ? widthPx : finalW;
                 const iconH = hasDuration ? laneH : finalH;
                 const iconX = hasDuration ? xStart : xStart - finalW / 2;
-                // Evia non-env point events: center on the top edge of the fire lane
-                const isEviaPoint = event.band === 'evia' && !hasDuration && !isEnvironmental && !isLegislation;
+
+                // allPointsOnDivider: all point events center on the Evia/Attica divider
+                const isPoint = !hasDuration;
+                const isEviaPoint = event.band === 'evia' && isPoint && !isEnvironmental && !isLegislation;
                 const eviaFireTop = layout.eviaFireLaneTopY + verticalOffset;
-                // Attica non-env point events: center on the bottom edge of the fire lane
-                const isAtticaPoint = event.band === 'attica' && !hasDuration && !isEnvironmental && !isLegislation;
+                const isAtticaPoint = event.band === 'attica' && isPoint && !isEnvironmental && !isLegislation;
                 const atticaFireBottom = layout.atticaFireLaneBottomY + verticalOffset;
-                const iconY = isLegislation
-                  ? dividerY - finalH / 2
-                  : isEviaPoint
-                    ? eviaFireTop - finalH / 2
-                    : isAtticaPoint
-                      ? atticaFireBottom - finalH / 2
-                      : hasDuration ? yTop : yMid - finalH / 2;
+
+                let iconY: number;
+                if (allPointsOnDivider && isPoint && !isLegislation) {
+                  // All point events on the Evia/Attica divider line
+                  iconY = dividerY - finalH / 2;
+                } else if (isLegislation) {
+                  iconY = dividerY - finalH / 2;
+                } else if (isEviaPoint) {
+                  iconY = eviaFireTop - finalH / 2;
+                } else if (isAtticaPoint) {
+                  iconY = atticaFireBottom - finalH / 2;
+                } else if (hasDuration) {
+                  iconY = yTop;
+                } else {
+                  iconY = yMid - finalH / 2;
+                }
+
                 // For duration: one tile keeps the SVG's native 24×14 ratio
                 const tileW = laneH * (24 / 14);
                 const patternId = `pat-${event.id.replace(/[^a-zA-Z0-9-]/g, '')}`;
@@ -806,25 +858,41 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
               />
             ))}
 
-            {/* Legislation symbols — rendered after dividers so they appear on top */}
+            {/* Event symbols rendered after dividers so their pixels appear on top of the line */}
             {layout.events
-              .filter((e) => e.category === 'legislation' || e.category === 'forestry-policy')
+              .filter((e) => {
+                const isLeg = e.category === 'legislation' || e.category === 'forestry-policy';
+                if (pointsAboveDivider) {
+                  const isPoint = !e.endTs || e.endTs === e.startTs;
+                  return isLeg || (isPoint && allPointsOnDivider);
+                }
+                return isLeg;
+              })
+              .filter((e) => {
+                if (hideFireEvents) {
+                  const cat = e.category;
+                  if (cat === 'wildfire' || cat === 'suppression' || cat === 'flood') return false;
+                }
+                return true;
+              })
               .map((event) => {
                 const xStart = visibleScale(new Date(event.startTs));
                 const hasDuration = !!(event.endTs && event.endTs !== event.startTs);
                 const iconFile = resolveEventIcon(event, hasDuration);
                 const iconHref = `${ICON_BASE}${iconFile}`;
                 const dividerY = layout.dividers[0] + verticalOffset;
-                const legSize = pointIconSize * 1.5;
-                const legW = 16 * 1.5;
+                const isLeg = event.category === 'legislation' || event.category === 'forestry-policy';
+                const scale = isLeg ? 1.5 : 1;
+                const h = pointIconSize * scale;
+                const w = 16 * scale;
                 return (
                   <image
                     key={`leg-${event.id}`}
                     href={iconHref}
-                    x={xStart - legW / 2}
-                    y={dividerY - legSize / 2}
-                    width={legW}
-                    height={legSize}
+                    x={xStart - w / 2}
+                    y={dividerY - h / 2}
+                    width={w}
+                    height={h}
                     preserveAspectRatio="xMidYMid meet"
                     style={{ pointerEvents: 'none' }}
                   />

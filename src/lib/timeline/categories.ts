@@ -10,7 +10,9 @@ const categoryPalette: Partial<Record<TimelineEvent['category'], string>> = {
   flood: '#5f72ba',
   'forestry-policy': '#84b87b',
   legislation: '#334496',
-  'spatial-planning': '#939393',
+  'spatial-planning':     { point: '_spatialplanning-phase1.svg',                         duration: '_spatialplanning-phase1.svg' },
+  'major-political-event': { point: '_majorpoliticalevent.svg',                            duration: '_majorpoliticalevent-morethan1day.svg' },
+  'forestry-works':         { point: '_forestryserviceworks1dayevent.svg',                   duration: '_forestryserviceworks.svg' },
   'reconstruction-governance': '#8a95bf',
   contract: '#7376c6',
   donation: '#aab1c4',
@@ -21,7 +23,9 @@ const categoryPalette: Partial<Record<TimelineEvent['category'], string>> = {
   election: '#5867a8',
   'private-actor': '#98a0b8',
   'study-report': '#a3abc0',
-  infrastructure: '#6d78a8'
+  infrastructure: '#6d78a8',
+  'major-political-event': '#334496',
+  'forestry-works': '#84b87b'
 };
 
 const categoryNameMap: Record<TimelineEvent['category'], string> = {
@@ -33,7 +37,9 @@ const categoryNameMap: Record<TimelineEvent['category'], string> = {
   flood: 'Flood',
   'forestry-policy': 'Forestry Policy',
   legislation: 'Legislation',
-  'spatial-planning': 'Spatial Planning',
+  'spatial-planning':     { point: '_spatialplanning-phase1.svg',                         duration: '_spatialplanning-phase1.svg' },
+  'major-political-event': { point: '_majorpoliticalevent.svg',                            duration: '_majorpoliticalevent-morethan1day.svg' },
+  'forestry-works':         { point: '_forestryserviceworks1dayevent.svg',                   duration: '_forestryserviceworks.svg' },
   'reconstruction-governance': 'Reconstruction Governance',
   contract: 'Contract',
   donation: 'Donation',
@@ -44,7 +50,9 @@ const categoryNameMap: Record<TimelineEvent['category'], string> = {
   election: 'Election',
   'private-actor': 'Private Actor',
   'study-report': 'Study Report',
-  infrastructure: 'Infrastructure'
+  infrastructure: 'Infrastructure',
+  'major-political-event': 'Major Political Event',
+  'forestry-works': 'Forestry Service Works'
 };
 
 // Maps each category to its legend SVG files:
@@ -53,7 +61,7 @@ const symbolSvgMap: Partial<Record<TimelineEvent['category'], { point: string; d
   wildfire:               { point: '_activefire.svg',                                    duration: '_activefire.svg' },
   suppression:            { point: '_periduntilfullsuppression.svg',                     duration: '_periduntilfullsuppression.svg' },
   flood:                  { point: '_flood.svg',                                         duration: '_flood.svg' },
-  'forestry-policy':      { point: '_forestryserviceworks.svg',                           duration: '_forestryserviceworks.svg' },
+  'forestry-policy':      { point: '_legislationchangesforestmanagement.svg',            duration: '_legislationchangesforestmanagement.svg' },
   legislation:            { point: '_legislationchanges.svg',                             duration: '_legislationchanges.svg' },
   election:               { point: '_generalelections.svg',                               duration: '_generalelections.svg' },
   'civil-society-action': { point: '_civilsociety.svg',                                   duration: '_civilsocitey-morethan1day.svg' },
@@ -65,6 +73,8 @@ const symbolSvgMap: Partial<Record<TimelineEvent['category'], { point: string; d
   donation:               { point: '_contractdiazoma1dayevent.svg',                       duration: '_contractssigningduration.svg' },
   'private-actor':        { point: '_announcementprivateentities1dayevent.svg',            duration: '_announcementprivateentities1dayevent.svg' },
   'spatial-planning':     { point: '_spatialplanning-phase1.svg',                         duration: '_spatialplanning-phase1.svg' },
+  'major-political-event': { point: '_majorpoliticalevent.svg',                            duration: '_majorpoliticalevent-morethan1day.svg' },
+  'forestry-works':         { point: '_forestryserviceworks1dayevent.svg',                   duration: '_forestryserviceworks.svg' },
 };
 
 const fallbackColor = '#8a92a5';

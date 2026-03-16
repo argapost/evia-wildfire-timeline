@@ -356,6 +356,13 @@ a:hover {
   flex: 1;
   min-height: 0;
 }
+n.timeline-host.compact-host {
+  flex: 0 0 auto;
+}
+
+.timeline-card.compact-card {
+  flex: 0 0 auto;
+}
 
 .timeline-host:focus-visible {
   outline-offset: 2px;

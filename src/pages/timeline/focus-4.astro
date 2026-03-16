@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TimelineWorkspace from '../../components/timeline/TimelineWorkspace.tsx';
+---
+
+<BaseLayout title="Timeline Focus 4 | Evia Wildfire Timeline">
+  <nav class="timeline-nav" aria-label="Section navigation">
+    <a href="/timeline" class="timeline-nav-tab is-active">_Planning &amp; Policy</a>
+    <a href="#" class="timeline-nav-tab">_Forestry Service</a>
+    <a href="/home" class="timeline-nav-tab">_Hybrid Schemes</a>
+  </nav>
+
+  <div class="focus4-layout">
+    <div class="focus4-photo-area"></div>
+    <TimelineWorkspace
+      client:load
+      focusDomain={['1965-01-01', '2026-03-16']}
+      highlightedIds={[
+        'evia-1979-fek-289a',
+        'evia-1998-fek-112a',
+        'evia-1986-fek-44a',
+        'evia-2024-fek-63a',
+      ]}
+      displayOptions={{
+        hideLabels: true,
+        hideFireSeasons: true,
+        hideFireEvents: true,
+        hideDurationEvents: true,
+        allPointsOnDivider: true,
+        pointsAboveDivider: true,
+        solidYearMultiple: 5,
+        compactTimelineHeight: 80,
+        legendCategories: ['legislation', 'forestry-policy', 'major-political-event'],
+      }}
+    />
+  </div>
+
+  <style is:global>
+    html, body {
+      overflow: hidden !important;
+      height: 100vh !important;
+    }
+  </style>
+  <style>
+    .focus4-layout {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 4rem);
+      overflow: hidden;
+    }
+    .focus4-photo-area {
+      flex: 1 1 0;
+      min-height: 0;
+      margin-bottom: -80px;
+    }
+    .focus4-layout :global(.timeline-workspace) {
+      flex: 0 0 auto;
+      height: auto;
+      min-height: 0;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement).closest('.timeline-host')) return;
+      if (e.key === 'ArrowRight') {
+        window.location.href = '/presentation/reconstruction';
+      }
+      if (e.key === 'ArrowLeft') {
+        window.location.href = '/timeline/focus-3';
+      }
+    });
+  </script>
+</BaseLayout>

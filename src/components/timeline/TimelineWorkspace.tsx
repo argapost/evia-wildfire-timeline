@@ -42,12 +42,31 @@ function filtersEqual(a: TimelineFilterState, b: TimelineFilterState): boolean {
   );
 }
 
+export type TimelineDisplayOptions = {
+  hideLabels?: boolean;
+  hideFireSeasons?: boolean;
+  allPointsOnDivider?: boolean;
+  /** Hide fire/suppression/flood events entirely */
+  hideFireEvents?: boolean;
+  /** Place point event symbols above the divider line instead of centered on it */
+  pointsAboveDivider?: boolean;
+  /** Hide all duration events, show only point events */
+  hideDurationEvents?: boolean;
+  /** Force a compact timeline height (px) — just the divider line area */
+  compactTimelineHeight?: number;
+  /** If set, only show these categories in the legend */
+  legendCategories?: string[];
+  /** Year multiples that get solid grid lines; all others are dotted */
+  solidYearMultiple?: number;
+};
+
 type WorkspaceProps = {
   focusDomain?: [string, string];
   highlightedIds?: string[];
+  displayOptions?: TimelineDisplayOptions;
 };
 
-export default function TimelineWorkspace({ focusDomain, highlightedIds }: WorkspaceProps = {}) {
+export default function TimelineWorkspace({ focusDomain, highlightedIds, displayOptions }: WorkspaceProps = {}) {
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [filters, setFilters] = useState<TimelineFilterState>(() => createEmptyFilters());
   const [sourcesById, setSourcesById] = useState<SourceLookup>({});
@@ -218,9 +237,10 @@ export default function TimelineWorkspace({ focusDomain, highlightedIds }: Works
           onSelectEvent={(eventId) => setSelectedEventId(eventId)}
           focusDomain={focusDomain}
           highlightedIds={highlightedSet}
+          displayOptions={displayOptions}
         />
         <div className="timeline-bottom-row">
-          <TimelineLegend events={filteredEvents} />
+          <TimelineLegend events={filteredEvents} displayOptions={displayOptions} />
           {highlightedEvents.length > 0
             ? highlightedEvents.map((ev) => <EventDetailCard key={ev.id} event={ev} />)
             : selectedEvent && <EventDetailCard event={selectedEvent} />}

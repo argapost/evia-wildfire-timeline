@@ -23,12 +23,17 @@ export default function EventDetailCard({ event }: Props) {
     ? `${fmtDate(event.startTs)} — ${fmtDate(event.endTs!)}`
     : fmtDate(event.startTs);
 
+  const isLegislation = event.category === 'legislation' || event.category === 'forestry-policy';
+
   return (
     <div className="event-detail-card">
       <div className="event-detail-header">
         <img src={iconHref} alt="" className="event-detail-icon" />
         <span className="event-detail-date">{dateStr}</span>
       </div>
+      {isLegislation && event.title && (
+        <div className="event-detail-title">{event.title}</div>
+      )}
       <div className="event-detail-summary">{event.summary}</div>
     </div>
   );
