@@ -52,6 +52,7 @@ const CATEGORY_MAP: Record<string, string> = {
   "meetings-events organised by 'diazoma'": 'reconstruction-governance',
   'meetings-events organised by diazoma': 'reconstruction-governance',
   'flood': 'flood',
+  'flood and extreme rainfall': 'flood',
   'legislation changes': 'legislation',
   'legislation changes regarding forestry': 'forestry-policy',
   'forest legislation changes': 'legislation',

@@ -5,13 +5,15 @@ import TimelineWorkspace from '../../components/timeline/TimelineWorkspace.tsx';
 
 <BaseLayout title="Timeline Focus 4 | Evia Wildfire Timeline">
   <nav class="timeline-nav" aria-label="Section navigation">
-    <a href="/timeline" class="timeline-nav-tab is-active">_Planning &amp; Policy</a>
-    <a href="#" class="timeline-nav-tab">_Forestry Service</a>
+    <a href="/timeline" class="timeline-nav-tab">_Planning &amp; Policy</a>
+    <a href="#" class="timeline-nav-tab is-active">_Forestry Service</a>
     <a href="/home" class="timeline-nav-tab">_Hybrid Schemes</a>
   </nav>
 
   <div class="focus4-layout">
-    <div class="focus4-photo-area"></div>
+    <div class="focus4-photo-area">
+      <img src="/images/focus4-map.png" alt="" class="focus4-photo" />
+    </div>
     <div class="focus4-timeline-wrap">
       <TimelineWorkspace
         client:load
@@ -21,6 +23,7 @@ import TimelineWorkspace from '../../components/timeline/TimelineWorkspace.tsx';
           'evia-1998-fek-112a',
           'evia-1986-fek-44a',
           'evia-2024-fek-63a',
+          'evia-2012-legislation-changes-regarding-forestry',
         ]}
         displayOptions={{
           hideLabels: true,
@@ -54,6 +57,15 @@ import TimelineWorkspace from '../../components/timeline/TimelineWorkspace.tsx';
     .focus4-photo-area {
       flex: 1 1 0;
       min-height: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 0;
+    }
+    .focus4-photo {
+      max-height: 100%;
+      max-width: 55%;
+      object-fit: contain;
     }
     .focus4-timeline-wrap {
       transform: translateY(-80px);

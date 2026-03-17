@@ -513,6 +513,9 @@ export default function AlertsMap({
         map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
         map.on('load', () => {
+          // Ensure map matches container after layout settles
+          map.resize();
+
           if (!map.hasImage(ARROWHEAD_ICON_OSM)) {
             map.addImage(ARROWHEAD_ICON_OSM, createArrowheadImageData(ARROW_COLOR_OSM));
             map.addImage(ARROWHEAD_ICON_SAT, createArrowheadImageData(ARROW_COLOR_SAT));
@@ -560,6 +563,11 @@ export default function AlertsMap({
         }
 
         mapRef.current = map;
+
+        // Keep map in sync with container size changes
+        const ro = new ResizeObserver(() => map.resize());
+        ro.observe(container);
+        (map as any)._resizeObserver = ro;
       } catch (error) {
         const message =
           error instanceof Error ? error.message : 'Unknown MapLibre initialization error.';
@@ -575,7 +583,11 @@ export default function AlertsMap({
 
     return () => {
       cancelled = true;
-      mapRef.current?.remove();
+      const map = mapRef.current;
+      if (map) {
+        (map as any)._resizeObserver?.disconnect();
+        map.remove();
+      }
       mapRef.current = null;
       isReadyRef.current = false;
     };

@@ -484,6 +484,38 @@
     ]
   },
   {
+    "id": "evia-2012-legislation-changes-regarding-forestry",
+    "slug": "legislation-changes-regarding-forestry",
+    "title": "Legislation changes regarding Forestry",
+    "summary": "The tenders for the drafting of the maps for all prefectures were launched by the Hellenic Cadastre in 2012, and the contracts were signed in 2013.",
+    "body": "",
+    "category": "forestry-policy",
+    "start": "2012-12-31",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2012-12-31",
+    "startTs": 1356912000000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
     "id": "evia-2013-phase-i",
     "slug": "phase-i",
     "title": "PHASE I",
@@ -1990,6 +2022,38 @@
     ]
   },
   {
+    "id": "evia-2021-mideia",
+    "slug": "mideia",
+    "title": "MIDEIA",
+    "summary": "Heavy snowfall and low temperatures",
+    "body": "",
+    "category": "flood",
+    "start": "2021-11-13",
+    "end": "2021-11-18",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2021-11-13 to 2021-11-18",
+    "startTs": 1636761600000,
+    "endTs": 1637279999000,
+    "actors": [],
+    "places": [
+      "place-greece"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-greece",
+        "name": "Greece",
+        "slug": "greece"
+      }
+    ]
+  },
+  {
     "id": "evia-2021-works-by-the-forestry-service",
     "slug": "works-by-the-forestry-service",
     "title": "Works by the Forestry Service",
@@ -2942,6 +3006,70 @@
     ]
   },
   {
+    "id": "evia-2023-fek-6595d",
+    "slug": "fek-6595d",
+    "title": "FEK 6595D",
+    "summary": "Establishment, formation, and appointment of the members of a Special Committee for the preparation of a Special Development Program for Evros.",
+    "body": "",
+    "category": "legislation",
+    "start": "2023-11-21",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2023-11-21",
+    "startTs": 1700524800000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2023-announcement-meeting-event-by-the-greek-government-1",
+    "slug": "announcement-meeting-event-by-the-greek-government",
+    "title": "Announcement / Meeting / Event by the greek government",
+    "summary": "Ministry press release announces the committee’s work for the Special Regneration Programme of Evros has begun.",
+    "body": "",
+    "category": "reconstruction-governance",
+    "start": "2023-12-12",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2023-12-12",
+    "startTs": 1702339200000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
     "id": "evia-2024-fek-63a",
     "slug": "fek-63a",
     "title": "FEK 63A",
@@ -2984,6 +3112,118 @@
         "id": "place-attica",
         "name": "Attica",
         "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2024-announcements-events-meetings-works-by-diazoma",
+    "slug": "announcements-events-meetings-works-by-diazoma",
+    "title": "Announcements-Events-Meetings-Works by Diazoma",
+    "summary": "Diazoma announces public release of Phase A of the Evros Meta masterplan.",
+    "body": "",
+    "category": "reconstruction-governance",
+    "start": "2024-04-22",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2024-04-22",
+    "startTs": 1713744000000,
+    "endTs": null,
+    "actors": [],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2025-announcement-meeting-event-by-the-greek-government",
+    "slug": "announcement-meeting-event-by-the-greek-government",
+    "title": "Announcement / Meeting / Event by the greek government",
+    "summary": "Approval of the program in accordance with European rules and the specific features of Integrated Territorial Investments (I.TI.).",
+    "body": "",
+    "category": "reconstruction-governance",
+    "start": "2025-07-24",
+    "end": null,
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2025-07-24",
+    "startTs": 1753315200000,
+    "endTs": null,
+    "actors": [
+      "actor-regional-government-of-sterea-ellada"
+    ],
+    "places": [
+      "place-attica"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-regional-government-of-sterea-ellada",
+        "name": "Regional Government of Sterea Ellada",
+        "slug": "regional-government-of-sterea-ellada"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-attica",
+        "name": "Attica",
+        "slug": "attica"
+      }
+    ]
+  },
+  {
+    "id": "evia-2025-kythera",
+    "slug": "kythera",
+    "title": "KYTHERA",
+    "summary": "KYTHERA",
+    "body": "",
+    "category": "wildfire",
+    "start": "2025-07-26",
+    "end": "2025-07-29",
+    "datePrecision": "day",
+    "isOngoing": false,
+    "displayDate": "2025-07-26 to 2025-07-29",
+    "startTs": 1753488000000,
+    "endTs": 1753833599000,
+    "actors": [
+      "actor-fire-department"
+    ],
+    "places": [
+      "place-kythera"
+    ],
+    "tags": [],
+    "sourceRefs": [],
+    "imageRefs": [],
+    "coverImage": null,
+    "featured": false,
+    "actorLabels": [
+      {
+        "id": "actor-fire-department",
+        "name": "Fire Department",
+        "slug": "fire-department"
+      }
+    ],
+    "placeLabels": [
+      {
+        "id": "place-kythera",
+        "name": "Kythera",
+        "slug": "kythera"
       }
     ]
   },

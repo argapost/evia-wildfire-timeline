@@ -769,6 +769,15 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
                   iconY = yMid - finalH / 2;
                 }
 
+                // MIDEIA flood: stretch from North Evia fire top to its normal y, render behind
+                const isMideia = event.id === 'evia-2021-mideia';
+                let finalIconH = hasDuration ? laneH : finalH;
+                let finalIconY = iconY;
+                if (isMideia && hasDuration) {
+                  finalIconY = eviaFireTop;
+                  finalIconH = (yTop + laneH) - eviaFireTop;
+                }
+
                 // For duration: one tile keeps the SVG's native 24×14 ratio
                 const tileW = laneH * (24 / 14);
                 const patternId = `pat-${event.id.replace(/[^a-zA-Z0-9-]/g, '')}`;
@@ -779,7 +788,7 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
                 return (
                   <g
                     key={event.id}
-                    className={`timeline-event ${isSelected ? 'is-selected' : ''}`}
+                    className={`timeline-event ${isSelected ? 'is-selected' : ''} ${isMideia ? 'mideia-bg' : ''}`}
                     role="button"
                     tabIndex={0}
                     aria-label={eventLabel}

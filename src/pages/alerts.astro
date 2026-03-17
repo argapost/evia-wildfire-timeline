@@ -15,14 +15,57 @@ import { alerts } from '../lib/alerts/data';
         <h1 class="alerts-header__title">Evacuation Orders</h1>
         <p class="alerts-header__subtitle">August 2021</p>
       </div>
+      <nav class="timeline-nav" aria-label="Section navigation">
+        <a href="/timeline" class="timeline-nav-tab is-active">_Planning &amp; Policy</a>
+        <a href="#" class="timeline-nav-tab">_Forestry Service</a>
+        <a href="/home" class="timeline-nav-tab">_Hybrid Schemes</a>
+      </nav>
     </header>
 
     <div class="alerts-workspace">
       <AlertsReplayModule client:load alerts={alerts} />
     </div>
   </div>
+
+  <script>
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      // If click is inside the map, timeline, detail card, controls, or a link/button — do nothing
+      if (
+        target.closest('.maplibregl-map') ||
+        target.closest('.maplibregl-canvas-container') ||
+        target.closest('canvas') ||
+        target.closest('[class*="AlertsTimeline"]') ||
+        target.closest('[class*="AlertDetail"]') ||
+        target.closest('button') ||
+        target.closest('a') ||
+        target.closest('input') ||
+        target.closest('label') ||
+        target.closest('.alerts-header')
+      ) return;
+
+      window.location.href = '/timeline';
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight') {
+        window.location.href = '/timeline';
+      }
+      if (e.key === 'ArrowLeft') {
+        window.location.href = '/archive';
+      }
+    });
+  </script>
 </BaseLayout>
 
+<style is:global>
+  .site-shell {
+    width: min(100%, 1440px);
+    padding: clamp(1.6rem, 2vw, 2.4rem) clamp(1.5rem, 3vw, 3rem) clamp(1.5rem, 2vw, 2rem);
+  }
+</style>
 <style>
   .alerts-page {
     --alert-red: #c74949;
@@ -37,6 +80,11 @@ import { alerts } from '../lib/alerts/data';
     padding: clamp(1rem, 2vw, 1.6rem) 0;
     border-bottom: 2px solid var(--color-text);
     margin-bottom: 0;
+  }
+
+  .alerts-header .timeline-nav {
+    margin-bottom: 0;
+    padding-bottom: 0.2rem;
   }
 
   .alerts-header__eyebrow {
