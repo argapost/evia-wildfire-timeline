@@ -21,8 +21,10 @@ type D3TimelineProps = {
   events: TimelineEvent[];
   selectedEventId: string | null;
   onSelectEvent: (eventId: string | null) => void;
-  /** Optional focused date range [start, end] as ISO strings. Overrides the initial zoom. */
+  /** Optional focused date range [start, end] as ISO strings. Locks zoom/pan. */
   focusDomain?: [string, string];
+  /** Optional initial date range [start, end]. Sets starting view but allows zoom/pan. */
+  initialDomain?: [string, string];
   /** Event IDs to visually highlight (scale 1.5×) on focused pages. */
   highlightedIds?: Set<string>;
   displayOptions?: TimelineDisplayOptions;
@@ -394,7 +396,7 @@ function isSpatialPlanning(event: TimelineEvent): boolean {
 /** Years that get solid grid lines on focus-4 (5-year multiples from 1965-2020) */
 const SOLID_YEARS = new Set([1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020]);
 
-export default function D3Timeline({ events, selectedEventId, onSelectEvent, focusDomain, highlightedIds, displayOptions, selectedOverlay }: D3TimelineProps) {
+export default function D3Timeline({ events, selectedEventId, onSelectEvent, focusDomain, initialDomain, highlightedIds, displayOptions, selectedOverlay }: D3TimelineProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const zoomBehaviorRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
@@ -430,8 +432,11 @@ export default function D3Timeline({ events, selectedEventId, onSelectEvent, foc
     if (focusDomain) {
       return [new Date(focusDomain[0]), new Date(focusDomain[1])];
     }
+    if (initialDomain) {
+      return [new Date(initialDomain[0]), new Date(initialDomain[1])];
+    }
     return FIXED_DOMAIN;
-  }, [focusDomain]);
+  }, [focusDomain, initialDomain]);
 
   const baseScale = useMemo(() => {
     return createBaseTimeScale(baseDomain, [0, innerWidth]);
